@@ -11,6 +11,7 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 
 class ViewProject extends ViewRecord
 {
@@ -20,6 +21,11 @@ class ViewProject extends ViewRecord
     {
         return [
             EditAction::make()->label('Bewerken'),
+            Action::make('view-guest')
+                ->label('Bekijk als gast')
+                ->color('gray')
+                ->url(fn () => route('choose.project', $this->record))
+                ->openUrlInNewTab(),
         ];
     }
 

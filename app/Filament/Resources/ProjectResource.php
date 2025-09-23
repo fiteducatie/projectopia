@@ -50,7 +50,7 @@ class ProjectResource extends Resource
                                             'event' => 'Evenement',
                                         ])->required()->default('software')
                                         ->helperText('Bepaalt de standaardtemplates (Software, Marketing, Evenement).'),
-                                    Forms\Components\Textarea::make('context')->label('Context')->rows(6)
+                                    Forms\Components\RichEditor::make('context')->label('Context')
                                         ->helperText('1–3 alinea’s met achtergrond, doelgroep en gewenste impact.'),
                                 ]),
                         ]),
@@ -59,7 +59,7 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Welke meetbare doelen moet het project bereiken? Denk aan KPI’s of leerdoelen.')
                                 ->schema([
-                                    Forms\Components\Textarea::make('objectives')->label('Doelstellingen')->rows(6)
+                                    Forms\Components\RichEditor::make('objectives')->label('Doelstellingen')
                                         ->helperText('Gebruik opsommingen; maak doelen concreet en toetsbaar.'),
                                 ]),
                         ]),
@@ -68,7 +68,7 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Beperkingen zoals tijd, budget, techniek, compliance of scope-afbakening.')
                                 ->schema([
-                                    Forms\Components\Textarea::make('constraints')->label('Randvoorwaarden')->rows(6)
+                                    Forms\Components\RichEditor::make('constraints')->label('Randvoorwaarden')
                                         ->helperText('Som de belangrijkste beperkingen op; dit helpt bij prioriteren.'),
                                 ]),
                         ]),
@@ -107,11 +107,11 @@ class ProjectResource extends Resource
                                                 ->helperText('Rol t.o.v. het project (bijv. Klant, Product Owner, Doelgroep).'),
                                             Forms\Components\TextInput::make('avatar_url')->label('Avatar-URL')->url()->nullable()
                                                 ->helperText('Optioneel; laat leeg om automatisch te genereren.'),
-                                            Forms\Components\Textarea::make('goals')->label('Doelen')->rows(3)->nullable()
+                                            Forms\Components\TextArea::make('goals')->label('Doelen')->nullable()
                                                 ->helperText('Wat wil deze persona bereiken met dit project?'),
-                                            Forms\Components\Textarea::make('traits')->label('Eigenschappen')->rows(3)->nullable()
+                                            Forms\Components\TextArea::make('traits')->label('Eigenschappen')->nullable()
                                                 ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
-                                            Forms\Components\Textarea::make('communication_style')->rows(3)->label('Communicatiestijl')->nullable()
+                                            Forms\Components\TextArea::make('communication_style')->label('Communicatiestijl')->nullable()
                                                 ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
                                         ])
                                         ->collapsed()
@@ -123,7 +123,7 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Welke risico’s zie je nu al? Hoe kun je ze beperken?')
                                 ->schema([
-                                    Forms\Components\Textarea::make('risk_notes')->label('Risico\'s')->rows(6)
+                                    Forms\Components\RichEditor::make('risk_notes')->label('Risico\'s')
                                         ->helperText('Beschrijf risico + mitigerende actie (bijv. capaciteit, afhankelijkheden, privacy).'),
                                 ]),
                         ]),

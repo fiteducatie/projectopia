@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Projecten – {{ $team->name }} – Projectopia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold">Projecten van {{ $team->name }}</h1>
+            <a href="{{ route('choose.teams') }}" class="text-sky-600 hover:underline">← Terug naar teams</a>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            @forelse ($projects as $project)
+                <a href="{{ route('choose.project', $project) }}" class="block rounded-xl border border-slate-200 bg-white p-6 hover:shadow-md">
+                    <div class="text-lg font-semibold">{{ $project->name }}</div>
+                    <div class="mt-1 text-slate-600 text-sm">Domein: {{ ucfirst($project->domain) }}</div>
+                    <div class="mt-1 text-slate-600 text-sm">Periode: {{ optional($project->start_date)->format('d-m-Y') }} – {{ optional($project->end_date)->format('d-m-Y') }}</div>
+                </a>
+            @empty
+                <div class="col-span-full text-slate-500">Geen projecten in dit team.</div>
+            @endforelse
+        </div>
+    </div>
+</body>
+</html>
+
+
