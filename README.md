@@ -28,11 +28,26 @@
 - **Avatars**: Integration with AI face generation APIs (e.g. Generated Photos / This Person Does Not Exist)  
 - **Frontend**: Filament components + TailwindCSS  
 
-## 📂 Project Structure
-```text
-/app
-/resources
-    /views
-    /css
-/routes
-/database
+## Installation
+
+# Clone the repo
+git clone https://github.com/your-org/projectopia.git
+
+cd projectopia
+
+# Install dependencies
+composer install
+npm install && npm run build
+
+# Copy environment file
+cp .env.example .env
+
+# Generate app key
+php artisan key:generate
+
+# Run migrations
+php artisan migrate --seed
+
+# Start dev server
+php artisan serve
+
