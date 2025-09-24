@@ -1,9 +1,4 @@
 <div>
-    <!-- Trigger -->
-    <button wire:click="open" class="rounded-xl px-4 py-2 bg-emerald-600 text-white">
-        Open Persona Chat
-    </button>
-
     <!-- Modal -->
     @if($isOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
@@ -11,10 +6,20 @@
 
                 <!-- Header -->
                 <header class="flex items-center gap-3 px-3 py-3 bg-[#075E54]">
-                    <button wire:click="close" class="p-2">
-                        ←
-                    </button>
-                    <h2 class="font-semibold">Persona Chat</h2>
+                    <button wire:click="close" class="p-2">←</button>
+                    @if($persona)
+                        @if($persona->avatar_url)
+                            <img src="{{ $persona->avatar_url }}" alt="{{ $persona->name }}" class="h-10 w-10 rounded-full border border-white/20 object-cover">
+                        @else
+                            <div class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-sm">{{ Str::of($persona->name)->explode(' ')->map(fn($p)=>Str::substr($p,0,1))->take(2)->implode('') }}</div>
+                        @endif
+                        <div class="leading-tight">
+                            <div class="font-semibold text-sm">{{ $persona->name }}</div>
+                            <div class="text-[11px] text-white/80">{{ $persona->role }}</div>
+                        </div>
+                    @else
+                        <h2 class="font-semibold">Chat</h2>
+                    @endif
                 </header>
 
                 <!-- Messages -->

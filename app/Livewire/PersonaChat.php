@@ -2,16 +2,23 @@
 
 namespace App\Livewire;
 
+use App\Models\Persona;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class PersonaChat extends Component
 {
     public $isOpen = false;
     public $message = '';
     public $messages = [];
+    public $personaId = null;
+    public ?Persona $persona = null;
 
-    public function open()
+    #[On('open-persona-chat')]
+    public function open($id = null)
     {
+        $this->personaId = $id;
+        $this->persona = $id ? Persona::query()->find($id) : null;
         $this->isOpen = true;
     }
 

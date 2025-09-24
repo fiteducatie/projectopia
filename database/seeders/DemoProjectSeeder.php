@@ -46,7 +46,7 @@ class DemoProjectSeeder extends Seeder
             'name' => 'Maria Jensen',
         ], [
             'role' => 'Manager Pretpark',
-            'avatar_url' => null,
+            'avatar_url' => 'https://i.pravatar.cc/150?img=49',
             'goals' => 'Hogere omzet en tevreden bezoekers.',
             'traits' => 'Resultaatgericht, praktisch.',
             'communication_style' => 'Direct, to-the-point.',

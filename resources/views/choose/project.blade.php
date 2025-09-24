@@ -44,19 +44,7 @@
                     <h3 class="font-semibold mb-3">Betrokkenen</h3>
                     <div class="space-y-3">
                         @forelse ($project->personas as $persona)
-                            <div class="rounded-lg border border-slate-200 p-3">
-                                <div class="font-semibold">{{ $persona->role }}: {{ $persona->name }}</div>
-                                @if ($persona->goals)
-                                    <div class="text-slate-600 text-sm mt-1">Doelen: {{ \Illuminate\Support\Str::limit(strip_tags($persona->goals), 120) }}</div>
-                                @endif
-                                <div class="mt-3">
-                                    <a href="{{ url('/kies-project/personas/'.$persona->id.'/chat') }}" class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-sky-500 text-white text-sm hover:bg-sky-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/></svg>
-                                        <span>Chat</span>
-                                    </a>
-                                    <button onclick="openModal('personaModal{{ $persona->id }}')" class="ml-2 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-slate-200 text-slate-700 text-sm hover:bg-slate-50">Meer info</button>
-                                </div>
-                            </div>
+                            @livewire('persona-component', ['persona' => $persona], key('persona-'.$persona->id))
                         @empty
                             <div class="text-slate-500 text-sm">Geen betrokkenen toegevoegd.</div>
                         @endforelse
@@ -117,35 +105,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function openModal(id){ document.getElementById(id)?.classList.remove('hidden') }
-        function closeModal(id){ document.getElementById(id)?.classList.add('hidden') }
-        function openChat(id, name, role){
-            const root = document.getElementById('personaChat');
-            const header = document.getElementById('personaChatHeader');
-            header.textContent = `Chat met ${role} – ${name}`;
-            root.classList.remove('hidden');
-            root.classList.add('flex');
-        }
-        function closeChat(){
-            const root = document.getElementById('personaChat');
-            root.classList.add('hidden');
-            root.classList.remove('flex');
-        }
-        function sendChat(){
-            const input = document.getElementById('personaChatInput');
-            const container = document.querySelector('#personaChatBody .p-4');
-            const text = input.value.trim();
-            if(!text) return;
-            const mine = document.createElement('div');
-            mine.className = 'flex justify-end';
-            mine.innerHTML = `<div class=\"max-w-[80%] rounded-2xl rounded-br-sm bg-sky-500 text-white px-3 py-2\">${text}</div>`;
-            container.appendChild(mine);
-            input.value='';
-            document.getElementById('personaChatBody').scrollTop = 1e6;
-        }
-    </script>
     @livewire('persona-chat')
     @livewireScripts
 </body>
