@@ -22,7 +22,7 @@ class DemoProjectSeeder extends Seeder
         ]);
 
         $team = Team::query()->firstOrCreate([
-            'name' => 'Demo Team',
+            'name' => 'CURIO TTSD',
         ], [
             'owner_id' => $user->id,
         ]);

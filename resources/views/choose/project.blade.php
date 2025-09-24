@@ -1,14 +1,8 @@
-<!doctype html>
-<html lang="nl">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $project->name }} – Projectopia</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+@extends('layouts.guest')
 
-</head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
-    <div class="max-w-4xl mx-auto px-6 py-10">
+@section('title', $project->name . ' – Projectopia')
+
+@section('content')
         <a href="{{ route('choose.team.projects', $project->team) }}" class="text-sky-600 hover:underline">← Terug naar projecten</a>
         <div class="mt-3 flex items-start justify-between gap-4">
             <div>
@@ -56,8 +50,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modals -->
+@endsection
+
+@section('scripts')
     <div id="contextModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/40" onclick="closeModal('contextModal')"></div>
         <div class="relative w-full max-w-2xl rounded-xl bg-white p-6 shadow-lg max-h-[80vh] overflow-y-auto">
@@ -107,7 +102,10 @@
     </div>
     @livewire('persona-chat')
     @livewireScripts
-</body>
-</html>
+    <script>
+        function openModal(id){ document.getElementById(id)?.classList.remove('hidden') }
+        function closeModal(id){ document.getElementById(id)?.classList.add('hidden') }
+    </script>
+@endsection
 
 
