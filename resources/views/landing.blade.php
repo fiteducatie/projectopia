@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Projectopia – AI-projectsupport & simulatie</title>
         <meta name="description" content="Projectopia: AI-ondersteuning voor projecten in het onderwijs. Genereer backlog, plan sprints en simuleer stakeholders.">
-        <link rel="icon" href="/favicon.ico">
+        <link rel="icon" href="/images/logo.png">
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             :root { --pri:#0ea5e9; --pri-600:#0284c7; --acc:#22c55e }
@@ -17,7 +17,9 @@
     <body class="min-h-screen bg-hero text-slate-900">
         <header class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 font-semibold">
-                <span class="inline-block h-6 w-6 rounded-md bg-sky-500"></span>
+                <div class="logo">
+                    <img src="/images/logo.png" alt="Projectopia" class="h-10 w-10">
+                </div>
                 <span>Projectopia</span>
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm">
