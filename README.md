@@ -57,31 +57,35 @@
     npm install && npm run build
     ```
 
-3. Copy environment file
+3. Copy environment file and set your variables
 
     ```bash
     cp .env.example .env
     ```
 
-4. Generate app key
+4. Edit the `.env` file and set your database connection and OpenAI API keys:
+    * You can get your OpenAI API key for the `OPENAI_API_KEY` field from the [OpenAI Platform website](https://platform.openai.com/settings/organization/api-keys).
+    * To get the organization ID for the `OPENAI_ORGANIZATION` field go to [OpenAI Organization Settings](https://platform.openai.com/settings/organization/general).
+
+5. Generate app key
 
     ```bash
     php artisan key:generate
     ```
 
-5. Create the sqlite database file
+6. Create the sqlite database file
 
     ```bash
     touch database/database.sqlite
     ```
     
-6. Run migrations
+7. Run migrations
 
     ```bash
     php artisan migrate --seed
     ```
 
-7. Start dev server
+8. Start dev server
 
     ```bash
     php artisan serve
