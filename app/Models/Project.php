@@ -45,4 +45,8 @@ class Project extends Model
     {
         return $this->hasMany(BacklogItem::class);
     }
+    public function userStories(): HasMany
+    {
+        return $this->hasMany(UserStory::class);
+    }
 }

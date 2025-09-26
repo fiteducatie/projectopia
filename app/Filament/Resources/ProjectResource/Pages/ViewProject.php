@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ProjectResource\Pages;
 
 use App\Filament\Resources\ProjectResource;
+use Dom\Text;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section as InfoSection;
@@ -12,6 +13,8 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
+use Filament\Infolists\Components\CodeEntry;
+use Phiki\Grammar\Grammar;
 
 class ViewProject extends ViewRecord
 {
@@ -58,7 +61,7 @@ class ViewProject extends ViewRecord
                             ->schema([
                                 TextEntry::make('constraints')->label('Randvoorwaarden')->markdown(),
                             ])->collapsible(),
-                    ]),
+                        ]),
 
                 InfoSection::make('Persona’s')
                     ->description('Belangrijkste stakeholders en doelgroepen')
@@ -77,6 +80,32 @@ class ViewProject extends ViewRecord
                             ])
                             ->columns(1),
                     ])->collapsed(false),
+
+                InfoSection::make('User Stories')
+                    ->description('Gedetailleerde beschrijvingen van functionaliteiten vanuit gebruikersperspectief.')
+                    ->schema([
+                        //TODO: not yet found out how to make a repeatable entry collapsible
+
+                        RepeatableEntry::make('userStories')
+                            ->schema([
+                                TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
+                                    ->limitList(1),
+                                TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
+                                    ->listWithLineBreaks()
+                                    ->bulleted(),
+                                TextEntry::make('mvp')
+                                    ->badge()
+                                    ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
+                                    ->color(fn ($state) => $state ? 'success' : 'secondary')
+                                    ->columnSpan(1),
+                                TextEntry::make('priority')->label('Prioriteit')->badge()->color(fn ($state) => match ($state) {
+                                    'high' => 'danger',
+                                    'medium' => 'warning',
+                                    'low' => 'success',
+                                    default => 'secondary',
+                                })->columnSpan(1),
+                            ])
+                    ])->collapsible(true),
             ]);
     }
 }

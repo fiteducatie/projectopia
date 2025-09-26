@@ -17,6 +17,8 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Hidden;
+use Filament\Schemas\Components\Utilities\Get;
 
 class ProjectResource extends Resource
 {
@@ -71,6 +73,53 @@ class ProjectResource extends Resource
                                     Forms\Components\RichEditor::make('constraints')->label('Randvoorwaarden')
                                         ->helperText('Som de belangrijkste beperkingen op; dit helpt bij prioriteren.'),
                                 ]),
+                        ]),
+                    Step::make('User Stories')
+                        ->schema([
+                            Section::make()
+                                ->description('Maak de scope van het project concreet door user stories aan te leveren.')
+                                ->schema([
+                                    Forms\Components\Repeater::make('user_stories_data')
+                                        ->relationship('userStories')
+                                        ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 30) . (isset($state['user_story']) && strlen($state['user_story']) > 30 ? '...' : '')))
+                                        ->label('User Stories')
+                                        ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
+                                        ->schema([
+                                            Forms\Components\TextInput::make('user_story')->label('User Story')->required()
+                                                ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
+                                            Forms\Components\Repeater::make('acceptance_criteria')
+                                                ->simple(
+                                                    Forms\Components\TextInput::make('acceptance_criteria')->label('Acceptatie Criterium')->required(),
+                                                ),
+                                            Forms\Components\Select::make('personas')
+                                                ->label('Persona\'s')
+                                                ->multiple()
+                                                ->relationship('personas', 'name')
+                                                ->searchable()
+                                                ->preload()
+                                                //TODO: only select personas related to this project. Code beneath works at frontend, not when saved. Working on it.
+                                                // ->getSearchResultsUsing(function($record){
+                                                //     return Persona::where('project_id', $record->project_id ?? 0)->pluck('name', 'id')->toArray();
+                                                // })
+                                                // ->getOptionLabelsUsing(function ($values) {
+                                                //     return Persona::whereIn('id', $values)->pluck('name')->toArray();
+                                                // })
+                                                ->helperText('Koppel relevante persona’s aan deze user story.'),
+                                            Forms\Components\Toggle::make('mvp')->label('MVP?')
+                                                ->helperText('Markeer deze user story als onderdeel van de Minimum Viable Product.'),
+                                            Forms\Components\Select::make('priority')->label('Prioriteit')
+                                                ->options([
+                                                    'low' => 'Laag',
+                                                    'medium' => 'Middel',
+                                                    'high' => 'Hoog',
+                                                ])->required()->default('medium')
+                                                ->helperText('Helpt bij het plannen en prioriteren van werk.'),
+                                        ])
+                                        ->collapsed()
+                                        ->minItems(1)
+                                        ->grid(1),
+                                ]),
+
                         ]),
                     Step::make('Tijdlijn')
                         ->schema([

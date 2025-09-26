@@ -21,4 +21,9 @@ class Persona extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function userStories()
+    {
+        return $this->belongsToMany(UserStory::class, 'persona_user_stories');
+    }
 }

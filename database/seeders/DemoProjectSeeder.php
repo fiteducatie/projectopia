@@ -8,7 +8,9 @@ use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\UserStory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DemoProjectSeeder extends Seeder
 {
@@ -118,7 +120,22 @@ class DemoProjectSeeder extends Seeder
             'sprint_id' => $sprint2->id,
             'status' => 'todo',
         ]);
+        UserStory::query()->updateOrCreate([
+            'project_id' => $project->id,
+            'user_story' => 'Als bezoeker wil ik tickets online kunnen kopen zodat ik snel toegang krijg tot het pretpark.',
+            'acceptance_criteria' => json_encode(['De bezoeker kan tickets selecteren', 'De bezoeker kan betalen met iDeal of creditcard', 'De bezoeker ontvangt een e-ticket per email']),
+            'personas' => json_encode([2]),
+            'priority' => 'high',
+        ]);
+
+
+        UserStory::query()->updateOrCreate([
+            'project_id' => $project->id,
+            'user_story' => 'Als bezoeker wil ik een soepele checkout zodat ik zonder problemen mijn tickets kan kopen.',
+            'acceptance_criteria' => json_encode(['De checkout valideert invoer correct', 'De gebruiker ontvangt een bevestiging na betaling']),
+            'personas' => json_encode([1, 2]),
+            'priority' => 'low',
+        ]);
     }
 }
-
 
