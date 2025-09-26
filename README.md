@@ -21,33 +21,72 @@
 - 🎮 **Gamified Learning** – project challenges, feedback rounds, and scenario-based play.  
 
 ## 🛠️ Tech Stack
-- **Backend**: [Laravel 11](https://laravel.com/)  
+- **Backend**: [Laravel 12](https://laravel.com/)  
 - **Admin Panel**: [FilamentPHP](https://filamentphp.com/)  
-- **Database**: MySQL / PostgreSQL  
+- **Database**: SQLite / MySQL
 - **AI Integration**: OpenAI API (for persona + backlog generation)  
 - **Avatars**: Integration with AI face generation APIs (e.g. Generated Photos / This Person Does Not Exist)  
 - **Frontend**: Filament components + TailwindCSS  
 
+## Requirements
+
+- PHP 8.3+
+- Composer
+- Node.js 22.12+
+- SQLite or MySQL
+- PHP Extensions (uncomment these in your `php.ini`):
+    - `extension=pdo_sqlite`
+    - `extension=pdo_mysql`
+    - `extension=zip`
+- OpenAI API Key (for AI features)
+
 ## Installation
 
-# Clone the repo
-git clone https://github.com/your-org/projectopia.git
+1. Clone the repo
 
-cd projectopia
+    ```bash
+    git clone https://github.com/your-org/projectopia.git
 
-# Install dependencies
-composer install
-npm install && npm run build
+    cd projectopia
+    ```
 
-# Copy environment file
-cp .env.example .env
+2. Install dependencies
 
-# Generate app key
-php artisan key:generate
+    ```bash
+    composer install
+    npm install && npm run build
+    ```
 
-# Run migrations
-php artisan migrate --seed
+3. Copy environment file and set your variables
 
-# Start dev server
-php artisan serve
+    ```bash
+    cp .env.example .env
+    ```
 
+4. Edit the `.env` file and set your database connection and OpenAI API keys:
+    * You can get your OpenAI API key for the `OPENAI_API_KEY` field from the [OpenAI Platform website](https://platform.openai.com/settings/organization/api-keys).
+    * To get the organization ID for the `OPENAI_ORGANIZATION` field go to [OpenAI Organization Settings](https://platform.openai.com/settings/organization/general).
+
+5. Generate app key
+
+    ```bash
+    php artisan key:generate
+    ```
+
+6. Create the sqlite database file
+
+    ```bash
+    touch database/database.sqlite
+    ```
+    
+7. Run migrations
+
+    ```bash
+    php artisan migrate --seed
+    ```
+
+8. Start dev server
+
+    ```bash
+    php artisan serve
+    ```
