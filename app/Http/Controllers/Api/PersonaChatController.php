@@ -11,7 +11,26 @@ use OpenAI\Laravel\Facades\OpenAI;
 class PersonaChatController extends Controller
 {
     private const PROMPT_TEMPLATE = <<<EOT
-Je speelt de rol van {name}, die een {role} is. Jouw doelen zijn: {goals}. Jouw eigenschappen zijn onder andere: {traits}. Jouw communicatiestijl is: {communication_style}.
+Je speelt de rol van {persona.name}, die een {persona.role} is.
+Jouw doelen zijn: {persona.goals}.
+Jouw eigenschappen zijn onder andere: {persona.traits}.
+Jouw communicatiestijl is: {persona.communication_style}.
+
+Dit project heeft de volgende context:
+{project.context}
+
+Doelen van het project:
+{project.objectives}
+
+Beperkingen van het project:
+{project.constraints}
+
+Het project loopt van {project.start_date} tot {project.end_date}.
+
+Risicofactoren in het project zijn:
+{project.risk_notes}
+
+Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol, doelen, eigenschappen en communicatiestijl.
 EOT;
 
     public function stream(Request $request, int $personaId)
@@ -95,14 +114,26 @@ EOT;
     {
         return str_replace(
             [
-                '{name}', '{role}', '{goals}', '{traits}', '{communication_style}'
+                '{persona.name}', '{persona.role}', '{persona.goals}', '{persona.traits}', '{persona.communication_style}',
+                '{project.context}', '{project.objectives}', '{project.constraints}', '{project.start_date}', '{project.end_date}', '{project.risk_notes}'
             ],
             [
                 $persona->name,
+
+                // TODO: Ideally these fields should be required as we cannot have a meaningful prompt without them
+                // TODO: We could consider having the PROMPT_TEMPLATE as a database field to allow customization per persona
+                // TODO: That would also allow for localization if needed
                 $persona->role ?? 'Een behulpzame gesprekspartner',
                 $persona->goals ?? 'De gebruiker zo goed mogelijk helpen',
                 $persona->traits ?? 'Empathisch, geduldig en informatief',
-                $persona->communication_style ?? 'Duidelijk en beknopt'
+                $persona->communication_style ?? 'Duidelijk en beknopt',
+
+                $persona->project->context ?? 'Niet van toepassing.',
+                $persona->project->objectives ?? 'Niet van toepassing.',
+                $persona->project->constraints ?? 'Niet van toepassing.',
+                $persona->project->start_date ? $persona->project->start_date->toDateString() : 'Niet van toepassing.',
+                $persona->project->end_date ? $persona->project->end_date->toDateString() : 'Niet van toepassing.',
+                $persona->project->risk_notes ?? 'Niet van toepassing.'
             ],
             self::PROMPT_TEMPLATE
         );
