@@ -31,6 +31,7 @@ Risicofactoren in het project zijn:
 {project.risk_notes}
 
 Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol, doelen, eigenschappen en communicatiestijl.
+Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot het project.
 EOT;
 
     public function stream(Request $request, int $personaId)
@@ -50,7 +51,7 @@ EOT;
 
             try {
                 $stream = OpenAI::chat()->createStreamed([
-                    'model' => 'gpt-4',
+                    'model' => 'gpt-4.1-mini',
                     'messages' => $messages,
                     'stream' => true,
                 ]);
@@ -74,7 +75,8 @@ EOT;
             } catch (\Exception $e) {
                 echo "data: " . json_encode([
                     'type' => 'error',
-                    'message' => 'Something went wrong. Please try again.'
+                    'message' => 'Something went wrong. Please try again.',
+                    'exception' => $e->getMessage()
                 ]) . "\n\n";
                 flush();
             }
