@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->tenant(Team::class, null, 'team')
             ->tenantMenu(true)
             ->brandName('Projectopia')
-            ->font('Outfit')
+            ->font('Helvetica')
             ->colors([
                 // nice purple color
                 'primary' => Color::Purple,

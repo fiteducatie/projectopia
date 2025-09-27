@@ -39,7 +39,7 @@ class ProjectResource extends Resource
                     Step::make('Context')
                         ->schema([
                             Section::make()
-                                ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')
+                                ->description('Basis projectinformatie')
                                 ->schema([
                                     Forms\Components\TextInput::make('name')->label('Naam')
                                         ->helperText('Korte, herkenbare projectnaam.')
@@ -52,21 +52,19 @@ class ProjectResource extends Resource
                                             'event' => 'Evenement',
                                         ])->required()->default('software')
                                         ->helperText('Bepaalt de standaardtemplates (Software, Marketing, Evenement).'),
-                                    Forms\Components\RichEditor::make('context')->label('Context')
-                                        ->helperText('1–3 alinea’s met achtergrond, doelgroep en gewenste impact.'),
                                 ]),
-                        ]),
-                    Step::make('Doelstellingen')
-                        ->schema([
                             Section::make()
-                                ->description('Welke meetbare doelen moet het project bereiken? Denk aan KPI’s of leerdoelen.')
+                                ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')
+                                ->schema([
+                                    Forms\Components\RichEditor::make('context')->label('Context')
+                                        ->helperText('1–3 alinea\'s met achtergrond, doelgroep en gewenste impact.'),
+                                ]),
+                            Section::make()
+                                ->description('Welke meetbare doelen moet het project bereiken? Denk aan KPI\'s of leerdoelen.')
                                 ->schema([
                                     Forms\Components\RichEditor::make('objectives')->label('Doelstellingen')
                                         ->helperText('Gebruik opsommingen; maak doelen concreet en toetsbaar.'),
                                 ]),
-                        ]),
-                    Step::make('Randvoorwaarden')
-                        ->schema([
                             Section::make()
                                 ->description('Beperkingen zoals tijd, budget, techniek, compliance of scope-afbakening.')
                                 ->schema([
@@ -74,7 +72,7 @@ class ProjectResource extends Resource
                                         ->helperText('Som de belangrijkste beperkingen op; dit helpt bij prioriteren.'),
                                 ]),
                         ]),
-                    Step::make('User Stories')
+                    Step::make('User Stories / Requirements')
                         ->schema([
                             Section::make()
                                 ->description('Maak de scope van het project concreet door user stories aan te leveren.')
@@ -88,8 +86,12 @@ class ProjectResource extends Resource
                                             Forms\Components\TextInput::make('user_story')->label('User Story')->required()
                                                 ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
                                             Forms\Components\Repeater::make('acceptance_criteria')
+                                                ->label('Acceptatie Criterium')
                                                 ->simple(
-                                                    Forms\Components\TextInput::make('acceptance_criteria')->label('Acceptatie Criterium')->required(),
+                                                    Forms\Components\TextInput::make('acceptance_criteria')
+                                                        ->required()
+                                                        ->helperText('Beschrijf welke aanvullende details de user story moet hebben.')
+                                                        ->label('Acceptatie Criterium'),
                                                 ),
                                             Forms\Components\Select::make('personas')
                                                 ->label('Persona\'s')
@@ -121,24 +123,6 @@ class ProjectResource extends Resource
                                 ]),
 
                         ]),
-                    Step::make('Tijdlijn')
-                        ->schema([
-                            Section::make()
-                                ->description('Geef de planning aan. Je kunt dit later altijd aanpassen.')
-                                ->schema([
-                                    Forms\Components\DatePicker::make('start_date')->label('Startdatum')
-                                        ->helperText('Start van Sprint 1 of project.'),
-                                    Forms\Components\DatePicker::make('end_date')->label('Einddatum')
-                                        ->helperText('Gewenste opleverdatum.'),
-                                    Forms\Components\Select::make('difficulty')->label('Moeilijkheid')
-                                        ->options([
-                                            'easy' => 'Makkelijk',
-                                            'normal' => 'Normaal',
-                                            'hard' => 'Moeilijk',
-                                        ])->default('normal')
-                                        ->helperText('Indicatie voor AI-planning; heeft geen harde gevolgen.'),
-                                ]),
-                        ]),
                     Step::make('Persona\'s')
                         ->schema([
                             Section::make()
@@ -167,16 +151,7 @@ class ProjectResource extends Resource
                                         ->grid(2),
                                 ]),
                         ]),
-                    Step::make('Risico\'s')
-                        ->schema([
-                            Section::make()
-                                ->description('Welke risico’s zie je nu al? Hoe kun je ze beperken?')
-                                ->schema([
-                                    Forms\Components\RichEditor::make('risk_notes')->label('Risico\'s')
-                                        ->helperText('Beschrijf risico + mitigerende actie (bijv. capaciteit, afhankelijkheden, privacy).'),
-                                ]),
-                        ]),
-                ])
+                 ])
                 ->skippable()
                 ->persistStepInQueryString()
                 ->columnSpanFull(),
