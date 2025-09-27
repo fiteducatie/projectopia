@@ -78,7 +78,6 @@ class ProjectResource extends Resource
                                 ->description('Maak de scope van het project concreet door user stories aan te leveren.')
                                 ->schema([
                                     Forms\Components\Repeater::make('user_stories_data')
-                                        ->relationship('userStories')
                                         ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 30) . (isset($state['user_story']) && strlen($state['user_story']) > 30 ? '...' : '')))
                                         ->label('User Stories')
                                         ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
@@ -96,9 +95,8 @@ class ProjectResource extends Resource
                                             Forms\Components\Select::make('personas')
                                                 ->label('Persona\'s')
                                                 ->multiple()
-                                                ->relationship('personas', 'name')
+                                                ->options([])
                                                 ->searchable()
-                                                ->preload()
                                                 //TODO: only select personas related to this project. Code beneath works at frontend, not when saved. Working on it.
                                                 // ->getSearchResultsUsing(function($record){
                                                 //     return Persona::where('project_id', $record->project_id ?? 0)->pluck('name', 'id')->toArray();
@@ -126,7 +124,7 @@ class ProjectResource extends Resource
                     Step::make('Persona\'s')
                         ->schema([
                             Section::make()
-                                ->description('Voeg belangrijke stakeholders of doelgroepen toe. Ze worden gebruikt in de dialoogkamer.')
+                                ->description('Voeg belangrijke stakeholders of doelgroepen toe. Ze worden gebruikt om mee te communiceren om meer van het project te weten te komen.')
                                 ->schema([
                                     Forms\Components\Repeater::make('personas_data')
                                         ->relationship('personas')

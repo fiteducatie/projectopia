@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\BacklogItem;
 use App\Models\Persona;
 use App\Models\Project;
 use App\Models\Sprint;
@@ -65,62 +64,7 @@ class DemoProjectSeeder extends Seeder
             'communication_style' => 'Coachend, vragend.',
         ]);
 
-        $sprint1 = Sprint::query()->updateOrCreate([
-            'project_id' => $project->id,
-            'number' => 1,
-        ], [
-            'start_date' => now()->startOfMonth(),
-            'end_date' => now()->startOfMonth()->addWeeks(2),
-            'capacity' => 20,
-        ]);
-
-        $sprint2 = Sprint::query()->updateOrCreate([
-            'project_id' => $project->id,
-            'number' => 2,
-        ], [
-            'start_date' => now()->startOfMonth()->addWeeks(2),
-            'end_date' => now()->startOfMonth()->addWeeks(4),
-            'capacity' => 20,
-        ]);
-
-        BacklogItem::query()->updateOrCreate([
-            'project_id' => $project->id,
-            'title' => 'Epic: Ticketing',
-        ], [
-            'epic' => 'Ticketing',
-            'description' => 'Als bezoeker wil ik tickets online kunnen kopen.',
-            'acceptance_criteria' => 'Betaal met iDeal/creditcard, ontvang e-ticket.',
-            'priority' => 1,
-            'effort' => 8,
-            'status' => 'todo',
-        ]);
-
-        BacklogItem::query()->updateOrCreate([
-            'project_id' => $project->id,
-            'title' => 'User story: Checkout flow',
-        ], [
-            'epic' => 'Ticketing',
-            'description' => 'Als bezoeker wil ik een soepele checkout.',
-            'acceptance_criteria' => 'Validatie, foutmeldingen, bevestiging.',
-            'priority' => 1,
-            'effort' => 5,
-            'sprint_id' => $sprint1->id,
-            'status' => 'todo',
-        ]);
-
-        BacklogItem::query()->updateOrCreate([
-            'project_id' => $project->id,
-            'title' => 'User story: Rit-informatie pagina',
-        ], [
-            'epic' => 'Informatie',
-            'description' => 'Als bezoeker wil ik ritdetails en wachttijd zien.',
-            'acceptance_criteria' => 'Naam, lengte-eisen, wachttijd.',
-            'priority' => 2,
-            'effort' => 3,
-            'sprint_id' => $sprint2->id,
-            'status' => 'todo',
-        ]);
-        UserStory::query()->updateOrCreate([
+       UserStory::query()->updateOrCreate([
             'project_id' => $project->id,
             'user_story' => 'Als bezoeker wil ik tickets online kunnen kopen zodat ik snel toegang krijg tot het pretpark.',
             'acceptance_criteria' => json_encode(['De bezoeker kan tickets selecteren', 'De bezoeker kan betalen met iDeal of creditcard', 'De bezoeker ontvangt een e-ticket per email']),
