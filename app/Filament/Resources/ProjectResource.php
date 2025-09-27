@@ -151,6 +151,44 @@ class ProjectResource extends Resource
                                         ->grid(2),
                                 ]),
                         ]),
+                    Step::make('Bijlagen')
+                        ->schema([
+                            Section::make()
+                                ->description('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s. Voeg extra details toe.')
+                                ->schema([
+                                    Forms\Components\Repeater::make('attachments_data')
+                                        ->label('Bijlagen')
+                                        ->helperText('Upload bestanden en voeg extra informatie toe.')
+                                        ->itemLabel(fn (array $state): string => $state['title'] ?? 'Bijlage')
+                                        ->schema([
+                                            Forms\Components\TextInput::make('title')
+                                                ->label('Titel')
+                                                ->required()
+                                                ->helperText('Korte titel voor deze bijlage.')
+                                                ->maxLength(255),
+                                            Forms\Components\FileUpload::make('file')
+                                                ->label('Bestand')
+                                                ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*'])
+                                                ->maxSize(10240) // 10MB
+                                                ->disk('public')
+                                                ->directory('attachments')
+                                                ->visibility('public')
+                                                ->imagePreviewHeight('250')
+                                                ->loadingIndicatorPosition('left')
+                                                ->panelAspectRatio('2:1')
+                                                ->panelLayout('integrated')
+                                                ->helperText('PDF, Word, afbeeldingen of video\'s. Maximaal 10MB.')
+                                                ->required(),
+                                            Forms\Components\TextArea::make('details')
+                                                ->label('Extra details')
+                                                ->helperText('Beschrijf wat dit bestand bevat en waarom het relevant is.')
+                                                ->rows(3),
+                                        ])
+                                        ->collapsed()
+                                        ->grid(1)
+                                        ->addActionLabel('Bijlage toevoegen'),
+                                ]),
+                        ]),
                  ])
                 ->skippable()
                 ->persistStepInQueryString()
