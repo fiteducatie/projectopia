@@ -28,6 +28,7 @@ class Project extends Model implements HasMedia
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+
     ];
 
     public function team(): BelongsTo
@@ -40,15 +41,6 @@ class Project extends Model implements HasMedia
         return $this->hasMany(Persona::class);
     }
 
-    public function sprints(): HasMany
-    {
-        return $this->hasMany(Sprint::class);
-    }
-
-    public function backlogItems(): HasMany
-    {
-        return $this->hasMany(BacklogItem::class);
-    }
     public function userStories(): HasMany
     {
         return $this->hasMany(UserStory::class);

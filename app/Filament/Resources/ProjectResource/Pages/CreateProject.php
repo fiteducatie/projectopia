@@ -16,6 +16,7 @@ class CreateProject extends CreateRecord
      * @var array<int, array<string, mixed>>
      */
     protected array $personasData = [];
+    protected array $userStoriesData = [];
     protected array $attachmentsData = [];
 
     protected function mutateFormDataBeforeCreate(array $data): array
@@ -28,6 +29,10 @@ class CreateProject extends CreateRecord
         // Extract personas repeater data so it doesn't attempt to persist on the project model
         $this->personasData = $data['personas_data'] ?? [];
         unset($data['personas_data']);
+
+        // Extract user stories repeater data so it doesn't attempt to persist on the project model
+        $this->userStoriesData = $data['user_stories_data'] ?? [];
+        unset($data['user_stories_data']);
 
         // Extract attachments repeater data so it doesn't attempt to persist on the project model
         $this->attachmentsData = $data['attachments_data'] ?? [];
@@ -47,6 +52,34 @@ class CreateProject extends CreateRecord
                 'goals' => $p['goals'] ?? null,
                 'traits' => $p['traits'] ?? null,
                 'communication_style' => $p['communication_style'] ?? null,
+            ]);
+        }
+
+        // Handle user stories
+        $userStories = $this->userStoriesData ?? [];
+        foreach ($userStories as $story) {
+            // Convert acceptance criteria from repeater format to array
+            $acceptanceCriteria = [];
+            if (isset($story['acceptance_criteria']) && is_array($story['acceptance_criteria'])) {
+                foreach ($story['acceptance_criteria'] as $criteria) {
+                    if (isset($criteria['criteria']) && !empty($criteria['criteria'])) {
+                        $acceptanceCriteria[] = $criteria['criteria'];
+                    }
+                }
+            }
+
+            // Convert personas from comma-separated string to array
+            $personas = [];
+            if (isset($story['personas']) && !empty($story['personas'])) {
+                $personas = array_map('trim', explode(',', $story['personas']));
+            }
+
+            $this->record->userStories()->create([
+                'user_story' => $story['user_story'] ?? '',
+                'acceptance_criteria' => $acceptanceCriteria,
+                'personas' => $personas,
+                'mvp' => $story['mvp'] ?? false,
+                'priority' => $story['priority'] ?? 'medium',
             ]);
         }
 

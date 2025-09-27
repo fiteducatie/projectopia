@@ -21,10 +21,9 @@ class UserStory extends Model
 
     protected $casts = [
         'user_story' => 'string',
-        'acceptance_criteria' => 'array',
-        'personas' => 'array',
+        'acceptance_criteria' => 'json',
+        'personas' => 'json',
         'mvp' => 'boolean',
-
     ];
 
     public function project(): BelongsTo
@@ -32,8 +31,39 @@ class UserStory extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function personas()
+    // Custom accessors to handle double-encoded JSON
+    public function getAcceptanceCriteriaAttribute($value)
     {
-        return $this->belongsToMany(Persona::class, 'persona_user_stories');
+        if (is_string($value)) {
+            // Handle double-encoded JSON
+            $decoded = json_decode($value, true);
+            if (is_string($decoded)) {
+                // It's still a JSON string, decode again
+                $decoded = json_decode($decoded, true);
+            }
+            return is_array($decoded) ? $decoded : [$value];
+        }
+        return $value;
     }
+
+    public function getPersonasAttribute($value)
+    {
+        if (is_string($value)) {
+            // Handle double-encoded JSON
+            $decoded = json_decode($value, true);
+            if (is_string($decoded)) {
+                // It's still a JSON string, decode again
+                $decoded = json_decode($decoded, true);
+            }
+            return is_array($decoded) ? $decoded : [$value];
+        }
+        return $value;
+    }
+
+    // Note: personas are stored as JSON in the personas column, not as a relationship
+    // The relationship method is commented out to avoid conflicts with the JSON column
+    // public function personas()
+    // {
+    //     return $this->belongsToMany(Persona::class, 'persona_user_stories');
+    // }
 }

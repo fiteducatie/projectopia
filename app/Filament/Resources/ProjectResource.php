@@ -78,7 +78,7 @@ class ProjectResource extends Resource
                                 ->description('Maak de scope van het project concreet door user stories aan te leveren.')
                                 ->schema([
                                     Forms\Components\Repeater::make('user_stories_data')
-                                        ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 30) . (isset($state['user_story']) && strlen($state['user_story']) > 30 ? '...' : '')))
+                                        ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 200) . (isset($state['user_story']) && strlen($state['user_story']) > 200 ? '...' : '')))
                                         ->label('User Stories')
                                         ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
                                         ->schema([
@@ -87,16 +87,15 @@ class ProjectResource extends Resource
                                             Forms\Components\Repeater::make('acceptance_criteria')
                                                 ->label('Acceptatie Criterium')
                                                 ->simple(
-                                                    Forms\Components\TextInput::make('acceptance_criteria')
+                                                    Forms\Components\TextInput::make('criteria')
                                                         ->required()
                                                         ->helperText('Beschrijf welke aanvullende details de user story moet hebben.')
                                                         ->label('Acceptatie Criterium'),
-                                                ),
-                                            Forms\Components\Select::make('personas')
+                                                )
+                                                ->defaultItems(1),
+                                            Forms\Components\TextInput::make('personas')
                                                 ->label('Persona\'s')
-                                                ->multiple()
-                                                ->options([])
-                                                ->searchable()
+                                                ->helperText('Voer de namen van relevante persona\'s in (gescheiden door komma\'s).')
                                                 //TODO: only select personas related to this project. Code beneath works at frontend, not when saved. Working on it.
                                                 // ->getSearchResultsUsing(function($record){
                                                 //     return Persona::where('project_id', $record->project_id ?? 0)->pluck('name', 'id')->toArray();
