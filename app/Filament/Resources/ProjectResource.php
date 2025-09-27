@@ -75,9 +75,11 @@ class ProjectResource extends Resource
                     Step::make('User Stories / Requirements')
                         ->schema([
                             Section::make()
+
                                 ->description('Maak de scope van het project concreet door user stories aan te leveren.')
                                 ->schema([
                                     Forms\Components\Repeater::make('user_stories_data')
+                                        ->relationship('userStories')
                                         ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 200) . (isset($state['user_story']) && strlen($state['user_story']) > 200 ? '...' : '')))
                                         ->label('User Stories')
                                         ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
