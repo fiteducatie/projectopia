@@ -160,6 +160,8 @@ class ProjectResource extends Resource
                                                 ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
                                             Repeater::make('workingHours')
                                                 ->relationship('workingHours')
+                                                ->label('Werkdagen / Tijden')
+                                                ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg.')
                                                 ->schema([
                                                     Select::make('day_of_week')
                                                         ->options([
