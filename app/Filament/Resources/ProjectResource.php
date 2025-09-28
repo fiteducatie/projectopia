@@ -231,7 +231,7 @@ class ProjectResource extends Resource
                                             ->collection('attachments')
                                             ->downloadable()
                                             ->multiple()
-                                            ->panelLayout('grid')
+                                            ->panelLayout('grid', ['columns' => 6])
                                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*'])
                                             ->maxSize(10240) // 10MB
                                             ->reorderable()
