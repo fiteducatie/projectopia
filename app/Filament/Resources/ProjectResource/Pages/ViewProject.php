@@ -116,19 +116,23 @@ class ViewProject extends ViewRecord
                             ->schema([
                                 RepeatableEntry::make('personas')
                                     ->schema([
-                                        Grid::make(5)
+                                        Grid::make(2)
                                             ->schema([
                                                 ImageEntry::make('avatar_url')->circular()->height(56)->columnSpan(1),
-                                                TextEntry::make('role')->label('Rol')->weight('semibold')->columnSpan(2),
-                                                TextEntry::make('name')->label('Naam')->columnSpan(2),
-                                                TextEntry::make('goals')->label('Doelen')->columnSpanFull(),
-                                                TextEntry::make('traits')->label('Eigenschappen')->columnSpan(3),
-                                                TextEntry::make('communication_style')->label('Communicatiestijl')->columnSpan(2),
+                                                Grid::make(1)
+                                                    ->schema([
+                                                        TextEntry::make('role')->label('Rol')->weight('semibold'),
+                                                        TextEntry::make('name')->label('Naam'),
+                                                    ])->columnSpan(1),
                                             ]),
+
+                                        TextEntry::make('goals')->label('**Doelen**')->markdown()->columnSpanFull(),
+                                        TextEntry::make('traits')->label('**Eigenschappen**')->markdown()->columnSpanFull(),
+                                        TextEntry::make('communication_style')->label('**Communicatiestijl**')->markdown()->columnSpanFull(),
 
                                         // Bestanden sectie per persona
                                         TextEntry::make('attachments_list')
-                                            ->label('Kennis / in bezit van de volgende bestanden')
+                                            ->label('**Kennis / in bezit van de volgende bestanden**')
                                             ->getStateUsing(function ($record) {
                                                 $attachments = $record->attachments()->get();
 
