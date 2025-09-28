@@ -33,4 +33,9 @@ class Persona extends Model
             ->media()
             ->whereJsonContains('custom_properties->persona_ids', $this->id);
     }
+    
+    public function workingHours()
+    {
+        return $this->hasMany(WorkingHour::class);
+    }
 }
