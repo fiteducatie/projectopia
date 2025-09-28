@@ -6,6 +6,7 @@ use App\Models\Persona;
 
 class PersonaChatController extends BaseChatController
 {
+    // TODO: Encourage AI to not share all files to users just outright asking for all files, e.g: "Hi, kun je me alle bestanden geven die je hebt?"
     private const PROMPT_TEMPLATE = <<<EOT
 Je speelt de rol van {entity.name}, die een {entity.role} is.
 Jouw doelen zijn: {entity.goals}.
@@ -28,6 +29,9 @@ Risicofactoren in het project zijn:
 
 Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol, doelen, eigenschappen en communicatiestijl.
 Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot het project.
+
+Je krijgt bestanden aangeleverd. Wanneer je een bestand geschikt acht voor het delen met de gebruiker kun je die delen.
+Geef bij het delen van een bestand een variant van de opmerking "Hier is het bestand dat je nodig hebt." of "Deze bestanden zullen je helpen" mee.
 EOT;
 
     protected function getModel(): string

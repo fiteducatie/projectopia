@@ -41,7 +41,7 @@
                                 'bg-red-600': message.error
                             }">
                                 <!-- Typing indicator for empty streaming messages -->
-                                <div x-show="message.streaming && !message.text" class="flex items-center space-x-1">
+                                <div x-show="message.streaming && !message.text && (!message.files || message.files.length === 0)" class="flex items-center space-x-1">
                                     <div class="flex space-x-1">
                                         <div class="w-2 h-2 bg-slate-300 rounded-full animate-bounce"></div>
                                         <div class="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
@@ -50,12 +50,47 @@
                                 </div>
 
                                 <!-- Message text -->
-                                <div x-show="!message.streaming || message.text">
-                                    <p class="text-sm">
-                                        <span x-text="message.text"></span>
-                                        <span x-show="message.streaming" class="inline-block w-2 h-4 bg-slate-300 animate-pulse ml-1"></span>
-                                    </p>
-                                    <span class="block text-right text-xs"
+                                <div x-show="!message.streaming || message.text || (message.files && message.files.length > 0)">
+                                    <!-- Files -->
+                                    <template x-if="message.files && message.files.length > 0">
+                                        <div class="space-y-2 mb-2">
+                                            <template x-for="file in message.files" :key="file.file_name">
+                                                <div class="bg-slate-600/50 rounded-lg p-3 border border-slate-600">
+                                                    <div class="flex items-center gap-3">
+                                                        <!-- File icon -->
+                                                        <div class="flex-shrink-0">
+                                                            <div class="w-10 h-10 bg-slate-500 rounded-lg flex items-center justify-center">
+                                                                <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex-1 min-w-0">
+                                                            <div class="text-sm font-medium text-white truncate" x-text="file.file_name"></div>
+                                                            <div class="text-xs text-slate-300" x-text="getFileExtension(file.file_name).toUpperCase() + ' File'"></div>
+                                                        </div>
+
+                                                        <button @click="downloadFile(file.file_url, file.file_name)"
+                                                                class="flex-shrink-0 p-2 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-colors">
+                                                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <template x-if="message.text">
+                                        <p class="text-sm">
+                                            <span x-text="message.text"></span>
+                                            <span x-show="message.streaming" class="inline-block w-2 h-4 bg-slate-300 animate-pulse ml-1"></span>
+                                        </p>
+                                    </template>
+
+                                    <span class="block text-right text-xs mt-1"
                                           :class="message.type === 'outgoing' ? 'text-emerald-100/90' : 'text-slate-300'"
                                           x-text="message.time"></span>
                                 </div>
@@ -100,12 +135,13 @@
                 isTyping: false,
                 currentStreamingIndex: null,
 
-                addMessage(type, text, streaming = false) {
+                addMessage(type, text, streaming = false, files = []) {
                     const message = {
                         type: type,
                         text: text,
                         time: this.getCurrentTime(),
-                        streaming: streaming
+                        streaming: streaming,
+                        files: files
                     };
 
                     this.messages.push(message);
@@ -116,6 +152,16 @@
                 updateMessage(index, text) {
                     if (this.messages[index]) {
                         this.messages[index].text = text;
+                    }
+                },
+
+                addFileToMessage(index, file) {
+                    if (this.messages[index]) {
+                        if (!this.messages[index].files) {
+                            this.messages[index].files = [];
+                        }
+                        this.messages[index].files.push(file);
+                        this.scrollToBottom();
                     }
                 },
 
@@ -132,6 +178,20 @@
                         this.messages[index].error = true;
                         this.messages[index].streaming = false;
                     }
+                },
+
+                getFileExtension(filename) {
+                    return filename.split('.').pop() || 'file';
+                },
+
+                downloadFile(url, filename) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 },
 
                 async sendMessage() {
@@ -221,6 +281,11 @@
                                             fullResponse += parsed.content;
                                             this.updateMessage(this.currentStreamingIndex, fullResponse);
                                             this.scrollToBottom();
+                                        } else if (parsed.type === 'file') {
+                                            this.addFileToMessage(this.currentStreamingIndex, {
+                                                file_name: parsed.file_name,
+                                                file_url: parsed.file_url
+                                            });
                                         } else if (parsed.type === 'done') {
                                             this.completeMessage(this.currentStreamingIndex);
                                             return;

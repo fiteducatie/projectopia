@@ -25,33 +25,52 @@ abstract class BaseChatController extends Controller
         $entity = $this->findEntity($entityId);
         $messages = $this->prepareMessages($request->input('messages'), $entity);
 
-        return response()->stream(function() use ($messages) {
+        return response()->stream(function () use ($messages, $entity) {
             echo "data: " . json_encode(['type' => 'start']) . "\n\n";
             flush();
 
+            $fileChoices = [];
+
+            $project = $this->getProjectFromEntity($entity);
+            $attachmentsToShare = $project->getMedia('*');
+
+            foreach ($attachmentsToShare as $attachment) {
+                $name = $attachment->file_name;
+                $description = $attachment->getCustomProperty('description') ?? 'No description available';
+                $fileChoices[$name] = $description;
+            }
+
+            $definition = $this->buildResponseSchema($fileChoices);
+
             try {
-                $stream = OpenAI::chat()->createStreamed([
-                    'model' => $this->getModel(),
-                    'messages' => $messages,
-                    'stream' => true,
+                $response = OpenAI::responses()->create([
+                    'model' => 'gpt-4.1-mini',
+                    'input' => $messages,
+                    'text' => [
+                        'format' => $definition,
+                    ],
                 ]);
 
-                foreach ($stream as $response) {
-                    if (isset($response->choices[0]->delta->content)) {
-                        $content = $response->choices[0]->delta->content;
+                $output = $response->outputText;
+                $content = json_decode($output);
+
+                foreach ($content->files_to_share as $file) {
+                    $attachment = $project->getMedia('*')->firstWhere('file_name', $file->value);
+                    if ($attachment) {
                         echo "data: " . json_encode([
-                            'type' => 'content',
-                            'content' => $content
+                            'type' => 'file',
+                            'file_name' => $attachment->file_name,
+                            'file_url' => $attachment->getFullUrl(),
                         ]) . "\n\n";
                         flush();
                     }
-
-                    if ($response->choices[0]->finishReason !== null) {
-                        echo "data: " . json_encode(['type' => 'done']) . "\n\n";
-                        flush();
-                        break;
-                    }
                 }
+
+                echo "data: " . json_encode([
+                    'type' => 'content',
+                    'content' => $content->message,
+                ]) . "\n\n";
+                flush();
             } catch (\Exception $e) {
                 echo "data: " . json_encode([
                     'type' => 'error',
@@ -67,7 +86,7 @@ abstract class BaseChatController extends Controller
             'Content-Type' => 'text/plain',
             'Cache-Control' => 'no-cache',
             'Connection' => 'keep-alive',
-            'X-Accel-Buffering' => 'no',
+            'X-Accel-Buffering' => 'no', // Disable nginx buffering
         ]);
     }
 
@@ -95,6 +114,7 @@ abstract class BaseChatController extends Controller
     protected function buildPromptFromTemplate($entity): string
     {
         $project = $this->getProjectFromEntity($entity);
+
         $prompt = $this->getPromptTemplate();
 
         // Add persona and user story information for teamleaders
@@ -102,6 +122,7 @@ abstract class BaseChatController extends Controller
             $prompt .= "\n\nBESCHIKBARE PERSONA'S EN USER STORIES:\n";
             $prompt .= $this->getPersonasAndUserStoriesInfo($project);
         }
+
 
         return str_replace(
             $this->getTemplatePlaceholders(),
@@ -191,6 +212,51 @@ abstract class BaseChatController extends Controller
             $project && $project->end_date ? $project->end_date->toDateString() : 'Niet van toepassing.',
             $project ? ($project->risk_notes ?? 'Niet van toepassing.') : 'Niet van toepassing.'
         ];
+    }
+
+    private function buildResponseSchema(array $fileChoices): array
+    {
+        function fileOption(string $value, string $description): array
+        {
+            return [
+                'type' => 'object',
+                'properties' => [
+                    'value' => ['const' => $value],
+                    'description' => ['type' => 'string', 'const' => $description],
+                ],
+                'required' => ['value', 'description'],
+            ];
+        }
+
+        $items = [];
+        foreach ($fileChoices as $value => $desc) {
+            $items[] = fileOption($value, $desc);
+        }
+
+        $definition = [
+            'type' => 'json_schema',
+            'name' => 'filesArray',
+            'strict' => false,
+            'schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'message' => [
+                        'type' => 'string',
+                        'description' => "The persona's response message to the user.",
+                    ],
+                    'files_to_share' => [
+                        'type' => 'array',
+                        'description' => "Choose zero, one, or multiple files to offer to the user.",
+                        'items' => [
+                            'anyOf' => $items,
+                        ],
+                    ],
+                ],
+                'required' => ['message', 'files_to_share'],
+            ],
+        ];
+
+        return $definition;
     }
 
     protected abstract function findEntity(int $id);
