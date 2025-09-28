@@ -33,13 +33,7 @@ abstract class BaseChatController extends Controller
 
             $project = $this->getProjectFromEntity($entity);
 
-            // For personas, only provide their specific attachments
-            if ($this instanceof \App\Http\Controllers\Api\PersonaChatController) {
-                $attachmentsToShare = $entity->attachments();
-            } else {
-                // For teamleaders, provide all project attachments
-                $attachmentsToShare = $project->getMedia('*');
-            }
+            $attachmentsToShare = $project->getMedia('*');
 
             foreach ($attachmentsToShare as $attachment) {
                 $name = $attachment->file_name;
@@ -72,13 +66,7 @@ abstract class BaseChatController extends Controller
                         continue;
                     }
                     
-                    // Use the same attachment collection as defined above
-                    if ($this instanceof \App\Http\Controllers\Api\PersonaChatController) {
-                        $attachment = $entity->attachments()->where('file_name', $file->value)->first();
-                    } else {
-                        $attachment = $project->getMedia('*')->firstWhere('file_name', $file->value);
-                    }
-                    
+                    $attachment = $project->getMedia('*')->firstWhere('file_name', $file->value);
                     if ($attachment) {
                         echo "data: " . json_encode([
                             'type' => 'file',
@@ -146,12 +134,6 @@ abstract class BaseChatController extends Controller
             $prompt .= $this->getPersonasAndUserStoriesInfo($project);
         }
 
-        // Add persona-specific attachment information for personas
-        if ($this instanceof \App\Http\Controllers\Api\PersonaChatController && $entity) {
-            $prompt .= "\n\nJOUW TOEGEWEZEN BESTANDEN:\n";
-            $prompt .= $this->getPersonaAttachmentsInfo($entity);
-        }
-
 
         return str_replace(
             $this->getTemplatePlaceholders(),
@@ -207,28 +189,6 @@ abstract class BaseChatController extends Controller
 
         if ($personas->isEmpty()) {
             $info .= "Er zijn momenteel geen persona's toegewezen aan dit project.\n";
-        }
-
-        return $info;
-    }
-
-    protected function getPersonaAttachmentsInfo($persona): string
-    {
-        $info = "";
-
-        // Get attachments assigned to this specific persona
-        $attachments = $persona->attachments();
-
-        if ($attachments->count() > 0) {
-            foreach ($attachments->get() as $attachment) {
-                $info .= "- {$attachment->name}";
-                if ($attachment->getCustomProperty('description')) {
-                    $info .= " - {$attachment->getCustomProperty('description')}";
-                }
-                $info .= "\n";
-            }
-        } else {
-            $info .= "Je hebt momenteel geen bestanden toegewezen gekregen.\n";
         }
 
         return $info;
