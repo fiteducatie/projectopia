@@ -68,6 +68,7 @@ class ViewProject extends ViewRecord
 
                         Tabs\Tab::make('User Stories')
                             ->icon('heroicon-o-document-text')
+                            ->badge(fn () => $this->record->userStories()->count())
                             ->schema([
                                 RepeatableEntry::make('userStories')
                                     ->label('')
@@ -97,6 +98,7 @@ class ViewProject extends ViewRecord
 
                         Tabs\Tab::make('Persona\'s')
                             ->icon('heroicon-o-users')
+                            ->badge(fn () => $this->record->personas()->count())
                             ->schema([
                                 RepeatableEntry::make('personas')
                                     ->schema([
@@ -115,6 +117,7 @@ class ViewProject extends ViewRecord
 
                         Tabs\Tab::make('Bijlagen')
                             ->icon('heroicon-o-paper-clip')
+                            ->badge(fn () => $this->record->getMedia('attachments')->count())
                             ->schema([
                                 RepeatableEntry::make('attachments')
                                     ->getStateUsing(fn () => $this->record->getAttachmentMetadata())
