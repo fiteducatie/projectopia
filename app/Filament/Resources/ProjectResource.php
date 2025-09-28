@@ -44,6 +44,11 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Basis projectinformatie')
                                 ->schema([
+                                    SpatieMediaLibraryFileUpload::make('banner_image')
+                                        ->label('Project afbeelding')
+                                        ->image()
+                                        ->imageEditor()
+                                        ->collection('banner_images'),
                                     Forms\Components\TextInput::make('name')->label('Naam')
                                         ->helperText('Korte, herkenbare projectnaam.')
                                         ->required()
