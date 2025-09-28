@@ -95,9 +95,9 @@ class ViewProject extends ViewRecord
                                         if (!$state || !is_array($state)) {
                                             return 'Geen criteria opgegeven';
                                         }
-                                        
+
                                         return collect($state)->map(function ($criteria) {
-                                            return '✓ ' . $criteria;
+                                            return '✔️ ' . $criteria;
                                         })->implode("\n");
                                     }),
                                 TextEntry::make('mvp')
