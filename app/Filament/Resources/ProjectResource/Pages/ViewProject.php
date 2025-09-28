@@ -48,10 +48,7 @@ class ViewProject extends ViewRecord
                         Grid::make(3)
                             ->schema([
                                 TextEntry::make('context')->label('Context')->markdown()->columnSpan(2),
-                                Grid::make(1)->schema([
-                                    TextEntry::make('start_date')->label('Start')->date(),
-                                    TextEntry::make('end_date')->label('Einde')->date(),
-                                ])->columnSpan(1),
+
                             ])->columnSpanFull(),
                         InfoSection::make('Doelstellingen')
                             ->schema([

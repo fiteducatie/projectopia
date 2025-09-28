@@ -44,10 +44,7 @@
                         @endforelse
                     </div>
                 </div>
-                <div class="rounded-xl border border-slate-200 bg-white p-6">
-                    <h3 class="font-semibold mb-2">Periode</h3>
-                    <div class="text-slate-700 text-sm">{{ optional($project->start_date)->format('d-m-Y') }} – {{ optional($project->end_date)->format('d-m-Y') }}</div>
-                </div>
+
             </div>
         </div>
 @endsection
