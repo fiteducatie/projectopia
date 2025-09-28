@@ -45,18 +45,17 @@ class ViewProject extends ViewRecord
                                 TextEntry::make('domain')->label('Domein')->badge()->columnSpan(1),
                                 TextEntry::make('difficulty')->label('Moeilijkheid')->badge()->color('warning')->columnSpan(1),
                             ])->columnSpanFull(),
-                        Grid::make(3)
+                        InfoSection::make('Context')
                             ->schema([
-                                TextEntry::make('context')->label('Context')->markdown()->columnSpan(2),
-
-                            ])->columnSpanFull(),
+                                TextEntry::make('context')->markdown()->hiddenLabel(),
+                            ])->collapsible()->collapsed(),
                         InfoSection::make('Doelstellingen')
                             ->schema([
-                                TextEntry::make('objectives')->label('Doelstellingen')->markdown(),
+                                TextEntry::make('objectives')->markdown()->hiddenLabel(),
                             ])->collapsible()->collapsed(),
                         InfoSection::make('Randvoorwaarden')
                             ->schema([
-                                TextEntry::make('constraints')->label('Randvoorwaarden')->markdown(),
+                                TextEntry::make('constraints')->markdown()->hiddenLabel(),
                             ])->collapsible()->collapsed(),
                         ]),
 
