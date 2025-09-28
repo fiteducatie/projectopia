@@ -95,12 +95,71 @@ abstract class BaseChatController extends Controller
     protected function buildPromptFromTemplate($entity): string
     {
         $project = $this->getProjectFromEntity($entity);
-        
+        $prompt = $this->getPromptTemplate();
+
+        // Add persona and user story information for teamleaders
+        if ($this instanceof \App\Http\Controllers\Api\TeamleaderChatController && $project) {
+            $prompt .= "\n\nBESCHIKBARE PERSONA'S EN USER STORIES:\n";
+            $prompt .= $this->getPersonasAndUserStoriesInfo($project);
+        }
+
         return str_replace(
             $this->getTemplatePlaceholders(),
             $this->getTemplateValues($entity, $project),
-            $this->getPromptTemplate()
+            $prompt
         );
+    }
+
+    protected function getPersonasAndUserStoriesInfo($project): string
+    {
+        $info = "";
+
+        // Get all user stories for the project
+        $userStories = $project->userStories;
+        $info .= "USER STORIES IN DIT PROJECT:\n";
+
+        if ($userStories->isNotEmpty()) {
+            foreach ($userStories as $index => $story) {
+                $info .= ($index + 1) . ". {$story->title}\n";
+                if ($story->description) {
+                    $info .= "   Beschrijving: {$story->description}\n";
+                }
+                if ($story->acceptance_criteria) {
+                    $criteria = is_array($story->acceptance_criteria)
+                        ? implode(', ', $story->acceptance_criteria)
+                        : $story->acceptance_criteria;
+                    $info .= "   Acceptatiecriteria: {$criteria}\n";
+                }
+                $info .= "\n";
+            }
+        } else {
+            $info .= "Er zijn momenteel geen user stories gedefinieerd voor dit project.\n\n";
+        }
+
+        // Get personas with their associated user stories
+        $personas = $project->personas()->with('userStories')->get();
+        $info .= "BESCHIKBARE PERSONA'S:\n";
+
+        foreach ($personas as $persona) {
+            $info .= "- {$persona->name} ({$persona->role}): ";
+
+            if ($persona->userStories->isNotEmpty()) {
+                $storyTitles = $persona->userStories->pluck('title')->take(3)->toArray();
+                $info .= "Kan helpen met user stories zoals: " . implode(', ', $storyTitles);
+                if ($persona->userStories->count() > 3) {
+                    $info .= " en " . ($persona->userStories->count() - 3) . " andere";
+                }
+            } else {
+                $info .= "Geen specifieke user stories toegewezen";
+            }
+            $info .= "\n";
+        }
+
+        if ($personas->isEmpty()) {
+            $info .= "Er zijn momenteel geen persona's toegewezen aan dit project.\n";
+        }
+
+        return $info;
     }
 
     protected function getTemplatePlaceholders(): array
