@@ -4,6 +4,15 @@
 
 @section('content')
         <a href="{{ route('choose.team.projects', $project->team) }}" class="text-sky-600 hover:underline">← Terug naar projecten</a>
+
+        @if($project->getFirstMediaUrl('banner'))
+            <div class="mt-4 rounded-xl overflow-hidden shadow-lg">
+                <img src="{{ $project->getFirstMediaUrl('banner') }}"
+                     alt="{{ $project->name }} banner"
+                     class="w-full h-64 object-cover">
+            </div>
+        @endif
+
         <div class="mt-3 flex items-start justify-between gap-4">
             <div>
                 <h1 class="text-3xl font-bold">{{ $project->name }}</h1>

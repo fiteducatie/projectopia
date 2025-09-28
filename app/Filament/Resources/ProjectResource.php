@@ -18,10 +18,7 @@ use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -47,11 +44,11 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Basis projectinformatie')
                                 ->schema([
-                                    SpatieMediaLibraryFileUpload::make('banner_image')
+                                    SpatieMediaLibraryFileUpload::make('banner')
                                         ->label('Project afbeelding')
                                         ->image()
                                         ->imageEditor()
-                                        ->collection('banner_images'),
+                                        ->collection('banner'),
                                     Forms\Components\TextInput::make('name')->label('Naam')
                                         ->helperText('Korte, herkenbare projectnaam.')
                                         ->required()
@@ -163,25 +160,6 @@ class ProjectResource extends Resource
                                                 ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
                                             Forms\Components\Textarea::make('communication_style')->label('Communicatiestijl')->nullable()
                                                 ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
-                                            Repeater::make('workingHours')
-                                                ->relationship('workingHours')
-                                                ->label('Werkdagen / Tijden')
-                                                ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg.')
-                                                ->schema([
-                                                    Select::make('day_of_week')
-                                                        ->options([
-                                                            0 => 'Sunday',
-                                                            1 => 'Monday',
-                                                            2 => 'Tuesday',
-                                                            3 => 'Wednesday',
-                                                            4 => 'Thursday',
-                                                            5 => 'Friday',
-                                                            6 => 'Saturday',
-                                                        ]),
-                                                    TimePicker::make('start_time')->required(),
-                                                    TimePicker::make('end_time')->required(),
-                                                ])
-                                                ->columns(3)
                                         ])
                                         ->collapsed()
                                         ->grid(2),

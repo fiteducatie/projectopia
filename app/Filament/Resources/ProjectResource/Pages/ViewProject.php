@@ -43,6 +43,13 @@ class ViewProject extends ViewRecord
                         Tabs\Tab::make('Overzicht')
                             ->icon('heroicon-o-eye')
                             ->schema([
+                                ImageEntry::make('banner')
+                                    ->label('')
+                                    ->getStateUsing(fn ($record) => $record->getFirstMediaUrl('banner'))
+                                    ->height(200)
+                                    ->columnSpanFull()
+                                    ->visible(fn ($record) => $record->getFirstMediaUrl('banner') !== null),
+
                                 Grid::make(3)
                                     ->schema([
                                         TextEntry::make('name')->label('Naam')->weight('bold')->size('xl'),
