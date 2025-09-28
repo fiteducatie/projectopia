@@ -17,7 +17,11 @@
                         <div class="leading-tight">
                             <div class="font-semibold text-sm">{{ $persona->name }}</div>
                             <div class="text-[11px] text-white/80">
-                                <span x-text="isTyping ? 'typing...' : '{{ $persona->role }}'"></span>
+                                @if($this->isProjectClosed())
+                                    <span class="text-red-300">Momenteel offline</span>
+                                @else
+                                    <span x-text="isTyping ? 'typing...' : '{{ $persona->role }}'"></span>
+                                @endif
                             </div>
                         </div>
                     @else
@@ -62,19 +66,26 @@
 
                 <!-- Input -->
                 <footer class="absolute bottom-0 left-0 right-0 bg-slate-900 px-2 py-2">
-                    <form @submit.prevent="sendMessage()" class="flex gap-2">
-                        <input type="text"
-                               x-model="currentMessage"
-                               placeholder="Schrijf een bericht"
-                               class="flex-1 rounded-2xl bg-slate-800 px-4 py-2 text-sm outline-none"
-                               :disabled="isTyping">
-                        <button type="submit"
-                                class="p-3 rounded-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                :disabled="isTyping || !currentMessage.trim()">
-                            <div x-show="isTyping" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span x-show="!isTyping">➤</span>
-                        </button>
-                    </form>
+                    @if($this->isProjectClosed())
+                        <div class="flex items-center justify-center gap-2 text-slate-400 text-sm">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <span>Project is gesloten - chat niet beschikbaar</span>
+                        </div>
+                    @else
+                        <form @submit.prevent="sendMessage()" class="flex gap-2">
+                            <input type="text"
+                                   x-model="currentMessage"
+                                   placeholder="Schrijf een bericht"
+                                   class="flex-1 rounded-2xl bg-slate-800 px-4 py-2 text-sm outline-none"
+                                   :disabled="isTyping">
+                            <button type="submit"
+                                    class="p-3 rounded-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :disabled="isTyping || !currentMessage.trim()">
+                                <div x-show="isTyping" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                <span x-show="!isTyping">➤</span>
+                            </button>
+                        </form>
+                    @endif
                 </footer>
             </div>
         </div>
@@ -125,6 +136,11 @@
 
                 async sendMessage() {
                     if (!this.currentMessage.trim()) return;
+                    
+                    // Check if project is closed
+                    if ({{ $this->isProjectClosed() ? 'true' : 'false' }}) {
+                        return;
+                    }
 
                     // Add user message
                     this.addMessage('outgoing', this.currentMessage);

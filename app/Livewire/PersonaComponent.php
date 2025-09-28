@@ -21,6 +21,11 @@ class PersonaComponent extends Component
 
     public function startChat(): void
     {
+        // Check if project is closed
+        if ($this->persona->project->status === 'closed') {
+            return;
+        }
+        
         $this->dispatch('open-persona-chat', id: $this->persona->id);
     }
 }

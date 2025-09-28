@@ -77,6 +77,12 @@ class ProjectResource extends Resource
                                                 'hoog' => 'Hoog',
                                             ])->required()->default('middel')
                                             ->helperText('Bepaalt de complexiteit van het project.'),
+                                        Forms\Components\Select::make('status')->label('Status')
+                                            ->options([
+                                                'open' => 'Open',
+                                                'closed' => 'Gesloten',
+                                            ])->required()->default('open')
+                                            ->helperText('Gesloten projecten hebben geen actieve chat functionaliteit.'),
                                     ]),
                                 Section::make()
                                     ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')

@@ -26,6 +26,7 @@ class Project extends Model implements HasMedia
         'end_date',
         'risk_notes',
         'difficulty',
+        'status',
     ];
 
     protected $casts = [

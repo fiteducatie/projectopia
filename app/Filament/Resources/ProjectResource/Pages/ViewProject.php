@@ -55,11 +55,12 @@ class ViewProject extends ViewRecord
                                     ->columnSpanFull()
                                     ->visible(fn ($record) => $record->getFirstMediaUrl('banner') !== null),
 
-                                Grid::make(3)
+                                Grid::make(4)
                                     ->schema([
-                                        TextEntry::make('name')->label('Naam')->weight('bold')->size('xl'),
+                                        TextEntry::make('name')->label('Naam')->weight('bold')->size('xl')->columnSpan(2),
                                         TextEntry::make('domain')->label('Domein')->badge()->columnSpan(1),
                                         TextEntry::make('difficulty')->label('Moeilijkheid')->badge()->color('warning')->columnSpan(1),
+                                        TextEntry::make('status')->label('Status')->badge()->color(fn($state) => $state === 'open' ? 'success' : 'danger')->columnSpan(2),
                                     ])->columnSpanFull(),
 
                                 InfoSection::make('Context')
