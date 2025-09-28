@@ -33,6 +33,8 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->tenant(Team::class, null, 'team')
             ->tenantMenu(true)
+            ->favicon(asset('images/logo.png'))
+            ->brandLogo(asset('images/logo.png'))
             ->brandName('Projectopia')
             ->font('Helvetica')
             ->colors([
