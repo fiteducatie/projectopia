@@ -4,6 +4,8 @@ namespace App\Filament\Resources\ProjectResource\Pages;
 
 use App\Filament\Resources\ProjectResource;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Illuminate\Support\Facades\Storage;
 
 class EditProject extends EditRecord
@@ -11,6 +13,18 @@ class EditProject extends EditRecord
     protected static string $resource = ProjectResource::class;
 
     protected array $attachmentsData = [];
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ViewAction::make()->label('Bekijken')->color('primary'),
+            Action::make('view-guest')
+                ->label('Bekijk als gast')
+                ->color('gray')
+                ->url(fn () => route('choose.project', $this->record))
+                ->openUrlInNewTab(),
+        ];
+    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
