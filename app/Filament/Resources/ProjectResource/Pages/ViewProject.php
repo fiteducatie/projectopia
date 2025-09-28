@@ -91,7 +91,15 @@ class ViewProject extends ViewRecord
                                     ->limitList(1),
                                 TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
                                     ->listWithLineBreaks()
-                                    ->bulleted(),
+                                    ->formatStateUsing(function ($state) {
+                                        if (!$state || !is_array($state)) {
+                                            return 'Geen criteria opgegeven';
+                                        }
+                                        
+                                        return collect($state)->map(function ($criteria) {
+                                            return '✓ ' . $criteria;
+                                        })->implode("\n");
+                                    }),
                                 TextEntry::make('mvp')
                                     ->badge()
                                     ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
