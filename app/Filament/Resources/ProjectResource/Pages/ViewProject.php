@@ -91,6 +91,7 @@ class ViewProject extends ViewRecord
                                             }),
                                         TextEntry::make('mvp')
                                             ->badge()
+                                            ->hiddenLabel()
                                             ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
                                             ->color(fn ($state) => $state ? 'success' : 'secondary')
                                             ->columnSpan(1),
@@ -114,7 +115,7 @@ class ViewProject extends ViewRecord
                                                 ImageEntry::make('avatar_url')->circular()->height(56)->columnSpan(1),
                                                 TextEntry::make('role')->label('Rol')->weight('semibold')->columnSpan(2),
                                                 TextEntry::make('name')->label('Naam')->columnSpan(2),
-                                                TextEntry::make('goals')->label('Doelen')->columnSpanFull()->hint('Wat wil deze persona bereiken?'),
+                                                TextEntry::make('goals')->label('Doelen')->columnSpanFull(),
                                                 TextEntry::make('traits')->label('Eigenschappen')->columnSpan(3),
                                                 TextEntry::make('communication_style')->label('Communicatiestijl')->columnSpan(2),
                                             ]),
