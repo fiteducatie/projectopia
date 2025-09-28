@@ -43,6 +43,7 @@ class ViewProject extends ViewRecord
         return $schema
             ->schema([
                 Tabs::make('Project Details')
+                    ->persistTabInQueryString()
                     ->columnSpanFull()
                     ->tabs([
                         Tabs\Tab::make('Overzicht')
@@ -83,7 +84,7 @@ class ViewProject extends ViewRecord
                             ->icon('heroicon-o-document-text')
                             ->badge(fn () => $this->record->userStories()->count())
                             ->schema([
-                                RepeatableEntry::make('userStories')
+                        RepeatableEntry::make('userStories')
                                     ->label('')
                             ->schema([
                                 TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
@@ -126,13 +127,13 @@ class ViewProject extends ViewRecord
                                                     ])->columnSpan(1),
                                             ]),
 
-                                        TextEntry::make('goals')->label('**Doelen**')->markdown()->columnSpanFull(),
-                                        TextEntry::make('traits')->label('**Eigenschappen**')->markdown()->columnSpanFull(),
-                                        TextEntry::make('communication_style')->label('**Communicatiestijl**')->markdown()->columnSpanFull(),
+                                        TextEntry::make('goals')->label('Doelen')->columnSpanFull(),
+                                        TextEntry::make('traits')->label('Eigenschappen')->columnSpanFull(),
+                                        TextEntry::make('communication_style')->label('Communicatiestijl')->columnSpanFull(),
 
                                         // Bestanden sectie per persona
                                         TextEntry::make('attachments_list')
-                                            ->label('**Kennis / in bezit van de volgende bestanden**')
+                                            ->label('Kennis / in bezit van de volgende bestanden')
                                             ->getStateUsing(function ($record) {
                                                 $attachments = $record->attachments()->get();
 
@@ -147,12 +148,12 @@ class ViewProject extends ViewRecord
 
                                                     $result = "📎 [**{$name}**]({$media->getUrl()})";
                                                     if ($description) {
-                                                        $result .= " - {$description}";
+                                                        $result .= " - *{$description}*";
                                                     }
-                                                    $result .= " ({$media->mime_type})";
+                                                    $result .= " <small>({$media->mime_type})</small>";
 
                                                     return $result;
-                                                })->join("\n");
+                                                })->join("\n\n");
                                             })
                                             ->markdown()
                                             ->columnSpanFull(),
