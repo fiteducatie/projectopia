@@ -24,7 +24,7 @@
     @if ($project->getFirstMediaUrl('banner'))
         <div class="mt-4 rounded-xl overflow-hidden shadow-lg">
             <img src="{{ $project->getFirstMediaUrl('banner') }}" alt="{{ $project->name }} banner"
-                class="w-full h-64 object-cover">
+                class="w-full h-64 object-contain">
         </div>
     @endif
 
