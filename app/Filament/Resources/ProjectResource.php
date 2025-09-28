@@ -184,9 +184,6 @@ class ProjectResource extends Resource
                                             ])
                                         ->collapsed()
                                         ->grid(2),
-                                            ])
-                                            ->collapsed()
-                                            ->grid(2),
                                     ]),
                             ]),
 
