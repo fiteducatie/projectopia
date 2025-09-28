@@ -7,7 +7,7 @@
         <div class="mt-3 flex items-start justify-between gap-4">
             <div>
                 <h1 class="text-3xl font-bold">{{ $project->name }}</h1>
-                <div class="mt-2 text-slate-600">Domein: {{ ucfirst($project->domain) }} · Moeilijkheid: {{ ucfirst($project->difficulty) }}</div>
+                <div class="mt-2 text-slate-600">Domein: {{ ucfirst($project->domain) }} · Complexiteit: {{ ucfirst($project->difficulty) }}</div>
             </div>
             @auth
                 @if ($project->team && $project->team->owner_id === auth()->id())
