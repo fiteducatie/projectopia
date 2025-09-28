@@ -136,6 +136,108 @@ class DemoProjectSeeder extends Seeder
             'personas' => json_encode([1, 2]),
             'priority' => 'low',
         ]);
+
+        // Project 'Restaurant App'
+
+        $restaurantApp = Project::query()->firstOrCreate([
+            'team_id' => $team->id,
+            'name' => 'Restaurant App',
+        ], [
+            'domain' => 'software',
+            'context' => 'Bouw een mobiele app voor het reserveren en bestellen in een restaurant.',
+            'objectives' => 'Tafelreserveringen, menu bekijken, online bestellen.',
+            'constraints' => 'Budget en tijdslimiet van 6 weken.',
+            'start_date' => now()->startOfMonth(),
+            'end_date' => now()->startOfMonth()->addWeeks(6),
+            'risk_notes' => 'Technische uitdagingen, gebruikersacceptatie.',
+            'difficulty' => 'hard',
+        ]);
+
+        $quinten = Persona::query()->updateOrCreate([
+            'project_id' => $restaurantApp->id,
+            'name' => 'Quinten de Vries',
+        ], [
+            'role' => 'Restaurant Eigenaar',
+            'avatar_url' => 'https://i.pravatar.cc/150?img=3',
+            'goals' => 'Meer reserveringen en tevreden klanten.',
+            'traits' => 'Gastvrij, ondernemend.',
+            'communication_style' => 'Informeel, vriendelijk.',
+        ]);
+        $sanne = Persona::query()->updateOrCreate([
+            'project_id' => $restaurantApp->id,
+            'name' => 'Sanne Jansen',
+        ], [
+            'role' => 'Kok/Docent',
+            'avatar_url' => 'https://i.pravatar.cc/150?img=4',
+            'goals' => 'Leren werken met klantgerichte technologie.',
+            'traits' => 'Creatief, leergierig.',
+            'communication_style' => 'Open, nieuwsgierig.',
+        ]);
+        UserStory::query()->updateOrCreate([
+            'project_id' => $restaurantApp->id,
+            'user_story' => 'Als klant wil ik een tafel kunnen reserveren zodat ik verzekerd ben van een plek in het restaurant.',
+            'acceptance_criteria' => json_encode(['De klant kan datum en tijd selecteren', 'De klant ontvangt een bevestiging per email']),
+            'personas' => json_encode([$quinten->id]),
+            'priority' => 'high',
+        ]);
+        UserStory::query()->updateOrCreate([
+            'project_id' => $restaurantApp->id,
+            'user_story' => 'Als klant wil ik het menu kunnen bekijken zodat ik een weloverwogen keuze kan maken.',
+            'acceptance_criteria' => json_encode(['Het menu is overzichtelijk ingedeeld', 'De klant kan gerechten filteren op dieetwensen']),
+            'personas' => json_encode([$quinten->id, $sanne->id]),
+            'priority' => 'low',
+        ]);
+
+        // Project 'Fitness Tracker App'
+        $fitnessTracker = Project::query()->firstOrCreate([
+            'team_id' => $team->id,
+            'name' => 'Fitness Tracker App',
+        ], [
+            'domain' => 'software',
+            'context' => 'Bouw een mobiele app voor het bijhouden van fitnessactiviteiten en gezondheid.',
+            'objectives' => 'Activiteiten loggen, doelen stellen, voortgang volgen.',
+            'constraints' => 'Budget en tijdslimiet van 10 weken.',
+            'start_date' => now()->startOfMonth(),
+            'end_date' => now()->startOfMonth()->addWeeks(10),
+            'risk_notes' => 'Privacy zorgen, technische integraties.',
+            'difficulty' => 'hard',
+        ]);
+        $emma = Persona::query()->updateOrCreate([
+            'project_id' => $fitnessTracker->id,
+            'name' => 'Emma de Jong',
+        ], [
+            'role' => 'Fitness Enthousiast',
+            'avatar_url' => 'https://i.pravatar.cc/150?img=5',
+            'goals' => 'Gezonder leven en fitter worden.',
+            'traits' => 'Gedreven, doelgericht.',
+            'communication_style' => 'Motiverend, positief.',
+        ]);
+        $lucas = Persona::query()->updateOrCreate([
+            'project_id' => $fitnessTracker->id,
+            'name' => 'Lucas van den Berg',
+        ], [
+            'role' => 'Personal Trainer/Docent',
+            'avatar_url' => 'https://i.pravatar.cc/150?img=6',
+            'goals' => 'Leren hoe technologie fitness kan verbeteren.',
+            'traits' => 'Coachend, analytisch.',
+            'communication_style' => 'Coachend, vragend.',
+        ]);
+        UserStory::query()->updateOrCreate([
+            'project_id' => $fitnessTracker->id,
+            'user_story' => 'Als gebruiker wil ik mijn dagelijkse activiteiten kunnen loggen zodat ik mijn voortgang kan bijhouden.',
+            'acceptance_criteria' => json_encode(['De gebruiker kan verschillende activiteiten selecteren', 'De gebruiker kan notities toevoegen bij elke activiteit']),
+            'personas' => json_encode([$emma->id]),
+            'priority' => 'high',
+        ]);
+        UserStory::query()->updateOrCreate([
+            'project_id' => $fitnessTracker->id,
+            'user_story' => 'Als gebruiker wil ik doelen kunnen stellen zodat ik gemotiveerd blijf om te sporten.',
+            'acceptance_criteria' => json_encode(['De gebruiker kan wekelijkse en maandelijkse doelen instellen', 'De app geeft herinneringen om doelen te behalen']),
+            'personas' => json_encode([$emma->id, $lucas->id]),
+            'priority' => 'low',
+        ]);
+
+
     }
 }
 
