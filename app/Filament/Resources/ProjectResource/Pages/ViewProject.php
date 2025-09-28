@@ -58,26 +58,26 @@ class ViewProject extends ViewRecord
                                 Grid::make(4)
                                     ->schema([
                                         TextEntry::make('name')->label('Naam')->weight('bold')->size('xl')->columnSpan(2),
-                                        TextEntry::make('domain')->label('Domein')->badge()->columnSpan(1),
-                                        TextEntry::make('difficulty')->label('Moeilijkheid')->badge()->color('warning')->columnSpan(1),
+                                TextEntry::make('domain')->label('Domein')->badge()->columnSpan(1),
+                                TextEntry::make('difficulty')->label('Moeilijkheid')->badge()->color('warning')->columnSpan(1),
                                         TextEntry::make('status')->label('Status')->badge()->color(fn($state) => $state === 'open' ? 'success' : 'danger')->columnSpan(2),
-                                    ])->columnSpanFull(),
+                            ])->columnSpanFull(),
 
                                 InfoSection::make('Context')
-                                    ->schema([
+                            ->schema([
                                         TextEntry::make('context')->markdown()->hiddenLabel(),
                                     ])->collapsible(),
 
-                                InfoSection::make('Doelstellingen')
-                                    ->schema([
+                        InfoSection::make('Doelstellingen')
+                            ->schema([
                                         TextEntry::make('objectives')->markdown()->hiddenLabel(),
-                                    ])->collapsible(),
+                            ])->collapsible(),
 
-                                InfoSection::make('Randvoorwaarden')
-                                    ->schema([
+                        InfoSection::make('Randvoorwaarden')
+                            ->schema([
                                         TextEntry::make('constraints')->markdown()->hiddenLabel(),
-                                    ])->collapsible(),
-                            ]),
+                            ])->collapsible(),
+                        ]),
 
                         Tabs\Tab::make('User Stories')
                             ->icon('heroicon-o-document-text')
@@ -85,29 +85,29 @@ class ViewProject extends ViewRecord
                             ->schema([
                                 RepeatableEntry::make('userStories')
                                     ->label('')
-                                    ->schema([
-                                        TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
-                                            ->limitList(1),
-                                        TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
-                                            ->listWithLineBreaks()
+                            ->schema([
+                                TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
+                                    ->limitList(1),
+                                TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
+                                    ->listWithLineBreaks()
                                             ->formatStateUsing(function ($state) {
                                                 return collect($state)->map(function ($criteria) {
                                                     return '✔️ ' . $criteria;
                                                 })->implode("\n");
                                             }),
-                                        TextEntry::make('mvp')
-                                            ->badge()
+                                TextEntry::make('mvp')
+                                    ->badge()
                                             ->hiddenLabel()
-                                            ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
-                                            ->color(fn ($state) => $state ? 'success' : 'secondary')
-                                            ->columnSpan(1),
-                                        TextEntry::make('priority')->label('Prioriteit')->badge()->color(fn ($state) => match ($state) {
-                                            'high' => 'danger',
-                                            'medium' => 'warning',
-                                            'low' => 'success',
-                                            default => 'secondary',
-                                        })->columnSpan(1),
-                                    ])
+                                    ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
+                                    ->color(fn ($state) => $state ? 'success' : 'secondary')
+                                    ->columnSpan(1),
+                                TextEntry::make('priority')->label('Prioriteit')->badge()->color(fn ($state) => match ($state) {
+                                    'high' => 'danger',
+                                    'medium' => 'warning',
+                                    'low' => 'success',
+                                    default => 'secondary',
+                                })->columnSpan(1),
+                            ])
                             ]),
 
                         Tabs\Tab::make('Persona\'s')
@@ -127,7 +127,7 @@ class ViewProject extends ViewRecord
                                             ]),
 
                                         // Bestanden sectie per persona
-                                        Section::make('Kennis / in bezit van de volgende bestanden')
+                                        InfoSection::make('Kennis / in bezit van de volgende bestanden')
                                             ->schema([
                                                 TextEntry::make('attachments_list')
                                                     ->label('')
