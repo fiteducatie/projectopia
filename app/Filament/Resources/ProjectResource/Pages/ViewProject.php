@@ -14,6 +14,7 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Schemas\Schema;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Infolists\Components\CodeEntry;
 use Phiki\Grammar\Grammar;
 
@@ -30,6 +31,10 @@ class ViewProject extends ViewRecord
                 ->color('gray')
                 ->url(fn () => route('choose.project', $this->record))
                 ->openUrlInNewTab(),
+            DeleteAction::make()
+                ->label('Verwijderen')
+                ->color('danger')
+                ->visible(fn () => !$this->record->trashed()),
         ];
     }
 

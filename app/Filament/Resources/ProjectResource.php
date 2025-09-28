@@ -14,6 +14,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
@@ -251,11 +255,15 @@ class ProjectResource extends Resource
                 TextColumn::make('attachments')->label('Bijlagen')->getStateUsing(function ($record) {
                     return $record->media()->count();
                 }),
-
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([])
-            ->recordUrl(fn($record) => static::getUrl('view', ['record' => $record]));
+            ->filters([
+                TrashedFilter::make(),
+            ])
+            ->bulkActions([
+                DeleteBulkAction::make(),
+            ])
+            ->recordUrl(fn($record) => !$record->trashed() ? static::getUrl('view', ['record' => $record]) : null);
     }
 
     public static function getEloquentQuery(): Builder
@@ -265,7 +273,7 @@ class ProjectResource extends Resource
         if ($tenant) {
             $query->where('team_id', $tenant->getKey());
         }
-        return $query;
+        return $query->withoutGlobalScopes();
     }
 
 
