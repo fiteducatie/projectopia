@@ -10,9 +10,32 @@ class Team extends Model
 {
     protected $fillable = [
         'name',
+        'slug',
         'owner_id',
         'settings',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($team) {
+            if (empty($team->slug)) {
+                $team->slug = \Illuminate\Support\Str::slug($team->name);
+            }
+        });
+
+        static::updating(function ($team) {
+            if ($team->isDirty('name') && empty($team->slug)) {
+                $team->slug = \Illuminate\Support\Str::slug($team->name);
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     protected $casts = [
         'settings' => 'array',

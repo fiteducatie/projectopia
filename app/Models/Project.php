@@ -17,6 +17,7 @@ class Project extends Model implements HasMedia
     protected $fillable = [
         'team_id',
         'name',
+        'slug',
         'domain',
         'context',
         'objectives',
@@ -30,8 +31,29 @@ class Project extends Model implements HasMedia
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
-
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($project) {
+            if (empty($project->slug)) {
+                $project->slug = \Illuminate\Support\Str::slug($project->name);
+            }
+        });
+
+        static::updating(function ($project) {
+            if ($project->isDirty('name') && empty($project->slug)) {
+                $project->slug = \Illuminate\Support\Str::slug($project->name);
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function team(): BelongsTo
     {
