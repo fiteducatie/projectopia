@@ -112,7 +112,7 @@ class ProjectResource extends Resource
                                                 $index = array_search($key, array_keys($component->getState()));
                                                 $realIndex = $index + 1;
 
-                                                $label = $realIndex . '. ' . ($state['user_story'] ?? 'User Story');
+                                                $label = $realIndex . '. ' . $state['user_story'];
                                                 $label = substr($label, 0, 200);
                                                 if (isset($state['user_story']) && strlen($state['user_story']) > 200) {
                                                     $label .= '...';
@@ -194,8 +194,8 @@ class ProjectResource extends Resource
                                                                 5 => 'Friday',
                                                                 6 => 'Saturday',
                                                             ]),
-                                                        TimePicker::make('start_time')->required(),
-                                                        TimePicker::make('end_time')->required(),
+                                                        TimePicker::make('start_time'),
+                                                        TimePicker::make('end_time'),
                                                     ])
                                                     ->columns(3)
                                             ])
@@ -287,6 +287,14 @@ class ProjectResource extends Resource
                 TextColumn::make('attachments')->label('Bijlagen')->getStateUsing(function ($record) {
                     return $record->media()->count();
                 }),
+                Tables\Columns\TextColumn::make('status')->label('Status')
+                        ->badge(fn($record) => $record->status)
+                        ->colors([
+                            'success' => 'open',
+                            'danger' => 'closed',
+                        ])
+                        ->sortable()
+                        ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

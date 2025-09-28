@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
             $table->foreignId('persona_id')->constrained()->onDelete('cascade');
-            $table->unsignedTinyInteger('day_of_week');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->unsignedTinyInteger('day_of_week')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->timestamps();
         });
     }
