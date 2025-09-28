@@ -149,11 +149,11 @@ class ProjectResource extends Resource
                                                 ->helperText('Rol t.o.v. het project (bijv. Klant, Product Owner, Doelgroep).'),
                                             Forms\Components\TextInput::make('avatar_url')->label('Avatar-URL')->url()->nullable()
                                                 ->helperText('Optioneel; laat leeg om automatisch te genereren.'),
-                                            Forms\Components\TextArea::make('goals')->label('Doelen')->nullable()
+                                            Forms\Components\Textarea::make('goals')->label('Doelen')->nullable()
                                                 ->helperText('Wat wil deze persona bereiken met dit project?'),
-                                            Forms\Components\TextArea::make('traits')->label('Eigenschappen')->nullable()
+                                            Forms\Components\Textarea::make('traits')->label('Eigenschappen')->nullable()
                                                 ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
-                                            Forms\Components\TextArea::make('communication_style')->label('Communicatiestijl')->nullable()
+                                            Forms\Components\Textarea::make('communication_style')->label('Communicatiestijl')->nullable()
                                                 ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
                                         ])
                                         ->collapsed()
