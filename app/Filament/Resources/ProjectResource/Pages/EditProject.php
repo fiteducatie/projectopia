@@ -23,6 +23,17 @@ class EditProject extends EditRecord
                 ->color('gray')
                 ->url(fn () => route('choose.project', $this->record))
                 ->openUrlInNewTab(),
+
+            //i want to make a toggle action to close and open the project
+            Action::make('toggle-project-status')
+                ->label(fn () => $this->record->status === 'closed' ? 'Heropen project' : 'Sluit project')
+                ->color(fn () => $this->record->status === 'closed' ? 'success' : 'danger')
+                ->requiresConfirmation()
+                ->action(function () {
+                    $this->record->status = $this->record->status === 'closed' ? 'open' : 'closed';
+                    $this->record->save();
+                    $this->redirect($this->getResource()::getUrl('edit', ['record' => $this->record]));
+                }),
         ];
     }
 
