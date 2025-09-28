@@ -273,7 +273,9 @@ class ProjectResource extends Resource
                                                             return [];
                                                         }
 
-                                                        return $record->personas()->pluck('name', 'id')->toArray();
+                                                        return $record->personas()->get()->mapWithKeys(function ($persona) {
+                                                            return [$persona->id => $persona->role . ': ' . $persona->name];
+                                                        })->toArray();
                                                     })
                                                     ->placeholder('Selecteer persona\'s die toegang hebben tot dit bestand'),
                                             ])
