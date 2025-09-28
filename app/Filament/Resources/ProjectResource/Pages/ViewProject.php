@@ -56,11 +56,11 @@ class ViewProject extends ViewRecord
                         InfoSection::make('Doelstellingen')
                             ->schema([
                                 TextEntry::make('objectives')->label('Doelstellingen')->markdown(),
-                            ])->collapsible(),
+                            ])->collapsible()->collapsed(),
                         InfoSection::make('Randvoorwaarden')
                             ->schema([
                                 TextEntry::make('constraints')->label('Randvoorwaarden')->markdown(),
-                            ])->collapsible(),
+                            ])->collapsible()->collapsed(),
                         ]),
 
                 InfoSection::make('Persona’s')
@@ -79,7 +79,7 @@ class ViewProject extends ViewRecord
                                     ]),
                             ])
                             ->columns(1),
-                    ])->collapsed(false),
+                    ])->collapsed(),
 
                 InfoSection::make('User Stories')
                     ->description('Gedetailleerde beschrijvingen van functionaliteiten vanuit gebruikersperspectief.')
@@ -105,7 +105,7 @@ class ViewProject extends ViewRecord
                                     default => 'secondary',
                                 })->columnSpan(1),
                             ])
-                    ])->collapsible(true),
+                    ])->collapsible(true)->collapsed(),
 
                 InfoSection::make('Bijlagen')
                     ->description('Relevante documenten en bestanden met extra details')
@@ -159,7 +159,7 @@ class ViewProject extends ViewRecord
                             ])
                             ->columns(1)
 
-                    ])->collapsible(true),
+                    ])->collapsible(true)->collapsed(),
             ]);
     }
 
