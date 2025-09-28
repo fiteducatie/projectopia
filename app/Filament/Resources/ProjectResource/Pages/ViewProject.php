@@ -127,36 +127,31 @@ class ViewProject extends ViewRecord
                                             ]),
 
                                         // Bestanden sectie per persona
-                                        InfoSection::make('Kennis / in bezit van de volgende bestanden')
-                                            ->schema([
-                                                TextEntry::make('attachments_list')
-                                                    ->label('')
-                                                    ->getStateUsing(function ($record) {
-                                                        $attachments = $record->attachments()->get();
+                                        TextEntry::make('attachments_list')
+                                            ->label('Kennis / in bezit van de volgende bestanden')
+                                            ->getStateUsing(function ($record) {
+                                                $attachments = $record->attachments()->get();
 
-                                                        if ($attachments->isEmpty()) {
-                                                            return 'Geen bestanden toegewezen';
-                                                        }
+                                                if ($attachments->isEmpty()) {
+                                                    return 'Geen bestanden toegewezen';
+                                                }
 
-                                                        return $attachments->map(function ($media) {
-                                                            $customProps = $media->custom_properties ?? [];
-                                                            $name = $customProps['name'] ?? $media->name;
-                                                            $description = $customProps['description'] ?? '';
+                                                return $attachments->map(function ($media) {
+                                                    $customProps = $media->custom_properties ?? [];
+                                                    $name = $customProps['name'] ?? $media->name;
+                                                    $description = $customProps['description'] ?? '';
 
-                                                            $result = "📎 **{$name}**";
-                                                            if ($description) {
-                                                                $result .= " - {$description}";
-                                                            }
-                                                            $result .= " ({$media->mime_type})";
+                                                    $result = "📎 [**{$name}**]({$media->getUrl()})";
+                                                    if ($description) {
+                                                        $result .= " - {$description}";
+                                                    }
+                                                    $result .= " ({$media->mime_type})";
 
-                                                            return $result;
-                                                        })->join("\n");
-                                                    })
-                                                    ->markdown()
-                                                    ->hiddenLabel(),
-                                            ])
-                                            ->collapsible()
-                                            ->collapsed(),
+                                                    return $result;
+                                                })->join("\n");
+                                            })
+                                            ->markdown()
+                                            ->columnSpanFull(),
                                     ])
                                     ->columns(1),
                             ]),
