@@ -162,6 +162,28 @@ class ProjectResource extends Resource
                                                     ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
                                                 Forms\Components\Textarea::make('communication_style')->label('Communicatiestijl')->nullable()
                                                     ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
+                                                 Repeater::make('workingHours')
+                                                    ->relationship('workingHours')
+                                                    ->label('Werkdagen / werktijden')
+                                                    ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg')
+                                                    ->schema([
+                                                        Select::make('day_of_week')
+                                                            ->options([
+                                                                0 => 'Sunday',
+                                                                1 => 'Monday',
+                                                                2 => 'Tuesday',
+                                                                3 => 'Wednesday',
+                                                                4 => 'Thursday',
+                                                                5 => 'Friday',
+                                                                6 => 'Saturday',
+                                                            ]),
+                                                        TimePicker::make('start_time')->required(),
+                                                        TimePicker::make('end_time')->required(),
+                                                    ])
+                                                    ->columns(3)
+                                            ])
+                                        ->collapsed()
+                                        ->grid(2),
                                             ])
                                             ->collapsed()
                                             ->grid(2),
