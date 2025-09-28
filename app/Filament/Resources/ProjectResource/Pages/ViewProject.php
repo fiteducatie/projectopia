@@ -85,12 +85,18 @@ class ViewProject extends ViewRecord
                         //TODO: not yet found out how to make a repeatable entry collapsible
 
                         RepeatableEntry::make('userStories')
+                            ->label('')
                             ->schema([
                                 TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
                                     ->limitList(1),
                                 TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
                                     ->listWithLineBreaks()
-                                    ->bulleted(),
+                                    ->formatStateUsing(function ($state) {
+
+                                        return collect($state)->map(function ($criteria) {
+                                            return '✔️ ' . $criteria;
+                                        })->implode("\n");
+                                    }),
                                 TextEntry::make('mvp')
                                     ->badge()
                                     ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
