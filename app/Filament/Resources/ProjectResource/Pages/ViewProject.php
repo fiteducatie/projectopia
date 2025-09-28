@@ -83,6 +83,7 @@ class ViewProject extends ViewRecord
                                             }),
                                         TextEntry::make('mvp')
                                             ->badge()
+                                            ->hiddenLabel()
                                             ->formatStateUsing(fn ($state) => $state ? 'MVP' : 'NTH')
                                             ->color(fn ($state) => $state ? 'success' : 'secondary')
                                             ->columnSpan(1),
