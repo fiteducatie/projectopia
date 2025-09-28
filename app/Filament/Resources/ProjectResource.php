@@ -21,6 +21,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
 
 class ProjectResource extends Resource
 {
@@ -232,14 +233,9 @@ class ProjectResource extends Resource
                 Tables\Columns\TextColumn::make('start_date')->label('Startdatum')->date(),
                 Tables\Columns\TextColumn::make('end_date')->label('Einddatum')->date(),
                 Tables\Columns\TextColumn::make('difficulty')->label('Moeilijkheid')->badge(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('attachments')
-                    ->label('Bijlagen')
-                    ->collection('attachments')
-                    ->conversion('thumb')
-                    ->limit(3)
-                    ->limitedRemainingText()
-                    ->square()
-                    ->size(40),
+                TextColumn::make('attachments')->label('Bijlagen')->getStateUsing(function ($record) {
+                    return $record->media()->count();
+                }),
 
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
