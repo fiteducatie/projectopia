@@ -85,6 +85,7 @@ class ViewProject extends ViewRecord
                         //TODO: not yet found out how to make a repeatable entry collapsible
 
                         RepeatableEntry::make('userStories')
+                            ->label('')
                             ->schema([
                                 TextEntry::make('user_story')->label('User Story')->weight('semibold')->columnSpanFull()
                                     ->limitList(1),
