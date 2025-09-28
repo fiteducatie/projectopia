@@ -107,21 +107,34 @@ class ProjectResource extends Resource
                                     ->schema([
                                         Forms\Components\Repeater::make('user_stories_data')
                                             ->relationship('userStories')
-                                            ->itemLabel(fn(array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 200) . (isset($state['user_story']) && strlen($state['user_story']) > 200 ? '...' : '')))
+                                            ->itemLabel(function (array $state, $component): string {
+                                                $key = array_search($state, $component->getState());
+                                                $index = array_search($key, array_keys($component->getState()));
+                                                $realIndex = $index + 1;
+
+                                                $label = $realIndex . '. ' . ($state['user_story'] ?? 'User Story');
+                                                $label = substr($label, 0, 200);
+                                                if (isset($state['user_story']) && strlen($state['user_story']) > 200) {
+                                                    $label .= '...';
+                                                }
+                                                return trim($label);
+                                            })
                                             ->label('User Stories')
                                             ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
                                             ->schema([
                                                 Forms\Components\TextInput::make('user_story')->label('User Story')->required()
                                                     ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
-                                                Forms\Components\Repeater::make('acceptance_criteria')
+                                                Section::make()
+                                                ->schema([
+                                                    Forms\Components\Repeater::make('acceptance_criteria')
                                                     ->label('Acceptatie Criterium')
+                                                    ->collapsible()
                                                     ->simple(
                                                         Forms\Components\TextInput::make('criteria')
-                                                            ->required()
                                                             ->helperText('Beschrijf welke aanvullende details de user story moet hebben.')
                                                             ->label('Acceptatie Criterium'),
                                                     )
-                                                    ->defaultItems(1),
+                                                ]),
                                                 Forms\Components\TextInput::make('personas')
                                                     ->label('Persona\'s')
                                                     ->helperText('Voer de namen van relevante persona\'s in (gescheiden door komma\'s). Koppel relevante persona\'s aan deze user story.'),
@@ -166,7 +179,7 @@ class ProjectResource extends Resource
                                                     ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
                                                 Forms\Components\Textarea::make('communication_style')->label('Communicatiestijl')->nullable()
                                                     ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
-                                                 Repeater::make('workingHours')
+                                                Repeater::make('workingHours')
                                                     ->relationship('workingHours')
                                                     ->label('Werkdagen / werktijden')
                                                     ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg')
