@@ -293,7 +293,17 @@ class ProjectResource extends Resource
                                             }),
                                     ]),
                             ]),
+                        Tabs\Tab::make('Team leider')
+                            ->icon('heroicon-o-user-group')
+                            ->schema([
+                                Section::make()
+                                    ->description('Voeg de team leider toe.')
+                                    ->schema([
+
+                                    ]),
+                            ]),
                     ]),
+
             ]);
     }
 
