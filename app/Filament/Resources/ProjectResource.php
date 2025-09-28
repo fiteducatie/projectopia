@@ -26,7 +26,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TimePicker;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -134,9 +133,10 @@ class ProjectResource extends Resource
                                                     ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
                                                 Section::make()
                                                 ->schema([
-                                                    TextEntry::make('Acceptatie Criteria')
-                                                        ->extraAttributes(['class' => 'italic'])
-                                                        ->state('Beschrijf welke aanvullende details de user story moet hebben.'),
+                                                    Placeholder::make('acceptance_criteria_help')
+                                                        ->label('Acceptatie Criteria')
+                                                        ->content('Beschrijf welke aanvullende details de user story moet hebben.')
+                                                        ->extraAttributes(['class' => 'italic text-sm text-gray-600']),
                                                     Forms\Components\Repeater::make('acceptance_criteria')
                                                         ->collapsible()
 
@@ -236,7 +236,7 @@ class ProjectResource extends Resource
                                             ->downloadable()
                                             ->multiple()
                                             ->panelLayout('grid', ['grid-cols-6'])
-                                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*', 'application/zip', 'application/x-zip-compressed'])
+                                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*', 'application/zip', 'application/x-zip-compressed', 'application/x-zip', '.zip'])
                                             ->maxSize(10240) // 10MB
                                             ->reorderable()
                                             ->appendFiles()

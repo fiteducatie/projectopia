@@ -158,7 +158,10 @@ class Project extends Model implements HasMedia
                 'video/avi',
                 'video/mov',
                 'video/quicktime',
-                'text/plain'
+                'text/plain',
+                'application/zip',
+                'application/x-zip-compressed',
+                'application/x-zip'
             ]);
     }
 
