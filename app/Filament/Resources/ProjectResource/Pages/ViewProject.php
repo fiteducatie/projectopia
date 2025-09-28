@@ -121,35 +121,35 @@ class ViewProject extends ViewRecord
                                             ->width(160)
                                             ->columnSpan(1)
                                             ->visible(fn ($state) => str_starts_with($state, 'http')),
-                                        
+
                                         TextEntry::make('name')
                                             ->label('Bestandsnaam')
                                             ->weight('semibold')
                                             ->columnSpan(2),
-                                        
+
                                         TextEntry::make('file_name')
                                             ->label('Originele naam')
                                             ->color('gray')
                                             ->columnSpan(1),
-                                        
+
                                         TextEntry::make('description')
                                             ->label('Beschrijving')
                                             ->columnSpanFull()
                                             ->placeholder('Geen beschrijving beschikbaar')
                                             ->color(fn ($state) => $state ? null : 'gray'),
-                                        
+
                                         TextEntry::make('mime_type')
                                             ->label('Type')
                                             ->badge()
                                             ->color('secondary')
                                             ->columnSpan(1),
-                                        
+
                                         TextEntry::make('size')
                                             ->label('Grootte')
                                             ->formatStateUsing(fn ($state) => $this->formatFileSize($state))
                                             ->color('gray')
                                             ->columnSpan(1),
-                                        
+
                                         TextEntry::make('persona_names')
                                             ->label('Relevante Persona\'s')
                                             ->formatStateUsing(fn ($state) => $state ? implode(', ', $state) : 'Geen persona\'s geselecteerd')
