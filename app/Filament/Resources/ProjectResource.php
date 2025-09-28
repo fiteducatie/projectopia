@@ -141,9 +141,17 @@ class ProjectResource extends Resource
                                                             ->label('Acceptatie Criterium'),
                                                     )
                                                 ]),
-                                                Forms\Components\TextInput::make('personas')
+                                                Forms\Components\Select::make('personas')
                                                     ->label('Persona\'s')
-                                                    ->helperText('Voer de namen van relevante persona\'s in (gescheiden door komma\'s). Koppel relevante persona\'s aan deze user story.'),
+                                                    ->helperText('Selecteer relevante persona\'s voor deze user story.')
+                                                    ->multiple()
+                                                    ->options(function($record){
+                                                        if(!$record){
+                                                            return [];
+                                                        }
+                                                        return $record->project->personas()->pluck('name', 'id');
+                                                    })
+                                                    ->visibleOn('edit'),
                                                 Forms\Components\Toggle::make('mvp')->label('MVP?')
                                                     ->helperText('Markeer deze user story als onderdeel van de Minimum Viable Product.'),
                                                 Forms\Components\Select::make('priority')->label('Prioriteit')
