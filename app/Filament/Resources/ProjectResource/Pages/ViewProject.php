@@ -79,6 +79,7 @@ class ViewProject extends ViewRecord
                     ])->collapsed(),
 
                 InfoSection::make('User Stories')
+                    ->columnSpanFull()
                     ->description('Gedetailleerde beschrijvingen van functionaliteiten vanuit gebruikersperspectief.')
                     ->schema([
                         //TODO: not yet found out how to make a repeatable entry collapsible
