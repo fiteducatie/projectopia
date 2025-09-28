@@ -92,9 +92,6 @@ class ViewProject extends ViewRecord
                                 TextEntry::make('acceptance_criteria')->label('Acceptatiecriteria')
                                     ->listWithLineBreaks()
                                     ->formatStateUsing(function ($state) {
-                                        if (!$state || !is_array($state)) {
-                                            return 'Geen criteria opgegeven';
-                                        }
 
                                         return collect($state)->map(function ($criteria) {
                                             return '✔️ ' . $criteria;
