@@ -24,8 +24,7 @@ class EditProject extends EditRecord
                 ->url(fn () => route('choose.project', $this->record))
                 ->openUrlInNewTab(),
 
-            //i want to make a toggle action to close and open the project
-            Action::make('toggle-project-status')
+            Action::make('change-project-status')
                 ->label(fn () => $this->record->status === 'closed' ? 'Heropen project' : 'Sluit project')
                 ->color(fn () => $this->record->status === 'closed' ? 'success' : 'danger')
                 ->requiresConfirmation()
