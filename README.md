@@ -8,17 +8,14 @@
 - Add **user stories, features, or deliverables**.  
 - Generate **stakeholder personas** (client, product owner, end-users) — complete with AI-generated faces.  
 - Interact with personas in a **chat simulation** to refine requirements.  
-- Build a **backlog, sprint plan, and timeline**.  
 - Experience **iterations, feedback, and scope changes** — just like in real life.  
 
 ## ✨ Features
 - 🧑‍🤝‍🧑 **AI Personas** – realistic stakeholders with roles, goals, and communication styles.  
 - 🎭 **Interactive Dialogue** – students can ask questions and negotiate requirements.  
 - 📋 **Backlog Generation** – automatic breakdown of context into epics and user stories.  
-- 📆 **Timeline Builder** – sprint planning and milestone generation.  
 - 🎨 **Avatar Faces** – AI-generated profile pictures for each persona.  
 - 🏫 **Teacher Mode** – define pre-made scenarios, difficulty levels, or stakeholder quirks.  
-- 🎮 **Gamified Learning** – project challenges, feedback rounds, and scenario-based play.  
 
 ## 🛠️ Tech Stack
 - **Backend**: [Laravel 12](https://laravel.com/)  
