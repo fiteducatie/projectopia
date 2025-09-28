@@ -158,8 +158,7 @@ class ViewProject extends ViewRecord
                                     ]),
                             ])
                             ->columns(1)
-                            ->emptyStateHeading('Geen bijlagen')
-                            ->emptyStateDescription('Er zijn nog geen bestanden geüpload voor dit project.')
+
                     ])->collapsible(true),
             ]);
     }

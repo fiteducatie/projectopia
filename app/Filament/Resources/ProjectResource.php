@@ -55,6 +55,13 @@ class ProjectResource extends Resource
                                             'event' => 'Evenement',
                                         ])->required()->default('software')
                                         ->helperText('Bepaalt de standaardtemplates (Software, Marketing, Evenement).'),
+                                    Forms\Components\Select::make('difficulty')->label('Complexiteit')
+                                        ->options([
+                                            'laag' => 'Laag',
+                                            'middel' => 'Middel',
+                                            'hoog' => 'Hoog',
+                                        ])->required()->default('middel')
+                                        ->helperText('Bepaalt de complexiteit van het project.'),
                                 ]),
                             Section::make()
                                 ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')
@@ -83,7 +90,7 @@ class ProjectResource extends Resource
                                 ->schema([
                                     Forms\Components\Repeater::make('user_stories_data')
                                         ->relationship('userStories')
-                                        ->itemLabel(fn (array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 200) . (isset($state['user_story']) && strlen($state['user_story']) > 200 ? '...' : '')))
+                                        ->itemLabel(fn(array $state): string => trim(substr($state['user_story'] ?? 'User Story', 0, 200) . (isset($state['user_story']) && strlen($state['user_story']) > 200 ? '...' : '')))
                                         ->label('User Stories')
                                         ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
                                         ->schema([
@@ -132,7 +139,7 @@ class ProjectResource extends Resource
                                 ->schema([
                                     Forms\Components\Repeater::make('personas_data')
                                         ->relationship('personas')
-                                        ->itemLabel(fn (array $state): string => trim(($state['role'] ?? 'Rol') . ': ' . ($state['name'] ?? 'Naam')))
+                                        ->itemLabel(fn(array $state): string => trim(($state['role'] ?? 'Rol') . ': ' . ($state['name'] ?? 'Naam')))
                                         ->label('Persona\'s')
                                         ->helperText('Minimaal 1 persona is aan te raden: Klant, Product Owner of Doelgroep.')
                                         ->schema([
@@ -172,6 +179,7 @@ class ProjectResource extends Resource
                                         ->conversion('thumb'),
 
                                     Forms\Components\Repeater::make('attachment_metadata')
+                                        ->visibleOn('edit')
                                         ->label('Bestandsdetails')
                                         ->helperText('Voeg extra details toe aan geüploade bestanden zoals naam, beschrijving en relevante persona\'s.')
                                         ->schema([
@@ -204,7 +212,8 @@ class ProjectResource extends Resource
                                                 })
                                                 ->placeholder('Selecteer persona\'s die toegang hebben tot dit bestand'),
                                         ])
-                                        ->itemLabel(fn (array $state): string =>
+                                        ->itemLabel(
+                                            fn(array $state): string =>
                                             $state['name'] ?? ($state['file_name'] ?? 'Nieuw bestand')
                                         )
                                         ->collapsed()
@@ -217,10 +226,10 @@ class ProjectResource extends Resource
                                         }),
                                 ]),
                         ]),
-                 ])
-                ->skippable()
-                ->persistStepInQueryString()
-                ->columnSpanFull(),
+                ])
+                    ->skippable()
+                    ->persistStepInQueryString()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -230,8 +239,6 @@ class ProjectResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Naam')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('domain')->label('Domein')->badge(),
-                Tables\Columns\TextColumn::make('start_date')->label('Startdatum')->date(),
-                Tables\Columns\TextColumn::make('end_date')->label('Einddatum')->date(),
                 Tables\Columns\TextColumn::make('difficulty')->label('Moeilijkheid')->badge(),
                 TextColumn::make('attachments')->label('Bijlagen')->getStateUsing(function ($record) {
                     return $record->media()->count();
@@ -239,15 +246,8 @@ class ProjectResource extends Resource
 
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-            ])
-            ->recordUrl(fn ($record) => static::getUrl('view', ['record' => $record]))
-            ->actions([
-                EditAction::make(),
-            ])
-            ->bulkActions([
-                DeleteBulkAction::make(),
-            ]);
+            ->filters([])
+            ->recordUrl(fn($record) => static::getUrl('view', ['record' => $record]));
     }
 
     public static function getEloquentQuery(): Builder
@@ -270,6 +270,4 @@ class ProjectResource extends Resource
             'edit' => Pages\EditProject::route('/{record}/edit'),
         ];
     }
-
 }
-
