@@ -18,7 +18,9 @@ use Filament\Actions\DeleteBulkAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class ProjectResource extends Resource
 {
@@ -155,37 +157,63 @@ class ProjectResource extends Resource
                             Section::make()
                                 ->description('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s. Voeg extra details toe.')
                                 ->schema([
-                                    Forms\Components\Repeater::make('attachments_data')
-                                        ->label('Bijlagen')
-                                        ->helperText('Upload bestanden en voeg extra informatie toe.')
-                                        ->itemLabel(fn (array $state): string => $state['title'] ?? 'Bijlage')
+                                    SpatieMediaLibraryFileUpload::make('attachments')
+                                        ->label('Bestanden uploaden')
+                                        ->helperText('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s.')
+                                        ->collection('attachments')
+                                        ->multiple()
+                                        ->panelLayout('grid')
+                                        ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*'])
+                                        ->maxSize(10240) // 10MB
+                                        ->reorderable()
+                                        ->appendFiles()
+                                        ->responsiveImages()
+                                        ->conversion('thumb'),
+
+                                    Forms\Components\Repeater::make('attachment_metadata')
+                                        ->label('Bestandsdetails')
+                                        ->helperText('Voeg extra details toe aan geüploade bestanden zoals naam, beschrijving en relevante persona\'s.')
                                         ->schema([
-                                            Forms\Components\TextInput::make('title')
-                                                ->label('Titel')
-                                                ->required()
-                                                ->helperText('Korte titel voor deze bijlage.')
-                                                ->maxLength(255),
-                                            Forms\Components\FileUpload::make('file')
-                                                ->label('Bestand')
-                                                ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*'])
-                                                ->maxSize(10240) // 10MB
-                                                ->disk('public')
-                                                ->directory('attachments')
-                                                ->visibility('public')
-                                                ->imagePreviewHeight('250')
-                                                ->loadingIndicatorPosition('left')
-                                                ->panelAspectRatio('2:1')
-                                                ->panelLayout('integrated')
-                                                ->helperText('PDF, Word, afbeeldingen of video\'s. Maximaal 10MB.')
+                                            Forms\Components\Hidden::make('media_id'),
+
+                                            Forms\Components\TextInput::make('file_name')
+                                                ->label('Bestandsnaam')
+                                                ->disabled()
+                                                ->dehydrated(false),
+
+                                            Forms\Components\TextInput::make('name')
+                                                ->label('Weergavenaam')
+                                                ->placeholder('Geef een beschrijvende naam op')
                                                 ->required(),
-                                            Forms\Components\TextArea::make('details')
-                                                ->label('Extra details')
-                                                ->helperText('Beschrijf wat dit bestand bevat en waarom het relevant is.')
+
+                                            Forms\Components\Textarea::make('description')
+                                                ->label('Beschrijving')
+                                                ->placeholder('Voeg een beschrijving toe aan dit bestand')
                                                 ->rows(3),
+
+                                            Forms\Components\Select::make('persona_ids')
+                                                ->label('Relevante Persona\'s')
+                                                ->multiple()
+                                                ->options(function ($record) {
+                                                    if (!$record) {
+                                                        return [];
+                                                    }
+
+                                                    return $record->personas()->pluck('name', 'id')->toArray();
+                                                })
+                                                ->placeholder('Selecteer persona\'s die toegang hebben tot dit bestand'),
                                         ])
+                                        ->itemLabel(fn (array $state): string =>
+                                            $state['name'] ?? ($state['file_name'] ?? 'Nieuw bestand')
+                                        )
                                         ->collapsed()
                                         ->grid(1)
-                                        ->addActionLabel('Bijlage toevoegen'),
+                                        ->addActionLabel('Bestand toevoegen')
+                                        ->reorderable(false)
+                                        ->live()
+                                        ->afterStateUpdated(function ($state, $component) {
+                                            // This will be handled in the page classes
+                                        }),
                                 ]),
                         ]),
                  ])
@@ -204,6 +232,15 @@ class ProjectResource extends Resource
                 Tables\Columns\TextColumn::make('start_date')->label('Startdatum')->date(),
                 Tables\Columns\TextColumn::make('end_date')->label('Einddatum')->date(),
                 Tables\Columns\TextColumn::make('difficulty')->label('Moeilijkheid')->badge(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('attachments')
+                    ->label('Bijlagen')
+                    ->collection('attachments')
+                    ->conversion('thumb')
+                    ->limit(3)
+                    ->limitedRemainingText()
+                    ->square()
+                    ->size(40),
+
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -227,6 +264,7 @@ class ProjectResource extends Resource
         return $query;
     }
 
+
     public static function getPages(): array
     {
         return [
@@ -236,5 +274,6 @@ class ProjectResource extends Resource
             'edit' => Pages\EditProject::route('/{record}/edit'),
         ];
     }
+
 }
 

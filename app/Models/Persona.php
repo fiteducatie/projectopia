@@ -26,4 +26,11 @@ class Persona extends Model
     {
         return $this->belongsToMany(UserStory::class, 'persona_user_stories');
     }
+
+    public function attachments()
+    {
+        return $this->project
+            ->media()
+            ->whereJsonContains('custom_properties->persona_ids', $this->id);
+    }
 }

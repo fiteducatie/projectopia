@@ -6,6 +6,7 @@ use App\Filament\Resources\ProjectResource;
 use App\Models\Persona;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Storage;
 
 class CreateProject extends CreateRecord
 {
@@ -34,9 +35,9 @@ class CreateProject extends CreateRecord
         $this->userStoriesData = $data['user_stories_data'] ?? [];
         unset($data['user_stories_data']);
 
-        // Extract attachments repeater data so it doesn't attempt to persist on the project model
-        $this->attachmentsData = $data['attachments_data'] ?? [];
-        unset($data['attachments_data']);
+        // Extract attachment metadata repeater data so it doesn't attempt to persist on the project model
+        $this->attachmentsData = $data['attachment_metadata'] ?? [];
+        unset($data['attachment_metadata']);
 
         return $data;
     }
@@ -83,39 +84,20 @@ class CreateProject extends CreateRecord
             ]);
         }
 
-        // Handle attachments using Spatie MediaLibrary
+        // Handle attachment metadata
         $attachments = $this->attachmentsData ?? [];
         foreach ($attachments as $attachment) {
-            if (!empty($attachment['file']) && is_array($attachment['file'])) {
-                // Handle multiple files if uploaded
-                $files = $attachment['file'];
-                foreach ($files as $filePath) {
-                    if ($filePath && \Storage::disk('public')->exists($filePath)) {
-                        $media = $this->record->addMediaFromDisk($filePath, 'public')
-                            ->toMediaCollection('attachments');
-
-                        // Store additional metadata
-                        $media->setCustomProperty('title', $attachment['title'] ?? '');
-                        $media->setCustomProperty('details', $attachment['details'] ?? '');
-                        $media->save();
-                    }
-                }
-            } elseif (!empty($attachment['file']) && is_string($attachment['file'])) {
-                // Handle single file
-                $filePath = $attachment['file'];
-                if (\Storage::disk('public')->exists($filePath)) {
-                    $media = $this->record->addMediaFromDisk($filePath, 'public')
-                        ->toMediaCollection('attachments');
-
-                    // Store additional metadata
-                    $media->setCustomProperty('title', $attachment['title'] ?? '');
-                    $media->setCustomProperty('details', $attachment['details'] ?? '');
-                    $media->save();
-                }
+            if (isset($attachment['media_id']) && !empty($attachment['media_id'])) {
+                $this->record->updateAttachmentMetadata($attachment['media_id'], [
+                    'name' => $attachment['name'] ?? '',
+                    'description' => $attachment['description'] ?? '',
+                    'persona_ids' => $attachment['persona_ids'] ?? [],
+                ]);
             }
         }
     }
 }
+
 
 
 

@@ -106,7 +106,72 @@ class ViewProject extends ViewRecord
                                 })->columnSpan(1),
                             ])
                     ])->collapsible(true),
+
+                InfoSection::make('Bijlagen')
+                    ->description('Relevante documenten en bestanden met extra details')
+                    ->schema([
+                        RepeatableEntry::make('attachments')
+                            ->getStateUsing(fn () => $this->record->getAttachmentMetadata())
+                            ->schema([
+                                Grid::make(4)
+                                    ->schema([
+                                        ImageEntry::make('url')
+                                            ->label('Preview')
+                                            ->height(120)
+                                            ->width(160)
+                                            ->columnSpan(1)
+                                            ->visible(fn ($state) => str_starts_with($state, 'http')),
+                                        
+                                        TextEntry::make('name')
+                                            ->label('Bestandsnaam')
+                                            ->weight('semibold')
+                                            ->columnSpan(2),
+                                        
+                                        TextEntry::make('file_name')
+                                            ->label('Originele naam')
+                                            ->color('gray')
+                                            ->columnSpan(1),
+                                        
+                                        TextEntry::make('description')
+                                            ->label('Beschrijving')
+                                            ->columnSpanFull()
+                                            ->placeholder('Geen beschrijving beschikbaar')
+                                            ->color(fn ($state) => $state ? null : 'gray'),
+                                        
+                                        TextEntry::make('mime_type')
+                                            ->label('Type')
+                                            ->badge()
+                                            ->color('secondary')
+                                            ->columnSpan(1),
+                                        
+                                        TextEntry::make('size')
+                                            ->label('Grootte')
+                                            ->formatStateUsing(fn ($state) => $this->formatFileSize($state))
+                                            ->color('gray')
+                                            ->columnSpan(1),
+                                        
+                                        TextEntry::make('persona_names')
+                                            ->label('Relevante Persona\'s')
+                                            ->formatStateUsing(fn ($state) => $state ? implode(', ', $state) : 'Geen persona\'s geselecteerd')
+                                            ->color(fn ($state) => $state ? null : 'gray')
+                                            ->columnSpan(2),
+                                    ]),
+                            ])
+                            ->columns(1)
+                            ->emptyStateHeading('Geen bijlagen')
+                            ->emptyStateDescription('Er zijn nog geen bestanden geüpload voor dit project.')
+                    ])->collapsible(true),
             ]);
+    }
+
+    protected function formatFileSize(int $bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= pow(1024, $pow);
+        return round($bytes, 2) . ' ' . $units[$pow];
     }
 }
 
