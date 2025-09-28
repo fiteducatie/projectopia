@@ -32,7 +32,7 @@ abstract class BaseChatController extends Controller
             $fileChoices = [];
 
             $project = $this->getProjectFromEntity($entity);
-            
+
             // For personas, only provide their specific attachments
             if ($this instanceof \App\Http\Controllers\Api\PersonaChatController) {
                 $attachmentsToShare = $entity->attachments();
@@ -45,6 +45,11 @@ abstract class BaseChatController extends Controller
                 $name = $attachment->file_name;
                 $description = $attachment->getCustomProperty('description') ?? 'No description available';
                 $fileChoices[$name] = $description;
+            }
+
+            // If no files are available, provide a minimal schema
+            if (empty($fileChoices)) {
+                $fileChoices = ['no_files' => 'No files available'];
             }
 
             $definition = $this->buildResponseSchema($fileChoices);
@@ -62,6 +67,11 @@ abstract class BaseChatController extends Controller
                 $content = json_decode($output);
 
                 foreach ($content->files_to_share as $file) {
+                    // Skip the "no_files" placeholder
+                    if ($file->value === 'no_files') {
+                        continue;
+                    }
+                    
                     // Use the same attachment collection as defined above
                     if ($this instanceof \App\Http\Controllers\Api\PersonaChatController) {
                         $attachment = $entity->attachments()->where('file_name', $file->value)->first();
@@ -205,10 +215,10 @@ abstract class BaseChatController extends Controller
     protected function getPersonaAttachmentsInfo($persona): string
     {
         $info = "";
-        
+
         // Get attachments assigned to this specific persona
         $attachments = $persona->attachments();
-        
+
         if ($attachments->count() > 0) {
             foreach ($attachments->get() as $attachment) {
                 $info .= "- {$attachment->name}";
@@ -220,7 +230,7 @@ abstract class BaseChatController extends Controller
         } else {
             $info .= "Je hebt momenteel geen bestanden toegewezen gekregen.\n";
         }
-        
+
         return $info;
     }
 
