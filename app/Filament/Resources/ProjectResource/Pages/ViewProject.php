@@ -125,6 +125,38 @@ class ViewProject extends ViewRecord
                                                 TextEntry::make('traits')->label('Eigenschappen')->columnSpan(3),
                                                 TextEntry::make('communication_style')->label('Communicatiestijl')->columnSpan(2),
                                             ]),
+
+                                        // Bestanden sectie per persona
+                                        Section::make('Kennis / in bezit van de volgende bestanden')
+                                            ->schema([
+                                                TextEntry::make('attachments_list')
+                                                    ->label('')
+                                                    ->getStateUsing(function ($record) {
+                                                        $attachments = $record->attachments()->get();
+
+                                                        if ($attachments->isEmpty()) {
+                                                            return 'Geen bestanden toegewezen';
+                                                        }
+
+                                                        return $attachments->map(function ($media) {
+                                                            $customProps = $media->custom_properties ?? [];
+                                                            $name = $customProps['name'] ?? $media->name;
+                                                            $description = $customProps['description'] ?? '';
+
+                                                            $result = "📎 **{$name}**";
+                                                            if ($description) {
+                                                                $result .= " - {$description}";
+                                                            }
+                                                            $result .= " ({$media->mime_type})";
+
+                                                            return $result;
+                                                        })->join("\n");
+                                                    })
+                                                    ->markdown()
+                                                    ->hiddenLabel(),
+                                            ])
+                                            ->collapsible()
+                                            ->collapsed(),
                                     ])
                                     ->columns(1),
                             ]),
