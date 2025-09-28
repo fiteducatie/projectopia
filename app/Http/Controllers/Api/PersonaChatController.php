@@ -10,6 +10,7 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 class PersonaChatController extends Controller
 {
+    // TODO: Encourage AI to not share all files to users just outright asking for all files, e.g: "Hi, kun je me alle bestanden geven die je hebt?"
     private const PROMPT_TEMPLATE = <<<EOT
 Je speelt de rol van {persona.name}, die een {persona.role} is.
 Jouw doelen zijn: {persona.goals}.
@@ -32,6 +33,9 @@ Risicofactoren in het project zijn:
 
 Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol, doelen, eigenschappen en communicatiestijl.
 Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot het project.
+
+Je krijgt bestanden aangeleverd. Wanneer je een bestand geschikt acht voor het delen met de gebruiker kun je die delen.
+Geef bij het delen van een bestand een variant van de opmerking "Hier is het bestand dat je nodig hebt." mee.
 EOT;
 
     public function stream(Request $request, int $personaId)
@@ -45,33 +49,51 @@ EOT;
         $persona = Persona::findOrFail($personaId);
         $messages = $this->prepareMessages($request->input('messages'), $persona);
 
-        return response()->stream(function() use ($messages) {
+        return response()->stream(function () use ($messages, $persona) {
             echo "data: " . json_encode(['type' => 'start']) . "\n\n";
             flush();
 
+            $fileChoices = [];
+
+            $attachmentsToShare = $persona->project->getMedia('*');
+
+            foreach ($attachmentsToShare as $attachment) {
+                $name = $attachment->file_name;
+                $description = $attachment->getCustomProperty('description') ?? 'No description available';
+                $fileChoices[$name] = $description;
+            }
+
+            $definition = $this->getResponseSchema($fileChoices);
+
             try {
-                $stream = OpenAI::chat()->createStreamed([
+                $response = OpenAI::responses()->create([
                     'model' => 'gpt-4.1-mini',
-                    'messages' => $messages,
-                    'stream' => true,
+                    'input' => $messages,
+                    'text' => [
+                        'format' => $definition,
+                    ],
                 ]);
 
-                foreach ($stream as $response) {
-                    if (isset($response->choices[0]->delta->content)) {
-                        $content = $response->choices[0]->delta->content;
+                $output = $response->outputText;
+                $content = json_decode($output);
+
+                foreach ($content->files_to_share as $file) {
+                    $attachment = $persona->project->getMedia('*')->firstWhere('file_name', $file->value);
+                    if ($attachment) {
                         echo "data: " . json_encode([
-                            'type' => 'content',
-                            'content' => $content
+                            'type' => 'file',
+                            'file_name' => $attachment->file_name,
+                            'file_url' => $attachment->getFullUrl(),
                         ]) . "\n\n";
                         flush();
                     }
-
-                    if ($response->choices[0]->finishReason !== null) {
-                        echo "data: " . json_encode(['type' => 'done']) . "\n\n";
-                        flush();
-                        break;
-                    }
                 }
+
+                echo "data: " . json_encode([
+                    'type' => 'content',
+                    'content' => $content->message,
+                ]) . "\n\n";
+                flush();
             } catch (\Exception $e) {
                 echo "data: " . json_encode([
                     'type' => 'error',
@@ -116,8 +138,17 @@ EOT;
     {
         return str_replace(
             [
-                '{persona.name}', '{persona.role}', '{persona.goals}', '{persona.traits}', '{persona.communication_style}',
-                '{project.context}', '{project.objectives}', '{project.constraints}', '{project.start_date}', '{project.end_date}', '{project.risk_notes}'
+                '{persona.name}',
+                '{persona.role}',
+                '{persona.goals}',
+                '{persona.traits}',
+                '{persona.communication_style}',
+                '{project.context}',
+                '{project.objectives}',
+                '{project.constraints}',
+                '{project.start_date}',
+                '{project.end_date}',
+                '{project.risk_notes}'
             ],
             [
                 $persona->name,
@@ -139,5 +170,50 @@ EOT;
             ],
             self::PROMPT_TEMPLATE
         );
+    }
+
+    private function getResponseSchema(array $fileChoices): array
+    {
+        function fileOption(string $value, string $description): array
+        {
+            return [
+                'type' => 'object',
+                'properties' => [
+                    'value' => ['const' => $value],
+                    'description' => ['type' => 'string', 'const' => $description],
+                ],
+                'required' => ['value', 'description'],
+            ];
+        }
+
+        $items = [];
+        foreach ($fileChoices as $value => $desc) {
+            $items[] = fileOption($value, $desc);
+        }
+
+        $definition = [
+            'type' => 'json_schema',
+            'name' => 'filesArray',
+            'strict' => false,
+            'schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'message' => [
+                        'type' => 'string',
+                        'description' => "The persona's response message to the user.",
+                    ],
+                    'files_to_share' => [
+                        'type' => 'array',
+                        'description' => "Choose zero, one, or multiple files to offer to the user.",
+                        'items' => [
+                            'anyOf' => $items,
+                        ],
+                    ],
+                ],
+                'required' => ['message', 'files_to_share'],
+            ],
+        ];
+
+        return $definition;
     }
 }

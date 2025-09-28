@@ -82,7 +82,13 @@
     php artisan migrate --seed
     ```
 
-8. Start dev server
+8. Ensure the storage symlink is created
+
+    ```bash
+    php artisan storage:link
+    ```
+
+9. Start dev server
 
     ```bash
     php artisan serve
