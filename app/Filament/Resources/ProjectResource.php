@@ -38,6 +38,7 @@ class ProjectResource extends Resource
 
             ->schema([
                 Tabs::make('Project Edit')
+                    ->persistTabInQueryString()
                     ->columnSpanFull()
                     ->tabs([
                         Tabs\Tab::make('Overzicht')
