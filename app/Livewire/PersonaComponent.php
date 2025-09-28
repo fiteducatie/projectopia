@@ -25,7 +25,7 @@ class PersonaComponent extends Component
         if ($this->persona->project->status === 'closed') {
             return;
         }
-        
+
         $this->dispatch('open-persona-chat', id: $this->persona->id);
     }
 }

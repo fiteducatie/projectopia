@@ -25,7 +25,7 @@ class PersonaChat extends Component
         if (!$this->persona) {
             return false;
         }
-        
+
         return $this->persona->project->status === 'closed';
     }
 

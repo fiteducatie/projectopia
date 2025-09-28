@@ -136,7 +136,7 @@
 
                 async sendMessage() {
                     if (!this.currentMessage.trim()) return;
-                    
+
                     // Check if project is closed
                     if ({{ $this->isProjectClosed() ? 'true' : 'false' }}) {
                         return;
