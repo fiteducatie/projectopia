@@ -21,10 +21,12 @@ use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TimePicker;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -132,14 +134,16 @@ class ProjectResource extends Resource
                                                     ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
                                                 Section::make()
                                                 ->schema([
+                                                    TextEntry::make('Acceptatie Criteria')
+                                                        ->extraAttributes(['class' => 'italic'])
+                                                        ->state('Beschrijf welke aanvullende details de user story moet hebben.'),
                                                     Forms\Components\Repeater::make('acceptance_criteria')
-                                                    ->label('Acceptatie Criterium')
-                                                    ->collapsible()
-                                                    ->simple(
-                                                        Forms\Components\TextInput::make('criteria')
-                                                            ->helperText('Beschrijf welke aanvullende details de user story moet hebben.')
-                                                            ->label('Acceptatie Criterium'),
-                                                    )
+                                                        ->collapsible()
+
+                                                        ->hiddenLabel()
+                                                        ->simple(
+                                                            Forms\Components\TextInput::make('criteria')
+                                                        )
                                                 ]),
                                                 Forms\Components\Select::make('personas')
                                                     ->label('Persona\'s')
