@@ -169,6 +169,7 @@ class ProjectResource extends Resource
                                         ->label('Bestanden uploaden')
                                         ->helperText('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s.')
                                         ->collection('attachments')
+                                        ->downloadable()
                                         ->multiple()
                                         ->panelLayout('grid')
                                         ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*'])

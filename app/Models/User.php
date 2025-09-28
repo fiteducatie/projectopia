@@ -17,6 +17,11 @@ class User extends Authenticatable implements HasTenantsContract
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
