@@ -24,7 +24,7 @@
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm">
                 <a href="#features" class="hover:text-sky-600">Functies</a>
-                <a href="#personas" class="hover:text-sky-600">Persona's</a>
+                <a href="#personas" class="hover:text-sky-600">Belanghebbenden</a>
                 <a href="#hoe" class="hover:text-sky-600">Hoe werkt het</a>
             </nav>
             <div class="flex items-center gap-3">
@@ -38,7 +38,7 @@
             <section class="max-w-7xl mx-auto px-6 pt-10 pb-16 md:pt-16 md:pb-24 grid md:grid-cols-2 gap-10 items-start">
                 <div>
                     <h1 class="text-4xl md:text-5xl font-bold leading-tight">
-                        Simuleer <span class="text-sky-600">projecten</span> met <span class="text-emerald-600">virtuele belanghebbenden</span> en chat in realtime.
+                        Simuleer <span class="text-sky-600">projecten</span> met <span class="text-emerald-600">belanghebbenden</span> en chat in realtime.
                     </h1>
                     <p class="mt-4 text-slate-600 text-lg">
                         Projectopia helpt teams om te communiceren met duidelijke projectcontext, stakeholder persona's en uitgewerkte user stories.
@@ -49,7 +49,7 @@
                     </div>
                     <div class="mt-6 flex items-center gap-4 text-sm text-slate-500">
                         <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-sky-500"></span> Project context</span>
-                        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> Stakeholder persona's</span>
+                        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span> Belanghebbenden</span>
                         <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span> User stories</span>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
 
             <!-- Features -->
             <section id="features" class="bg-white border-y border-slate-200">
-                <div class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8">
+                <div class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <div class="p-6 rounded-xl border border-slate-200 shadow-sm">
                         <div class="h-10 w-10 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center mb-3">💬</div>
                         <h3 class="font-semibold text-lg mb-1">Realtime Chat</h3>
@@ -74,28 +74,33 @@
                     </div>
                     <div class="p-6 rounded-xl border border-slate-200 shadow-sm">
                         <div class="h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-3">🎭</div>
-                        <h3 class="font-semibold text-lg mb-1">Virtuele Persona's</h3>
-                        <p class="text-slate-600">Persona's met eigen doelen, eigenschappen en communicatiestijl die realistisch reageren.</p>
+                        <h3 class="font-semibold text-lg mb-1">Virtuele Belanghebbenden</h3>
+                        <p class="text-slate-600">Belanghebbenden met eigen doelen, eigenschappen en communicatiestijl die realistisch reageren.</p>
                     </div>
                     <div class="p-6 rounded-xl border border-slate-200 shadow-sm">
                         <div class="h-10 w-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mb-3">🎯</div>
                         <h3 class="font-semibold text-lg mb-1">Project Simulatie</h3>
                         <p class="text-slate-600">Oefen projectgesprekken in een veilige omgeving zonder echte consequenties.</p>
                     </div>
+                    <div class="p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="h-10 w-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mb-3">📎</div>
+                        <h3 class="font-semibold text-lg mb-1">Gerichte Informatie Uitwisseling</h3>
+                        <p class="text-slate-600">Belanghebbenden hebben geheime documenten die ze alleen delen als je de juiste vragen stelt. Oefen hoe je informatie verkrijgt door goed te luisteren en door te vragen.</p>
+                    </div>
                 </div>
             </section>
 
-            <!-- Persona's -->
+            <!-- Belanghebbenden -->
             <section id="personas" class="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
                 <div>
-                    <h2 class="text-2xl font-bold">Stakeholder Persona's</h2>
-                    <p class="mt-3 text-slate-600">Maak gedetailleerde persona's van je stakeholders met doelen, eigenschappen en communicatiestijl. Dit helpt je team om beter te begrijpen voor wie je bouwt.</p>
+                    <h2 class="text-2xl font-bold">Belanghebbenden</h2>
+                    <p class="mt-3 text-slate-600">Maak gedetailleerde profielen van je belanghebbenden met doelen, eigenschappen en communicatiestijl. Dit helpt je team om beter te begrijpen voor wie je bouwt.</p>
                     <ul class="mt-4 space-y-2 text-slate-700">
-                        <li>• Definiëer doelen en eigenschappen per persona</li>
-                        <li>• Koppel persona's aan user stories</li>
-                        <li>• Organiseer bestanden per relevante stakeholder</li>
+                        <li>• Definiëer doelen en eigenschappen per belanghebbende</li>
+                        <li>• Koppel belanghebbenden aan user stories</li>
+                        <li>• Organiseer bestanden per relevante belanghebbende</li>
                     </ul>
-                    <a href="/admin" class="inline-block mt-6 px-5 py-3 rounded-lg bg-sky-500 text-white font-semibold hover:bg-sky-600">Bekijk persona's</a>
+                    <a href="/admin" class="inline-block mt-6 px-5 py-3 rounded-lg bg-sky-500 text-white font-semibold hover:bg-sky-600">Bekijk belanghebbenden</a>
                 </div>
                 <div class="relative">
 
@@ -138,7 +143,7 @@
             <div class="space-x-4">
                 <a href="/admin" class="hover:text-sky-600">Inloggen</a>
                 <a href="#features" class="hover:text-sky-600">Functies</a>
-                <a href="#personas" class="hover:text-sky-600">Persona's</a>
+                <a href="#personas" class="hover:text-sky-600">Belanghebbenden</a>
             </div>
         </footer>
     </body>
