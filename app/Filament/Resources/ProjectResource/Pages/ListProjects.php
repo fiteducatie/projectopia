@@ -15,7 +15,6 @@ class ListProjects extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            //make a toggle action button to close al project statusses at once in this list
             Action::make('change-all-projects-status')
                 ->label('Sluit alle projecten')
                 ->color('danger')
