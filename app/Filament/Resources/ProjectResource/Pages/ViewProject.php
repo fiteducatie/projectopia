@@ -149,7 +149,22 @@ class ViewProject extends ViewRecord
 
                                         TextEntry::make('persona_names')
                                             ->label('Relevante Persona\'s')
-                                            ->formatStateUsing(fn ($state) => $state ? implode(', ', $state) : 'Geen persona\'s geselecteerd')
+                                            ->formatStateUsing(function ($state) {
+                                                if (!$state) {
+                                                    return 'Geen persona\'s geselecteerd';
+                                                }
+                                                
+                                                // Ensure $state is an array
+                                                if (is_string($state)) {
+                                                    return $state;
+                                                }
+                                                
+                                                if (is_array($state)) {
+                                                    return implode(', ', $state);
+                                                }
+                                                
+                                                return 'Geen persona\'s geselecteerd';
+                                            })
                                             ->color(fn ($state) => $state ? null : 'gray')
                                             ->columnSpan(2),
                                     ]),
