@@ -153,16 +153,16 @@ class ViewProject extends ViewRecord
                                                 if (!$state) {
                                                     return 'Geen persona\'s geselecteerd';
                                                 }
-                                                
+
                                                 // Ensure $state is an array
                                                 if (is_string($state)) {
                                                     return $state;
                                                 }
-                                                
+
                                                 if (is_array($state)) {
                                                     return implode(', ', $state);
                                                 }
-                                                
+
                                                 return 'Geen persona\'s geselecteerd';
                                             })
                                             ->color(fn ($state) => $state ? null : 'gray')
