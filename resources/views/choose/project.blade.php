@@ -46,6 +46,17 @@
         </div>
         <div class="space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-6">
+                <h3 class="font-semibold mb-3">Team Leiders</h3>
+                <div class="space-y-3">
+                    @forelse ($project->teamleaders as $teamleader)
+                        @livewire('teamleader-component', ['teamleader' => $teamleader], key('teamleader-' . $teamleader->id))
+                    @empty
+                        <div class="text-slate-500 text-sm">Geen team leiders toegevoegd.</div>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-6">
                 <h3 class="font-semibold mb-3">Betrokkenen</h3>
                 <div class="space-y-3">
                     @forelse ($project->personas as $persona)
@@ -112,6 +123,7 @@
         </div>
     </div>
     @livewire('persona-chat')
+    @livewire('teamleader-chat')
     @livewireScripts
     <script>
         function openModal(id) {

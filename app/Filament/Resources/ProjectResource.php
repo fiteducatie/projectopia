@@ -293,13 +293,20 @@ class ProjectResource extends Resource
                                             }),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Team leider')
+                        Tabs\Tab::make('Team Leiders')
                             ->icon('heroicon-o-user-group')
+                            ->badge(fn ($record) => $record ? $record->teamLeaders()->count() : 0)
                             ->schema([
                                 Section::make()
-                                    ->description('Voeg de team leider toe.')
+                                    ->description('Selecteer team leiders voor dit project.')
                                     ->schema([
-
+                                        Forms\Components\Select::make('team_leader_ids')
+                                            ->label('Team Leiders')
+                                            ->multiple()
+                                            ->relationship('teamLeaders', 'name')
+                                            ->preload()
+                                            ->searchable()
+                                            ->helperText('Selecteer een of meer team leiders die betrokken zijn bij dit project.'),
                                     ]),
                             ]),
                     ]),

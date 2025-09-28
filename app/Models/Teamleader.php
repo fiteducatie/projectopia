@@ -13,8 +13,10 @@ class Teamleader extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'team_id',
         'name',
         'avatar_url',
+        'summary',
         'description',
         'communication_style',
         'skillset',

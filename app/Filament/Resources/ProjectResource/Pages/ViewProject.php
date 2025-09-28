@@ -229,6 +229,46 @@ class ViewProject extends ViewRecord
                                     ])
                                     ->columns(1)
                             ]),
+
+                        Tabs\Tab::make('Team Leiders')
+                            ->icon('heroicon-o-user-group')
+                            ->badge(fn () => $this->record->teamleaders()->count())
+                            ->schema([
+                                RepeatableEntry::make('teamleaders')
+                                    ->schema([
+                                        Grid::make(3)
+                                            ->schema([
+                                                ImageEntry::make('avatar_url')
+                                                    ->label('Avatar')
+                                                    ->circular()
+                                                    ->columnSpan(1),
+                                                Grid::make(1)
+                                                    ->schema([
+                                                        TextEntry::make('name')
+                                                            ->label('Naam')
+                                                            ->weight('bold')
+                                                            ->size('lg'),
+                                                        TextEntry::make('summary')
+                                                            ->label('Samenvatting'),
+                                                    ])
+                                                    ->columnSpan(2),
+                                            ]),
+
+                                        TextEntry::make('description')
+                                            ->label('Beschrijving')
+                                            ->columnSpanFull(),
+                                        TextEntry::make('communication_style')
+                                            ->label('Communicatiestijl')
+                                            ->columnSpanFull(),
+                                        TextEntry::make('skillset')
+                                            ->label('Vaardigheden')
+                                            ->columnSpanFull(),
+                                        TextEntry::make('deliverables')
+                                            ->label('Verwachte Deliverables')
+                                            ->columnSpanFull(),
+                                    ])
+                                    ->columns(1),
+                            ]),
                     ])
             ]);
     }
