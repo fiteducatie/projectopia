@@ -9,3 +9,16 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.prose ul {
+    @apply my-4 space-y-2 pl-0;
+}
+
+.prose ul li {
+    @apply list-disc ml-6 text-gray-700 leading-relaxed;
+    position: relative;
+}
+
+.prose ul li::marker {
+    @apply text-blue-500;
+}

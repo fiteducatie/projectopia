@@ -65,7 +65,7 @@ abstract class BaseChatController extends Controller
                     if ($file->value === 'no_files') {
                         continue;
                     }
-                    
+
                     $attachment = $project->getMedia('*')->firstWhere('file_name', $file->value);
                     if ($attachment) {
                         echo "data: " . json_encode([

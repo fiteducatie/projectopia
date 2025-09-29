@@ -9,8 +9,8 @@
 
         <meta name="description" content="Projectopia – AI-projectsupport & simulatie voor onderwijs">
         <link rel="icon" href="{{ Vite::asset('resources/images/logo.png') }}">
-
         <script src="https://cdn.tailwindcss.com"></script>
+        @vite('resources/css/app.css')
         @yield('head')
     </head>
     <body class="min-h-screen bg-slate-50 text-slate-900">
