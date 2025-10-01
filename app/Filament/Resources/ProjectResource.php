@@ -26,6 +26,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TimePicker;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -129,14 +130,19 @@ class ProjectResource extends Resource
                                             ->label('User Stories')
                                             ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
                                             ->schema([
-                                                Forms\Components\TextInput::make('user_story')->label('User Story')->required()
-                                                    ->helperText('Bijv. Als [rol] wil ik [doel] zodat [reden].'),
+                                                TextEntry::make('userstories_help')
+                                                    ->label('User stories')
+                                                    ->state('Bijv. Als [rol] wil ik [doel] zodat [reden].')
+                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
+                                                Forms\Components\TextInput::make('user_story')
+                                                    ->hiddenLabel()
+                                                    ->required(),
                                                 Section::make()
                                                 ->schema([
-                                                    Placeholder::make('acceptance_criteria_help')
+                                                    TextEntry::make('acceptance_criteria_help')
+                                                        ->state('Beschrijf welke aanvullende details de user story moet hebben.')
                                                         ->label('Acceptatie Criteria')
-                                                        ->content('Beschrijf welke aanvullende details de user story moet hebben.')
-                                                        ->extraAttributes(['class' => 'italic text-sm text-gray-600']),
+                                                        ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                                                     Forms\Components\Repeater::make('acceptance_criteria')
                                                         ->collapsible()
 
@@ -145,9 +151,12 @@ class ProjectResource extends Resource
                                                             Forms\Components\TextInput::make('criteria')
                                                         )
                                                 ]),
-                                                Forms\Components\Select::make('personas')
+                                                TextEntry::make('personas_help')
                                                     ->label('Persona\'s')
-                                                    ->helperText('Selecteer relevante persona\'s voor deze user story.')
+                                                    ->state('Selecteer relevante persona\'s voor deze user story.')
+                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
+                                                Forms\Components\Select::make('personas')
+                                                    ->hiddenLabel()
                                                     ->multiple()
                                                     ->options(function($record){
                                                         if(!$record){
@@ -156,15 +165,18 @@ class ProjectResource extends Resource
                                                         return $record->project->personas()->pluck('name', 'id');
                                                     })
                                                     ->visibleOn('edit'),
-                                                Forms\Components\Toggle::make('mvp')->label('MVP?')
-                                                    ->helperText('Markeer deze user story als onderdeel van de Minimum Viable Product.'),
+                                                Forms\Components\Toggle::make('mvp')->label('MVP?'),
+                                                TextEntry::make('priority_help')
+                                                    ->label('Prioriteit')
+                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400'])
+                                                    ->state('Helpt bij het plannen en prioriteren van werk.'),
                                                 Forms\Components\Select::make('priority')->label('Prioriteit')
+                                                    ->hiddenLabel()
                                                     ->options([
                                                         'low' => 'Laag',
                                                         'medium' => 'Middel',
                                                         'high' => 'Hoog',
                                                     ])->required()->default('medium')
-                                                    ->helperText('Helpt bij het plannen en prioriteren van werk.'),
                                             ])
                                             ->collapsed()
                                             ->minItems(1)
