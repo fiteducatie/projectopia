@@ -3,32 +3,21 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
+use App\Filament\Resources\ProjectResource\Tabs\OverviewTab;
+use App\Filament\Resources\ProjectResource\Tabs\UserStoriesTab;
+use App\Filament\Resources\ProjectResource\Tabs\PersonasTab;
+use App\Filament\Resources\ProjectResource\Tabs\AttachmentsTab;
+use App\Filament\Resources\ProjectResource\Tabs\TeamLeadersTab;
 use App\Models\Project;
-use App\Models\Persona;
-use Filament\Forms;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\RestoreAction;
-use Filament\Actions\ForceDeleteAction;
 use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TimePicker;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 
 class ProjectResource extends Resource
@@ -52,275 +41,27 @@ class ProjectResource extends Resource
                     ->tabs([
                         Tabs\Tab::make('Overzicht')
                             ->icon('heroicon-o-eye')
-                            ->schema([
-                                Section::make()
-                                    ->description('Basis projectinformatie')
-                                    ->schema([
-                                        SpatieMediaLibraryFileUpload::make('banner')
-                                            ->label('Project afbeelding')
-                                            ->image()
-                                            ->imageEditor()
-                                            ->collection('banner'),
-                                        Forms\Components\TextInput::make('name')->label('Naam')
-                                            ->helperText('Korte, herkenbare projectnaam.')
-                                            ->required()
-                                            ->maxLength(255),
-                                        Forms\Components\Select::make('domain')->label('Domein')
-                                            ->options([
-                                                'software' => 'Software',
-                                                'marketing' => 'Marketing',
-                                                'event' => 'Evenement',
-                                            ])->required()->default('software')
-                                            ->helperText('Bepaalt de standaardtemplates (Software, Marketing, Evenement).'),
-                                        Forms\Components\Select::make('difficulty')->label('Complexiteit')
-                                            ->options([
-                                                'laag' => 'Laag',
-                                                'middel' => 'Middel',
-                                                'hoog' => 'Hoog',
-                                            ])->required()->default('middel')
-                                            ->helperText('Bepaalt de complexiteit van het project.'),
-                                        Forms\Components\Select::make('status')->label('Status')
-                                            ->options([
-                                                'open' => 'Open',
-                                                'closed' => 'Gesloten',
-                                            ])->required()->default('open')
-                                            ->helperText('Gesloten projecten hebben geen actieve chat functionaliteit.'),
-                                    ]),
-                                Section::make()
-                                    ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')
-                                    ->schema([
-                                        Forms\Components\RichEditor::make('context')->label('Context')
-                                            ->helperText('1–3 alinea\'s met achtergrond, doelgroep en gewenste impact.'),
-                                    ]),
-                                Section::make()
-                                    ->description('Welke meetbare doelen moet het project bereiken? Denk aan KPI\'s of leerdoelen.')
-                                    ->schema([
-                                        Forms\Components\RichEditor::make('objectives')->label('Doelstellingen')
-                                            ->helperText('Gebruik opsommingen; maak doelen concreet en toetsbaar.'),
-                                    ]),
-                                Section::make()
-                                    ->description('Beperkingen zoals tijd, budget, techniek, compliance of scope-afbakening.')
-                                    ->schema([
-                                        Forms\Components\RichEditor::make('constraints')->label('Randvoorwaarden')
-                                            ->helperText('Som de belangrijkste beperkingen op; dit helpt bij prioriteren.'),
-                                    ]),
-                            ]),
+                            ->schema(OverviewTab::make()),
 
                         Tabs\Tab::make('User Stories')
                             ->icon('heroicon-o-document-text')
                             ->badge(fn ($record) => $record ? $record->userStories()->count() : 0)
-                            ->schema([
-                                Section::make()
-                                    ->description('Maak de scope van het project concreet door user stories aan te leveren.')
-                                    ->schema([
-                                        Forms\Components\Repeater::make('user_stories_data')
-                                            ->relationship('userStories')
-                                            ->itemLabel(function (array $state, $component): string {
-                                                $key = array_search($state, $component->getState());
-                                                $index = array_search($key, array_keys($component->getState()));
-                                                $realIndex = $index + 1;
-
-                                                $label = $realIndex . '. ' . $state['user_story'];
-                                                $label = substr($label, 0, 200);
-                                                if (isset($state['user_story']) && strlen($state['user_story']) > 200) {
-                                                    $label .= '...';
-                                                }
-                                                return trim($label);
-                                            })
-                                            ->label('User Stories')
-                                            ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
-                                            ->schema([
-                                                TextEntry::make('userstories_help')
-                                                    ->label('User stories')
-                                                    ->state('Bijv. Als [rol] wil ik [doel] zodat [reden].')
-                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
-                                                Forms\Components\TextInput::make('user_story')
-                                                    ->hiddenLabel()
-                                                    ->required(),
-                                                Section::make()
-                                                ->schema([
-                                                    TextEntry::make('acceptance_criteria_help')
-                                                        ->state('Beschrijf welke aanvullende details de user story moet hebben.')
-                                                        ->label('Acceptatie Criteria')
-                                                        ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
-                                                    Forms\Components\Repeater::make('acceptance_criteria')
-                                                        ->collapsible()
-
-                                                        ->hiddenLabel()
-                                                        ->simple(
-                                                            Forms\Components\TextInput::make('criteria')
-                                                        )
-                                                ]),
-                                                TextEntry::make('personas_help')
-                                                    ->label('Persona\'s')
-                                                    ->state('Selecteer relevante persona\'s voor deze user story.')
-                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
-                                                Forms\Components\Select::make('personas')
-                                                    ->hiddenLabel()
-                                                    ->multiple()
-                                                    ->options(function($record){
-                                                        if(!$record){
-                                                            return [];
-                                                        }
-                                                        return $record->project->personas()->pluck('name', 'id');
-                                                    })
-                                                    ->visibleOn('edit'),
-                                                Forms\Components\Toggle::make('mvp')->label('MVP?'),
-                                                TextEntry::make('priority_help')
-                                                    ->label('Prioriteit')
-                                                    ->extraAttributes(['class' => 'italic text-sm text-gray-400'])
-                                                    ->state('Helpt bij het plannen en prioriteren van werk.'),
-                                                Forms\Components\Select::make('priority')->label('Prioriteit')
-                                                    ->hiddenLabel()
-                                                    ->options([
-                                                        'low' => 'Laag',
-                                                        'medium' => 'Middel',
-                                                        'high' => 'Hoog',
-                                                    ])->required()->default('medium')
-                                            ])
-                                            ->collapsed()
-                                            ->minItems(1)
-                                            ->grid(1),
-                                    ]),
-                            ]),
+                            ->schema(UserStoriesTab::make()),
 
                         Tabs\Tab::make('Persona\'s')
                             ->icon('heroicon-o-users')
                             ->badge(fn ($record) => $record ? $record->personas()->count() : 0)
-                            ->schema([
-                                Section::make()
-                                    ->description('Voeg belangrijke stakeholders of doelgroepen toe. Ze worden gebruikt om mee te communiceren om meer van het project te weten te komen.')
-                                    ->schema([
-                                        Forms\Components\Repeater::make('personas_data')
-                                            ->relationship('personas')
-                                            ->itemLabel(fn(array $state): string => trim(($state['role'] ?? 'Rol') . ': ' . ($state['name'] ?? 'Naam')))
-                                            ->label('Persona\'s')
-                                            ->helperText('Minimaal 1 persona is aan te raden: Klant, Product Owner of Doelgroep.')
-                                            ->schema([
-                                                Forms\Components\TextInput::make('name')->label('Naam')->required()
-                                                    ->helperText('Naam van de persona (mag fictief).'),
-                                                Forms\Components\TextInput::make('role')->label('Rol')->required()
-                                                    ->helperText('Rol t.o.v. het project (bijv. Klant, Product Owner, Doelgroep).'),
-                                                Forms\Components\TextInput::make('avatar_url')->label('Avatar-URL')->url()->nullable()
-                                                    ->helperText('Optioneel; laat leeg om automatisch te genereren.'),
-                                                Forms\Components\Textarea::make('goals')->label('Doelen')->nullable()
-                                                    ->helperText('Wat wil deze persona bereiken met dit project?'),
-                                                Forms\Components\Textarea::make('traits')->label('Eigenschappen')->nullable()
-                                                    ->helperText('Kernwoorden zoals direct, risico-avers, kwaliteitsgericht.'),
-                                                Forms\Components\Textarea::make('communication_style')->label('Communicatiestijl')->nullable()
-                                                    ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
-                                                Repeater::make('workingHours')
-                                                    ->relationship('workingHours')
-                                                    ->label('Werkdagen / werktijden')
-                                                    ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg')
-                                                    ->schema([
-                                                        Select::make('day_of_week')
-                                                            ->options([
-                                                                0 => 'Sunday',
-                                                                1 => 'Monday',
-                                                                2 => 'Tuesday',
-                                                                3 => 'Wednesday',
-                                                                4 => 'Thursday',
-                                                                5 => 'Friday',
-                                                                6 => 'Saturday',
-                                                            ]),
-                                                        TimePicker::make('start_time'),
-                                                        TimePicker::make('end_time'),
-                                                    ])
-                                                    ->columns(3)
-                                            ])
-                                        ->collapsed()
-                                        ->grid(2),
-                                    ]),
-                            ]),
+                            ->schema(PersonasTab::make()),
 
                         Tabs\Tab::make('Bijlagen')
                             ->icon('heroicon-o-paper-clip')
                             ->badge(fn ($record) => $record ? $record->getMedia('attachments')->count() : 0)
-                            ->schema([
-                                Section::make()
-                                    ->description('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s. Voeg extra details toe.')
-                                    ->schema([
-                                        SpatieMediaLibraryFileUpload::make('attachments')
-                                            ->label('Bestanden uploaden')
-                                            ->helperText('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s.')
-                                            ->collection('attachments')
-                                            ->downloadable()
-                                            ->multiple()
-                                            ->panelLayout('grid', ['grid-cols-6'])
-                                             ->acceptedFileTypes(['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/*', 'video/*', 'application/zip', 'application/x-zip-compressed', 'application/x-zip', '.zip'])
-                                            ->maxSize(10240) // 10MB
-                                            ->reorderable()
-                                            ->appendFiles()
-                                            ->responsiveImages()
-                                            ->conversion('thumb'),
+                            ->schema(AttachmentsTab::make()),
 
-                                        Forms\Components\Repeater::make('attachment_metadata')
-                                            ->visibleOn('edit')
-                                            ->label('Bestandsdetails')
-                                            ->helperText('Voeg extra details toe aan geüploade bestanden zoals naam, beschrijving en relevante persona\'s.')
-                                            ->schema([
-                                                Forms\Components\Hidden::make('media_id'),
-
-                                                Forms\Components\TextInput::make('file_name')
-                                                    ->label('Bestandsnaam')
-                                                    ->disabled()
-                                                    ->dehydrated(false),
-
-                                                Forms\Components\TextInput::make('name')
-                                                    ->label('Weergavenaam')
-                                                    ->placeholder('Geef een beschrijvende naam op')
-                                                    ->required(),
-
-                                                Forms\Components\Textarea::make('description')
-                                                    ->label('Beschrijving')
-                                                    ->placeholder('Voeg een beschrijving toe aan dit bestand')
-                                                    ->rows(3),
-
-                                                Forms\Components\Select::make('persona_ids')
-                                                    ->label('Relevante Persona\'s')
-                                                    ->multiple()
-                                                    ->options(function ($record) {
-                                                        if (!$record) {
-                                                            return [];
-                                                        }
-
-                                                        return $record->personas()->get()->mapWithKeys(function ($persona) {
-                                                            return [$persona->id => $persona->role . ': ' . $persona->name];
-                                                        })->toArray();
-                                                    })
-                                                    ->placeholder('Selecteer persona\'s die toegang hebben tot dit bestand'),
-                                            ])
-                                            ->itemLabel(
-                                                fn(array $state): string =>
-                                                $state['name'] ?? ($state['file_name'] ?? 'Nieuw bestand')
-                                            )
-                                            ->collapsed()
-                                            ->grid(1)
-                                            ->addActionLabel('Bestand toevoegen')
-                                            ->reorderable(false)
-                                            ->live()
-                                            ->afterStateUpdated(function ($state, $component) {
-                                                // This will be handled in the page classes
-                                            }),
-                                    ]),
-                            ]),
                         Tabs\Tab::make('Team Leiders')
                             ->icon('heroicon-o-user-group')
                             ->badge(fn ($record) => $record ? $record->teamLeaders()->count() : 0)
-                            ->schema([
-                                Section::make()
-                                    ->description('Selecteer team leiders voor dit project.')
-                                    ->schema([
-                                        Forms\Components\Select::make('team_leader_ids')
-                                            ->label('Team Leiders')
-                                            ->multiple()
-                                            ->relationship('teamLeaders', 'name')
-                                            ->preload()
-                                            ->searchable()
-                                            ->helperText('Selecteer een of meer team leiders die betrokken zijn bij dit project.'),
-                                    ]),
-                            ]),
+                            ->schema(TeamLeadersTab::make()),
                     ]),
 
             ]);

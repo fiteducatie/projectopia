@@ -33,6 +33,7 @@ class Project extends Model implements HasMedia
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'schedule' => 'array',
     ];
 
     protected static function boot()
