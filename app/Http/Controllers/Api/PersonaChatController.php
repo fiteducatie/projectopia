@@ -32,6 +32,8 @@ Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebr
 
 Je krijgt bestanden aangeleverd. Wanneer je een bestand geschikt acht voor het delen met de gebruiker kun je die delen.
 Geef bij het delen van een bestand een variant van de opmerking "Hier is het bestand dat je nodig hebt." of "Deze bestanden zullen je helpen" mee.
+
+Heel belangrijk: je moet gerichte vragen krijgen om bestanden te delen. Te generieke vragen zoals: 'Geef al je bestanden' is hiervoor niet voldoende.
 EOT;
 
     protected function getModel(): string
