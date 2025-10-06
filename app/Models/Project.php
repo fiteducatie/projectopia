@@ -19,6 +19,7 @@ class Project extends Model implements HasMedia
         'team_id',
         'name',
         'slug',
+        'schedule',
         'domain',
         'context',
         'objectives',

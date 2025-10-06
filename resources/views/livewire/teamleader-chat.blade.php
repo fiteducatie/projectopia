@@ -33,19 +33,34 @@
                     @else
                         <h2 class="font-bold text-lg text-emerald-900">Team Leider Chat</h2>
                     @endif
+
+                    <!-- Schedule History Button -->
+                    @if($teamleader)
+                        <button onclick="openScheduleHistory('{{ $teamleader->projects()->first()->slug ?? '' }}')"
+                                class="ml-auto inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Alle team updates
+                        </button>
+                    @endif
                 </header>
 
                 <!-- Chat Messages -->
-                <main class="flex-1 p-6 space-y-4 min-h-[400px] max-h-[500px] overflow-y-auto bg-slate-50"
-                      x-ref="messagesContainer">
+                <main class="flex-1 p-6 space-y-4 min-h-[400px] max-h-[500px] overflow-y-auto bg-slate-50 chat-messages"
+                      x-ref="messagesContainer"
+                      data-teamleader-chat
+                      data-teamleader-id="{{ $teamleaderId }}">
                     <template x-for="(message, index) in messages" :key="index">
                         <div :class="message.type === 'outgoing' ? 'flex justify-end' : 'flex'">
                             <div :class="{
                                 'bg-emerald-500 text-white rounded-lg px-4 py-3 shadow max-w-[80%]': message.type === 'outgoing',
-                                'bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-3 shadow max-w-[80%]': message.type === 'incoming',
+                                'bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-3 shadow max-w-[80%]': message.type === 'incoming' && !message.isScheduleMessage,
+                                'bg-blue-100 border-2 border-blue-300 text-blue-900 rounded-lg px-4 py-3 shadow max-w-[80%]': message.type === 'incoming' && message.isScheduleMessage,
                                 'animate-pulse': message.streaming,
                                 'bg-red-500 text-white': message.error
-                            }">
+                            }"
+                            :data-schedule-message="message.isScheduleMessage ? 'true' : 'false'">
                                 <!-- Typing indicator for empty streaming messages -->
                                 <div x-show="message.streaming && !message.text" class="flex items-center space-x-1">
                                     <div class="flex space-x-1">
@@ -57,10 +72,10 @@
 
                                 <!-- Message text -->
                                 <div x-show="!message.streaming || message.text">
-                                    <p class="text-sm">
-                                        <span x-text="message.text"></span>
+                                    <div class="text-sm"
+                                         x-html="parseMarkdown(message.text)">
                                         <span x-show="message.streaming" class="inline-block w-2 h-4 bg-slate-400 animate-pulse ml-1"></span>
-                                    </p>
+                                    </div>
                                     <span class="block text-right text-xs mt-1 opacity-70"
                                           :class="message.type === 'outgoing' ? 'text-emerald-100' : 'text-slate-500'"
                                           x-text="message.time"></span>
@@ -144,6 +159,57 @@
                         this.messages[index].text = errorText;
                         this.messages[index].error = true;
                         this.messages[index].streaming = false;
+                    }
+                },
+
+                async init() {
+                    // Load existing messages including schedule messages
+                    await this.loadMessages();
+                    // Mark schedule messages as read when chat is opened
+                    await this.markAsRead();
+                },
+
+                async loadMessages() {
+                    try {
+                        const response = await fetch(`/api/teamleader/${this.teamleaderId}/messages`);
+                        if (response.ok) {
+                            const messages = await response.json();
+                            this.messages = messages.map(msg => ({
+                                type: msg.sender === 'user' ? 'outgoing' : 'incoming',
+                                text: msg.message,
+                                time: new Date(msg.timestamp).toLocaleTimeString('en-GB', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }),
+                                streaming: false,
+                                isScheduleMessage: msg.is_schedule_message || false
+                            }));
+                            this.scrollToBottom();
+                        }
+                    } catch (error) {
+                        console.error('Error loading messages:', error);
+                    }
+                },
+
+                async markAsRead() {
+                    // Mark schedule messages as read in localStorage when chat is opened
+                    try {
+                        // Get current schedule data to mark as read
+                        const response = await fetch(`/api/teamleader/${this.teamleaderId}/schedule/pending`);
+                        const result = await response.json();
+
+                        if (result.success && result.has_pending && result.schedule_data) {
+                            const scheduleStartTime = result.schedule_data.time_from;
+                            const readKey = `teamleader_${this.teamleaderId}_schedule_${scheduleStartTime}`;
+                            localStorage.setItem(readKey, 'true');
+
+                            // Trigger a re-check in the teamleader component to update button state
+                            window.dispatchEvent(new CustomEvent('scheduleMessageRead', {
+                                detail: { teamleaderId: this.teamleaderId, scheduleStartTime }
+                            }));
+                        }
+                    } catch (error) {
+                        console.error('Error marking messages as read:', error);
                     }
                 },
 
@@ -265,8 +331,31 @@
                         hour: '2-digit',
                         minute: '2-digit'
                     });
+                },
+
+                parseMarkdown(text) {
+                    if (!text) return '';
+
+                    // Simple markdown parser for basic formatting
+                    return text
+                        // Bold text **text** or __text__
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                        // Italic text *text* or _text_
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        .replace(/_(.*?)_/g, '<em>$1</em>')
+                        // Line breaks
+                        .replace(/\n/g, '<br>')
+                        // Links [text](url)
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 underline" target="_blank">$1</a>');
+                },
+
+                // Initialize when component loads
+                mounted() {
+                    this.init();
                 }
             }
         }
+
     </script>
 </div>

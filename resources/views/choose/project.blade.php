@@ -133,5 +133,140 @@
         function closeModal(id) {
             document.getElementById(id)?.classList.add('hidden')
         }
+
+        // Initialize schedule notifications for teamleaders
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach($project->teamleaders as $teamleader)
+                new ScheduleNotification({{ $teamleader->id }}, document.querySelector('[data-teamleader-chat]'));
+            @endforeach
+        });
+
+        // Simplified Schedule History functionality
+        async function openScheduleHistory(projectSlug) {
+            const modal = document.getElementById('simple-schedule-history-modal');
+            modal.classList.remove('hidden');
+
+            await loadSimpleScheduleHistory(projectSlug);
+        }
+
+        async function loadSimpleScheduleHistory(projectSlug) {
+            const content = document.getElementById('simple-schedule-history-content');
+            content.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
+                    <p class="mt-2 text-gray-600 text-sm">Laden...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/api/schedule/project/${projectSlug}/history`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const scheduleData = result.data;
+                    // Filter to show only active and completed items
+                    const filteredData = scheduleData.filter(item =>
+                        item.status === 'active' || item.status === 'completed'
+                    );
+
+                    if (filteredData.length === 0) {
+                        content.innerHTML = `
+                            <div class="text-center py-8">
+                                <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-gray-600">Geen schedule items gevonden</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    content.innerHTML = filteredData.map(item => renderSimpleScheduleItem(item)).join('');
+                } else {
+                    throw new Error('Failed to load history data');
+                }
+            } catch (error) {
+                console.error('Error loading schedule history:', error);
+                content.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-red-600">Er is een fout opgetreden</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderSimpleScheduleItem(item) {
+            const statusColors = {
+                'completed': 'bg-green-100 text-green-800',
+                'active': 'bg-purple-100 text-purple-800'
+            };
+
+            const statusLabels = {
+                'completed': 'Voltooid',
+                'active': 'Actief'
+            };
+
+            return `
+                <div class="border border-gray-200 rounded-lg p-4 mb-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex-1">
+                            <h3 class="text-base font-semibold text-gray-900">${item.title}</h3>
+                            <div class="flex items-center gap-3 mt-1 text-xs text-gray-600">
+                                <span>📅 ${item.time_from_formatted} - ${item.time_until_formatted}</span>
+                                ${item.days_ago ? `<span>${item.days_ago} dagen geleden</span>` : ''}
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColors[item.status]}">
+                            ${statusLabels[item.status]}
+                        </span>
+                    </div>
+
+                    <p class="text-gray-700 text-sm">${item.description}</p>
+                </div>
+            `;
+        }
+
     </script>
+
+    <script src="{{ asset('js/components/ScheduleNotification.js') }}"></script>
+
+    <!-- Simple Schedule History Modal -->
+    <div id="simple-schedule-history-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 hidden">
+        <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <header class="flex items-center justify-between px-6 py-4 bg-blue-50 border-b border-blue-200">
+                <h2 class="text-lg font-bold text-blue-900">Schedule History</h2>
+                <button onclick="document.getElementById('simple-schedule-history-modal').classList.add('hidden')"
+                        class="p-2 hover:bg-blue-100 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Content -->
+            <main class="p-6 max-h-80 overflow-y-auto">
+                <div id="simple-schedule-history-content">
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500 mx-auto"></div>
+                        <p class="mt-2 text-gray-600 text-sm">Laden...</p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="flex justify-end">
+                    <button onclick="document.getElementById('simple-schedule-history-modal').classList.add('hidden')"
+                            class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+                        Sluiten
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
 @endsection

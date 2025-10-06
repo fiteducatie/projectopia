@@ -3,9 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Teamleader;
+use App\Services\ScheduleService;
 
 class TeamleaderChatController extends BaseChatController
 {
+    protected ScheduleService $scheduleService;
+
+    public function __construct(ScheduleService $scheduleService)
+    {
+        $this->scheduleService = $scheduleService;
+    }
     private const PROMPT_TEMPLATE = <<<EOT
 Je speelt de rol van {entity.name}, die een Team Leider is.
 Jouw samenvatting is: {entity.summary}.
@@ -75,5 +82,94 @@ EOT;
     protected function findEntity(int $id): Teamleader
     {
         return Teamleader::findOrFail($id);
+    }
+
+    /**
+     * Get the chat messages with schedule message if active
+     */
+    public function getMessages(int $teamleaderId): array
+    {
+        $teamleader = $this->findEntity($teamleaderId);
+        $messages = []; // Start with empty messages for now
+
+        // Check if there's an active schedule message
+        $scheduleMessageData = $this->scheduleService->getCurrentScheduleMessage($teamleader);
+
+        if ($scheduleMessageData) {
+            // Check if schedule message is already in the messages
+            $hasScheduleMessage = collect($messages)->contains(function ($message) {
+                return isset($message['is_schedule_message']) && $message['is_schedule_message'];
+            });
+
+            if (!$hasScheduleMessage) {
+                // Add schedule message at the beginning
+                array_unshift($messages, [
+                    'id' => 'schedule_' . time(),
+                    'message' => $scheduleMessageData['message'],
+                    'sender' => 'teamleader',
+                    'timestamp' => $scheduleMessageData['timestamp'],
+                    'is_schedule_message' => true,
+                    'is_persistent' => true, // This message stays during the schedule period
+                ]);
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * Check if there's a pending schedule message for notifications
+     */
+    public function hasPendingScheduleMessage(int $teamleaderId): array
+    {
+        $teamleader = $this->findEntity($teamleaderId);
+        $project = $teamleader->projects()->first();
+
+        if (!$project) {
+            return [
+                'success' => true,
+                'has_pending' => false,
+            ];
+        }
+
+        $hasActiveSchedule = $this->scheduleService->shouldShowScheduleMessage($project);
+        $scheduleData = null;
+
+        if ($hasActiveSchedule) {
+            // Get the current active schedule item
+            $activeItems = $this->scheduleService->getActiveScheduleItems($project);
+            if ($activeItems->isNotEmpty()) {
+                $activeItem = $activeItems->first();
+                $scheduleData = [
+                    'time_from' => $activeItem['time_from'],
+                    'time_until' => $activeItem['time_until'],
+                    'title' => $activeItem['title'],
+                    'description' => $activeItem['description'],
+                ];
+            }
+        }
+
+        return [
+            'success' => true,
+            'has_pending' => $hasActiveSchedule,
+            'schedule_data' => $scheduleData,
+        ];
+    }
+
+    /**
+     * Mark schedule messages as read
+     */
+    public function markScheduleAsRead(int $teamleaderId): array
+    {
+        $teamleader = $this->findEntity($teamleaderId);
+
+        // For now, we'll just return success
+        // In a real implementation, you might want to track read status in the database
+        // or use session/cache to track which messages have been seen
+
+        return [
+            'success' => true,
+            'message' => 'Schedule messages marked as read',
+        ];
     }
 }

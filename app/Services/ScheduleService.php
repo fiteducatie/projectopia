@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Project;
+use App\Models\Teamleader;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+
+class ScheduleService
+{
+    /**
+     * Get currently active schedule items for a project
+     */
+    public function getActiveScheduleItems(Project $project): Collection
+    {
+        $now = Carbon::now();
+        $schedule = $project->schedule ?? [];
+
+        return collect($schedule)->filter(function ($item) use ($now) {
+            if (!isset($item['time_from']) || !isset($item['time_until'])) {
+                return false;
+            }
+
+            $timeFrom = Carbon::parse($item['time_from']);
+            $timeUntil = Carbon::parse($item['time_until']);
+
+            return $now->between($timeFrom, $timeUntil);
+        });
+    }
+
+    /**
+     * Check if there's an active schedule item for a project
+     */
+    public function hasActiveSchedule(Project $project): bool
+    {
+        return $this->getActiveScheduleItems($project)->isNotEmpty();
+    }
+
+    /**
+     * Generate a proactive schedule message for a teamleader
+     */
+    public function generateScheduleMessage(Teamleader $teamleader, array $scheduleItem): string
+    {
+        $project = $teamleader->projects()->first();
+        $title = $scheduleItem['title'] ?? 'Geplande activiteit';
+        $description = $scheduleItem['description'] ?? '';
+        $timeFrom = Carbon::parse($scheduleItem['time_from'])->format('H:i');
+        $timeUntil = Carbon::parse($scheduleItem['time_until'])->format('H:i');
+
+        // Get teamleader personality traits
+        $communicationStyle = $teamleader->communication_style ?? '';
+        $skillset = $teamleader->skillset ?? '';
+
+        // Generate message based on teamleader's personality
+        $message = $this->buildPersonalityBasedMessage($teamleader, $title, $description, $timeFrom, $timeUntil);
+
+        return $message;
+    }
+
+    /**
+     * Build a message based on teamleader's personality and communication style
+     */
+    private function buildPersonalityBasedMessage(Teamleader $teamleader, string $title, string $description, string $timeFrom, string $timeUntil): string
+    {
+        $communicationStyle = strtolower($teamleader->communication_style ?? '');
+        $name = $teamleader->name;
+
+        // Different message styles based on communication style
+        if (str_contains($communicationStyle, 'direct') || str_contains($communicationStyle, 'kort')) {
+            return "Hallo team! 👋 Van {$timeFrom} tot {$timeUntil} hebben we: **{$title}**\n\n{$description}\n\nZorg dat je erbij bent!";
+        }
+
+        if (str_contains($communicationStyle, 'enthousiasmerend') || str_contains($communicationStyle, 'motiverend')) {
+            return "Hé team! 🚀 Geweldig nieuws - van {$timeFrom} tot {$timeUntil} staat er iets tofs op de planning!\n\n**{$title}**\n\n{$description}\n\nIk zie ernaar uit om dit samen met jullie aan te pakken! 💪";
+        }
+
+        if (str_contains($communicationStyle, 'data-gedreven') || str_contains($communicationStyle, 'gestructureerd')) {
+            return "Team update 📊\n\n**Geplande activiteit:** {$title}\n**Tijdslot:** {$timeFrom} - {$timeUntil}\n**Details:** {$description}\n\nZorg voor *goede voorbereiding* en punctualiteit.";
+        }
+
+        if (str_contains($communicationStyle, 'informeel') || str_contains($communicationStyle, 'casual')) {
+            return "Hey iedereen! 😊\n\nVan {$timeFrom} tot {$timeUntil} doen we: {$title}\n\n{$description}\n\nTot straks!";
+        }
+
+        // Default professional style
+        return "Beste team,\n\nVan {$timeFrom} tot {$timeUntil} staat er een belangrijke activiteit gepland:\n\n**{$title}**\n\n{$description}\n\nGraag zie ik jullie allemaal aanwezig.\n\nMet vriendelijke groet,\n{$name}";
+    }
+
+    /**
+     * Check if a schedule message should be shown (is currently active)
+     */
+    public function shouldShowScheduleMessage(Project $project): bool
+    {
+        return $this->hasActiveSchedule($project);
+    }
+
+    /**
+     * Get the current active schedule message for a teamleader
+     */
+    public function getCurrentScheduleMessage(Teamleader $teamleader): ?array
+    {
+        $project = $teamleader->projects()->first();
+        if (!$project) {
+            return null;
+        }
+        
+        $activeItems = $this->getActiveScheduleItems($project);
+        if ($activeItems->isEmpty()) {
+            return null;
+        }
+        
+        // Get the first active item (assuming one active item at a time)
+        $activeItem = $activeItems->first();
+        $message = $this->generateScheduleMessage($teamleader, $activeItem);
+        $timeFrom = Carbon::parse($activeItem['time_from']);
+        
+        return [
+            'message' => $message,
+            'timestamp' => $timeFrom->toISOString(),
+        ];
+    }
+
+    /**
+     * Get all projects with active schedules
+     */
+    public function getProjectsWithActiveSchedules(): Collection
+    {
+        return Project::all()->filter(function ($project) {
+            return $this->hasActiveSchedule($project);
+        });
+    }
+}
+
+
+
