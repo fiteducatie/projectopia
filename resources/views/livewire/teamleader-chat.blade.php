@@ -199,13 +199,20 @@
                         const result = await response.json();
 
                         if (result.success && result.has_pending && result.schedule_data) {
-                            const scheduleStartTime = result.schedule_data.time_from;
-                            const readKey = `teamleader_${this.teamleaderId}_schedule_${scheduleStartTime}`;
-                            localStorage.setItem(readKey, 'true');
+                            const scheduleItems = result.schedule_data.items || [];
+
+                            // Mark each schedule item as read individually
+                            scheduleItems.forEach(item => {
+                                const readKey = `teamleader_${this.teamleaderId}_schedule_${item.time_from}`;
+                                localStorage.setItem(readKey, 'true');
+                            });
 
                             // Trigger a re-check in the teamleader component to update button state
                             window.dispatchEvent(new CustomEvent('scheduleMessageRead', {
-                                detail: { teamleaderId: this.teamleaderId, scheduleStartTime }
+                                detail: {
+                                    teamleaderId: this.teamleaderId,
+                                    scheduleItems: scheduleItems.map(item => item.time_from)
+                                }
                             }));
                         }
                     } catch (error) {

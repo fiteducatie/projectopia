@@ -241,7 +241,7 @@ class ScheduleHistory {
                         <div class="space-y-2">
                             ${item.teamleaders.map(tl => `
                                 <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                                    ${tl.avatar_url ? 
+                                    ${tl.avatar_url ?
                                         `<img src="${tl.avatar_url}" alt="${tl.name}" class="w-8 h-8 rounded-full">` :
                                         `<div class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center text-xs font-medium">${tl.name.charAt(0)}</div>`
                                     }
@@ -263,7 +263,7 @@ class ScheduleHistory {
 
     parseMarkdown(text) {
         if (!text) return '';
-        
+
         return text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/__(.*?)__/g, '<strong>$1</strong>')
@@ -275,7 +275,7 @@ class ScheduleHistory {
 
     formatTimestamp(timestamp) {
         if (!timestamp) return '';
-        
+
         const date = new Date(timestamp);
         return date.toLocaleTimeString('nl-NL', {
             hour: '2-digit',

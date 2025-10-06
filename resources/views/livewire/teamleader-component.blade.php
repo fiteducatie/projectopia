@@ -27,7 +27,7 @@
                     class="inline-flex items-center gap-2 px-3 py-2 rounded-md text-white text-sm hover:bg-emerald-600 transition-all duration-200 relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/></svg>
                 <span x-show="!hasPendingMessage">Chat</span>
-                <span x-show="hasPendingMessage" class="font-semibold">Nieuw bericht!</span>
+                <span x-show="hasPendingMessage" class="font-semibold" x-text="buttonText"></span>
             </button>
         </div>
     </div>
@@ -36,6 +36,7 @@
         function teamleaderComponent(teamleaderId) {
             return {
                 hasPendingMessage: false,
+                buttonText: 'Nieuw bericht!',
 
                 init() {
                     this.checkForPendingMessage();
@@ -48,6 +49,7 @@
                     window.addEventListener('scheduleMessageRead', (event) => {
                         if (event.detail.teamleaderId === teamleaderId) {
                             this.hasPendingMessage = false;
+                            this.buttonText = 'Nieuw bericht!'; // Reset to default
                         }
                     });
                 },
@@ -58,12 +60,23 @@
                         const result = await response.json();
 
                         if (result.success && result.has_pending && result.schedule_data) {
-                            // Check if this specific schedule item has been read
-                            const scheduleStartTime = result.schedule_data.time_from;
-                            const readKey = `teamleader_${teamleaderId}_schedule_${scheduleStartTime}`;
-                            const hasBeenRead = localStorage.getItem(readKey) === 'true';
+                            // Check if any of the active schedule items have been read
+                            const scheduleItems = result.schedule_data.items || [];
+                            let unreadCount = 0;
 
-                            this.hasPendingMessage = !hasBeenRead;
+                            // Check each schedule item individually
+                            scheduleItems.forEach(item => {
+                                const readKey = `teamleader_${teamleaderId}_schedule_${item.time_from}`;
+                                const hasBeenRead = localStorage.getItem(readKey) === 'true';
+                                if (!hasBeenRead) {
+                                    unreadCount++;
+                                }
+                            });
+
+                            this.hasPendingMessage = unreadCount > 0;
+
+                            // Update button text based on unread count
+                            this.updateButtonText(unreadCount);
                         } else {
                             this.hasPendingMessage = false;
                             // Clean up old localStorage entries when no schedule is active
@@ -101,6 +114,14 @@
                             localStorage.removeItem(key);
                         }
                     });
+                },
+
+                updateButtonText(activeCount) {
+                    if (activeCount === 1) {
+                        this.buttonText = 'Nieuw bericht!';
+                    } else {
+                        this.buttonText = `${activeCount} nieuwe berichten!`;
+                    }
                 }
             }
         }

@@ -85,26 +85,21 @@ EOT;
     }
 
     /**
-     * Get the chat messages with schedule message if active
+     * Get the chat messages with schedule messages if active
      */
     public function getMessages(int $teamleaderId): array
     {
         $teamleader = $this->findEntity($teamleaderId);
         $messages = []; // Start with empty messages for now
 
-        // Check if there's an active schedule message
-        $scheduleMessageData = $this->scheduleService->getCurrentScheduleMessage($teamleader);
+        // Check if there are active schedule messages
+        $scheduleMessages = $this->scheduleService->getCurrentScheduleMessages($teamleader);
 
-        if ($scheduleMessageData) {
-            // Check if schedule message is already in the messages
-            $hasScheduleMessage = collect($messages)->contains(function ($message) {
-                return isset($message['is_schedule_message']) && $message['is_schedule_message'];
-            });
-
-            if (!$hasScheduleMessage) {
-                // Add schedule message at the beginning
+        if (!empty($scheduleMessages)) {
+            // Add each schedule message at the beginning
+            foreach ($scheduleMessages as $scheduleMessageData) {
                 array_unshift($messages, [
-                    'id' => 'schedule_' . time(),
+                    'id' => 'schedule_' . $scheduleMessageData['schedule_item_id'],
                     'message' => $scheduleMessageData['message'],
                     'sender' => 'teamleader',
                     'timestamp' => $scheduleMessageData['timestamp'],
@@ -136,15 +131,25 @@ EOT;
         $scheduleData = null;
 
         if ($hasActiveSchedule) {
-            // Get the current active schedule item
+            // Get all current active schedule items
             $activeItems = $this->scheduleService->getActiveScheduleItems($project);
             if ($activeItems->isNotEmpty()) {
-                $activeItem = $activeItems->first();
+                // For localStorage key, we'll use the earliest time_from
+                $earliestTimeFrom = $activeItems->map(function ($item) {
+                    return $item['time_from'];
+                })->min();
+
                 $scheduleData = [
-                    'time_from' => $activeItem['time_from'],
-                    'time_until' => $activeItem['time_until'],
-                    'title' => $activeItem['title'],
-                    'description' => $activeItem['description'],
+                    'time_from' => $earliestTimeFrom,
+                    'active_count' => $activeItems->count(),
+                    'items' => $activeItems->map(function ($item) {
+                        return [
+                            'time_from' => $item['time_from'],
+                            'time_until' => $item['time_until'],
+                            'title' => $item['title'],
+                            'description' => $item['description'],
+                        ];
+                    })->values()->toArray(),
                 ];
             }
         }

@@ -96,30 +96,50 @@ class ScheduleService
     }
 
     /**
-     * Get the current active schedule message for a teamleader
+     * Get all current active schedule messages for a teamleader
      */
-    public function getCurrentScheduleMessage(Teamleader $teamleader): ?array
+    public function getCurrentScheduleMessages(Teamleader $teamleader): array
     {
         $project = $teamleader->projects()->first();
         if (!$project) {
-            return null;
+            return [];
         }
-        
+
         $activeItems = $this->getActiveScheduleItems($project);
         if ($activeItems->isEmpty()) {
-            return null;
+            return [];
         }
-        
-        // Get the first active item (assuming one active item at a time)
-        $activeItem = $activeItems->first();
-        $message = $this->generateScheduleMessage($teamleader, $activeItem);
-        $timeFrom = Carbon::parse($activeItem['time_from']);
-        
-        return [
-            'message' => $message,
-            'timestamp' => $timeFrom->toISOString(),
-        ];
+
+        // Generate separate messages for each active item
+        $messages = [];
+        foreach ($activeItems as $item) {
+            $message = $this->generateScheduleMessage($teamleader, $item);
+            $timeFrom = Carbon::parse($item['time_from']);
+
+            $messages[] = [
+                'message' => $message,
+                'timestamp' => $timeFrom->toISOString(),
+                'schedule_item_id' => $timeFrom->format('Y-m-d_H-i-s'), // Unique ID for this schedule item
+            ];
+        }
+
+        // Sort by timestamp (earliest first)
+        usort($messages, function ($a, $b) {
+            return strcmp($a['timestamp'], $b['timestamp']);
+        });
+
+        return $messages;
     }
+
+    /**
+     * Get the current active schedule message for a teamleader (backwards compatibility)
+     */
+    public function getCurrentScheduleMessage(Teamleader $teamleader): ?array
+    {
+        $messages = $this->getCurrentScheduleMessages($teamleader);
+        return !empty($messages) ? $messages[0] : null;
+    }
+
 
     /**
      * Get all projects with active schedules
