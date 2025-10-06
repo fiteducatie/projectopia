@@ -2,6 +2,7 @@
     <!-- Modal -->
     @if($isOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div class="absolute inset-0 bg-black/60" wire:click="close"></div>
             <div class="relative w-[360px] h-[640px] bg-slate-900 text-slate-100 rounded-[36px] shadow-2xl overflow-hidden"
                  x-data="personaChat({{ $personaId }})">
 

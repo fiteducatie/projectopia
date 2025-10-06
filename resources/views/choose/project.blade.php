@@ -235,6 +235,7 @@
 
     <!-- Simple Schedule History Modal -->
     <div id="simple-schedule-history-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 hidden">
+        <div class="absolute inset-0 bg-black/60" onclick="document.getElementById('simple-schedule-history-modal').classList.add('hidden')"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden">
             <!-- Header -->
             <header class="flex items-center justify-between px-6 py-4 bg-blue-50 border-b border-blue-200">

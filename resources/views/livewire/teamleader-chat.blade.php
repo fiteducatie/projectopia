@@ -2,6 +2,7 @@
     <!-- Modal -->
     @if($isOpen)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+            <div class="absolute inset-0 bg-black/60" wire:click="close"></div>
             <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden"
                  x-data="teamleaderChat({{ $teamleaderId }})">
 

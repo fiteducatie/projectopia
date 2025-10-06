@@ -13,7 +13,6 @@ class ScheduleInfolistTab
     {
         return [
             RepeatableEntry::make('schedule')
-                ->label(Date('d-m-Y h:i:s'))
                 ->getStateUsing(function ($record) {
                     $schedule = $record->schedule ?? [];
                     $now = Carbon::now();
