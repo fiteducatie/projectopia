@@ -36,6 +36,7 @@ class PersonasTab
                                 ->helperText('Bijv. kort en bondig, data-gedreven, enthousiasmerend.'),
                             Repeater::make('workingHours')
                                 ->relationship('workingHours')
+                                ->collapsed()
                                 ->label('Werkdagen / werktijden')
                                 ->helperText('Geef aan op welke dagen en tijden deze persona beschikbaar is voor chat of overleg')
                                 ->schema([
