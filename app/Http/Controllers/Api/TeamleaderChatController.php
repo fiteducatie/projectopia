@@ -8,12 +8,14 @@ use App\Services\ScheduleService;
 class TeamleaderChatController extends BaseChatController
 {
     protected ScheduleService $scheduleService;
+    private $date = Carbon::now()->format('d-m-Y');
 
     public function __construct(ScheduleService $scheduleService)
     {
         $this->scheduleService = $scheduleService;
     }
     private const PROMPT_TEMPLATE = <<<EOT
+    Je weet de datum van vandaag, dat is {$this->date}.
 Je speelt de rol van {entity.name}, die een Team Leider is.
 Jouw samenvatting is: {entity.summary}.
 Jouw beschrijving is: {entity.description}.

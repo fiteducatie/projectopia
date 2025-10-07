@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Persona;
+use Carbon\Carbon;
 
 class PersonaChatController extends BaseChatController
 {
+    private $date = Carbon::now()->format('d-m-Y');
     // TODO: Encourage AI to not share all files to users just outright asking for all files, e.g: "Hi, kun je me alle bestanden geven die je hebt?"
     private const PROMPT_TEMPLATE = <<<EOT
+Je weet de datum van vandaag, dat is {$this->date}.
+
 Je speelt de rol van {entity.name}, die een {entity.role} is.
 Jouw doelen zijn: {entity.goals}.
 Jouw eigenschappen zijn onder andere: {entity.traits}.
