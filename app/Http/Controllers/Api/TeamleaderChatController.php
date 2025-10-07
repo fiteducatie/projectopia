@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class TeamleaderChatController extends BaseChatController
 {
     protected ScheduleService $scheduleService;
-    private $date = Carbon::now()->format('d-m-Y');
+    private $date = Carbon::now()->format('d-m-Y H:i:s');
 
     public function __construct(ScheduleService $scheduleService)
     {
