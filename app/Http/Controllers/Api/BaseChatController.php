@@ -199,12 +199,15 @@ abstract class BaseChatController extends Controller
         return [
             '{entity.name}', '{entity.role}', '{entity.goals}', '{entity.traits}', '{entity.communication_style}',
             '{entity.summary}', '{entity.description}', '{entity.skillset}', '{entity.deliverables}',
+            '{current_datetime}', '{current_date}', '{current_time}',
             '{project.context}', '{project.objectives}', '{project.constraints}', '{project.start_date}', '{project.end_date}', '{project.risk_notes}'
         ];
     }
 
     protected function getTemplateValues($entity, $project): array
     {
+        $now = now();
+
         return [
             $entity->name,
             $entity->role ?? $entity->summary ?? 'Een behulpzame gesprekspartner',
@@ -215,6 +218,11 @@ abstract class BaseChatController extends Controller
             $entity->description ?? 'Verantwoordelijk voor het leiden van het team en begeleiden van projectactiviteiten.',
             $entity->skillset ?? 'Projectmanagement, teamleiderschap en communicatie',
             $entity->deliverables ?? 'Succesvol projectresultaat en gemotiveerd team',
+
+            // Current date and time
+            $now->format('d-m-Y H:i:s'),
+            $now->format('l d F Y'),
+            $now->format('H:i'),
 
             $project ? ($project->context ?? 'Niet van toepassing.') : 'Niet van toepassing.',
             $project ? ($project->objectives ?? 'Niet van toepassing.') : 'Niet van toepassing.',

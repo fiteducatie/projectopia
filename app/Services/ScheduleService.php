@@ -65,26 +65,28 @@ class ScheduleService
     {
         $communicationStyle = strtolower($teamleader->communication_style ?? '');
         $name = $teamleader->name;
+        $currentDate = Carbon::now()->format('l d F Y');
+        $currentTime = Carbon::now()->format('H:i');
 
-        // Different message styles based on communication style TODO
+        // Different message styles based on communication style
         if (str_contains($communicationStyle, 'direct') || str_contains($communicationStyle, 'kort')) {
-            return "Hallo team! 👋 Van {$timeFrom} tot {$timeUntil} hebben we: **{$title}**\n\n{$description}\n\nZorg dat je erbij bent!";
+            return "Hallo team! 👋\n\n**{$title}**\n\n{$description}\n\nZorg dat je erbij bent!";
         }
 
         if (str_contains($communicationStyle, 'enthousiasmerend') || str_contains($communicationStyle, 'motiverend')) {
-            return "Hé team! 🚀 Geweldig nieuws - van {$timeFrom} tot {$timeUntil} staat er iets tofs op de planning!\n\n**{$title}**\n\n{$description}\n\nIk zie ernaar uit om dit samen met jullie aan te pakken! 💪";
+            return "Hé team! 🚀 Geweldig nieuws!\n\nWe gaan aan de slag met: **{$title}**\n\n{$description}\n\nIk zie ernaar uit om dit samen met jullie aan te pakken! 💪";
         }
 
         if (str_contains($communicationStyle, 'data-gedreven') || str_contains($communicationStyle, 'gestructureerd')) {
-            return "Team update 📊\n\n**Geplande activiteit:** {$title}\n**Tijdslot:** {$timeFrom} - {$timeUntil}\n**Details:** {$description}\n\nZorg voor *goede voorbereiding* en punctualiteit.";
+            return "Team update 📊\n\n**{$title}**\n\n{$description}\n\nZorg voor goede voorbereiding en punctualiteit.";
         }
 
         if (str_contains($communicationStyle, 'informeel') || str_contains($communicationStyle, 'casual')) {
-            return "Hey iedereen! 😊\n\nVan {$timeFrom} tot {$timeUntil} doen we: {$title}\n\n{$description}\n\nTot straks!";
+            return "Hey iedereen! 😊\n\nWe doen: {$title}\n\n{$description}\n\nTot straks!";
         }
 
         // Default professional style
-        return "Beste team,\n\n **{$title}**\n\n{$description}\n\nGraag zie ik jullie allemaal aanwezig.\n\nMet vriendelijke groet,\n{$name}";
+        return "Beste team,\n\n**{$title}**\n\n{$description}\n\nGraag zie ik jullie allemaal aanwezig.\n\nMet vriendelijke groet,\n{$name}";
     }
 
     /**

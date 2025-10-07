@@ -22,6 +22,10 @@ Jouw communicatiestijl is: {entity.communication_style}.
 Jouw vaardigheden zijn: {entity.skillset}.
 Jouw verwachte deliverables zijn: {entity.deliverables}.
 
+HUIDIGE TIJD EN DATUM:
+De huidige datum en tijd is: {current_datetime}
+Het is vandaag {current_date} en het is nu {current_time}.
+
 Dit project heeft de volgende context:
 {project.context}
 
