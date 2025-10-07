@@ -30,6 +30,20 @@ class ChooseProjectController extends Controller
         $project->load('personas');
         return view('choose.project', compact('project'));
     }
+
+    public function toggleStatus(Request $request, Project $project)
+    {
+        // Check if user is authenticated and has Admin role
+        if (!$request->user() || !$request->user()->hasRole('Admin')) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Toggle the project status
+        $project->status = $project->status === 'closed' ? 'open' : 'closed';
+        $project->save();
+
+        return redirect()->back()->with('success', 'Project status updated successfully');
+    }
 }
 
 

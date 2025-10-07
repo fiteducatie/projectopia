@@ -14,10 +14,22 @@
         </div>
         @auth
             @if ($project->team && $project->team->owner_id === auth()->id())
-                <a href="{{ url('/admin/' . $project->team->getRouteKey() . '/projects/' . $project->getRouteKey() . '/edit') }}"
-                    class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-amber-500 text-white text-sm hover:bg-amber-600">
-                    Bewerken
-                </a>
+                <div class="flex items-center gap-2">
+                    <a href="{{ url('/admin/' . $project->team->getRouteKey() . '/projects/' . $project->getRouteKey() . '/edit') }}"
+                        class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-amber-500 text-white text-sm hover:bg-amber-600">
+                        Bewerken
+                    </a>
+                    @if (auth()->user()->hasRole('Admin'))
+                        <form method="POST" action="{{ route('project.toggle-status', $project) }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-3 py-2 rounded-md text-white text-sm {{ $project->status === 'closed' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700' }}"
+                                onclick="return confirm('Weet je zeker dat je dit project wilt {{ $project->status === 'closed' ? 'heropenen' : 'sluiten' }}?')">
+                                {{ $project->status === 'closed' ? 'Heropen project' : 'Sluit project' }}
+                            </button>
+                        </form>
+                    @endif
+                </div>
             @endif
         @endauth
     </div>

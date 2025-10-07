@@ -38,7 +38,7 @@ class ProjectTabsConfig
             'schedule' => [
                 'name' => 'Planning',
                 'icon' => 'heroicon-o-calendar',
-                'badge' => fn ($record) => $record ? count($record->schedule) : 0,
+                'badge' => fn ($record) => $record ? count($record->schedule ?? []) : 0,
             ],
         ];
     }
