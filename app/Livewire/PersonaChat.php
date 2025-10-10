@@ -20,13 +20,13 @@ class PersonaChat extends Component
         $this->isOpen = true;
     }
 
-    public function isProjectClosed(): bool
+    public function isActivityClosed(): bool
     {
         if (!$this->persona) {
             return false;
         }
 
-        return $this->persona->project->status === 'closed';
+        return $this->persona->activity->status === 'closed';
     }
 
     public function close()

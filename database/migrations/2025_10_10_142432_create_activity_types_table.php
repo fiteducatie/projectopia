@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personas', function (Blueprint $table) {
+        Schema::create('activity_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('activity_id')->constrained('activities')->cascadeOnDelete();
             $table->string('name');
-            $table->string('role');
-            $table->string('avatar_url')->nullable();
-            $table->text('goals')->nullable();
-            $table->text('traits')->nullable();
-            $table->text('communication_style')->nullable();
+            $table->string('description')->nullable();
+            $table->string('color')->nullable();
+            $table->string('icon')->nullable();
+            $table->string('slug')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personas');
+        Schema::dropIfExists('activity_types');
     }
 };

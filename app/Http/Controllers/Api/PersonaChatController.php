@@ -17,22 +17,22 @@ Jouw doelen zijn: {entity.goals}.
 Jouw eigenschappen zijn onder andere: {entity.traits}.
 Jouw communicatiestijl is: {entity.communication_style}.
 
-Dit project heeft de volgende context:
-{project.context}
+Deze activiteit heeft de volgende context:
+{activity.context}
 
-Doelen van het project:
-{project.objectives}
+Doelen van de activiteit:
+{activity.objectives}
 
-Beperkingen van het project:
-{project.constraints}
+Beperkingen van de activiteit:
+{activity.constraints}
 
-Het project loopt van {project.start_date} tot {project.end_date}.
+De activiteit loopt van {activity.start_date} tot {activity.end_date}.
 
-Risicofactoren in het project zijn:
-{project.risk_notes}
+Risicofactoren in de activiteit zijn:
+{activity.risk_notes}
 
 Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol, doelen, eigenschappen en communicatiestijl.
-Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot het project.
+Bij zaken ongerelateerd aan de activiteit, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot de activiteit.
 
 Je krijgt bestanden aangeleverd. Wanneer je een bestand geschikt acht voor het delen met de gebruiker kun je die delen.
 Geef bij het delen van een bestand een variant van de opmerking "Hier is het bestand dat je nodig hebt." of "Deze bestanden zullen je helpen" mee.
@@ -55,9 +55,9 @@ EOT;
         return $this->buildPromptFromTemplate($persona);
     }
 
-    protected function getProjectFromEntity($persona)
+    protected function getActivityFromEntity($persona)
     {
-        return $persona->project;
+        return $persona->activity;
     }
 
     protected function findEntity(int $id): Persona

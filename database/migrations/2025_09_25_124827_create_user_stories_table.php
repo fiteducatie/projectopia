@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_stories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->foreignId('activity_id')->constrained('activities')->onDelete('cascade');
             $table->string('user_story');
             $table->json('acceptance_criteria')->nullable();
             $table->json('personas')->nullable();

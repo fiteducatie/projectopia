@@ -29,7 +29,7 @@
             </nav>
             <div class="flex items-center gap-3">
                 <a href="/admin" class="px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-50">Inloggen</a>
-                <a href="/kies-project" class="px-4 py-2 rounded-lg bg-sky-500 text-white hover:bg-sky-600">Kies project</a>
+                <a href="/kies-activiteit" class="px-4 py-2 rounded-lg bg-sky-500 text-white hover:bg-sky-600">Kies activiteit</a>
             </div>
         </header>
 
