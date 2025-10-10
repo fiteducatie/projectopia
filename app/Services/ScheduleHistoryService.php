@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Activity;
 use App\Models\Project;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -11,9 +12,9 @@ class ScheduleHistoryService
     /**
      * Get all schedule items for a project with status information
      */
-    public function getScheduleHistory(Project $project): Collection
+    public function getScheduleHistory(Activity $activity): Collection
     {
-        $schedule = $project->schedule ?? [];
+        $schedule = $activity->schedule ?? [];
         $now = Carbon::now();
 
         return collect($schedule)->map(function ($item, $index) use ($now) {
@@ -55,9 +56,9 @@ class ScheduleHistoryService
     /**
      * Get completed schedule items (past)
      */
-    public function getCompletedSchedules(Project $project): Collection
+    public function getCompletedSchedules(Activity $activity): Collection
     {
-        return $this->getScheduleHistory($project)->filter(function ($item) {
+        return $this->getScheduleHistory($activity)->filter(function ($item) {
             return $item['status'] === 'completed';
         });
     }
@@ -65,9 +66,9 @@ class ScheduleHistoryService
     /**
      * Get upcoming schedule items (future)
      */
-    public function getUpcomingSchedules(Project $project): Collection
+    public function getUpcomingSchedules(Activity $activity): Collection
     {
-        return $this->getScheduleHistory($project)->filter(function ($item) {
+        return $this->getScheduleHistory($activity)->filter(function ($item) {
             return $item['status'] === 'upcoming';
         });
     }
@@ -75,9 +76,9 @@ class ScheduleHistoryService
     /**
      * Get active schedule items (current)
      */
-    public function getActiveSchedules(Project $project): Collection
+    public function getActiveSchedules(Activity $activity): Collection
     {
-        return $this->getScheduleHistory($project)->filter(function ($item) {
+        return $this->getScheduleHistory($activity)->filter(function ($item) {
             return $item['status'] === 'active';
         });
     }
@@ -85,9 +86,9 @@ class ScheduleHistoryService
     /**
      * Get schedule statistics for a project
      */
-    public function getScheduleStats(Project $project): array
+    public function getScheduleStats(Activity $activity): array
     {
-        $history = $this->getScheduleHistory($project);
+        $history = $this->getScheduleHistory($activity);
 
         return [
             'total' => $history->count(),
@@ -102,13 +103,13 @@ class ScheduleHistoryService
     /**
      * Get schedule history with teamleader messages
      */
-    public function getScheduleHistoryWithMessages(Project $project): Collection
+    public function getScheduleHistoryWithMessages(Activity $activity): Collection
     {
-        $history = $this->getScheduleHistory($project);
+        $history = $this->getScheduleHistory($activity);
         $scheduleService = app(ScheduleService::class);
 
-        return $history->map(function ($item) use ($project, $scheduleService) {
-            $item['teamleaders'] = $project->teamleaders->map(function ($teamleader) use ($item, $scheduleService) {
+        return $history->map(function ($item) use ($activity, $scheduleService) {
+            $item['teamleaders'] = $activity->teamleaders->map(function ($teamleader) use ($item, $scheduleService) {
                 // Generate what the teamleader would have said
                 $mockScheduleItem = [
                     'title' => $item['title'],
