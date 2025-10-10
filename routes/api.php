@@ -18,9 +18,9 @@ Route::prefix('persona')->group(function () {
         });
 
 Route::prefix('schedule')->group(function () {
-    Route::get('project/{project}/history', [ScheduleHistoryController::class, 'getHistory']);
-    Route::get('project/{project}/completed', [ScheduleHistoryController::class, 'getCompleted']);
-    Route::get('project/{project}/upcoming', [ScheduleHistoryController::class, 'getUpcoming']);
-    Route::get('project/{project}/active', [ScheduleHistoryController::class, 'getActive']);
-    Route::get('project/{project}/stats', [ScheduleHistoryController::class, 'getStats']);
+    Route::get('activity/{activity}/history', [ScheduleHistoryController::class, 'getHistory']);
+    Route::get('activity/{activity}/completed', [ScheduleHistoryController::class, 'getCompleted']);
+    Route::get('activity/{activity}/upcoming', [ScheduleHistoryController::class, 'getUpcoming']);
+    Route::get('activity/{activity}/active', [ScheduleHistoryController::class, 'getActive']);
+    Route::get('activity/{activity}/stats', [ScheduleHistoryController::class, 'getStats']);
 });
