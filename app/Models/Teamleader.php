@@ -28,9 +28,9 @@ class Teamleader extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function projects(): BelongsToMany
+    public function activities(): BelongsToMany
     {
-        return $this->belongsToMany(Project::class);
+        return $this->belongsToMany(Activity::class);
     }
 
 }

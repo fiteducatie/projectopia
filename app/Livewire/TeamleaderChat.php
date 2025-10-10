@@ -20,14 +20,14 @@ class TeamleaderChat extends Component
         $this->isOpen = true;
     }
 
-    public function isProjectClosed(): bool
+    public function isActivityClosed(): bool
     {
         if (!$this->teamleader) {
             return false;
         }
 
-        // Check if any project associated with this teamleader is closed
-        return $this->teamleader->team && $this->teamleader->team->projects()->where('status', 'closed')->exists();
+        // Check if any activity associated with this teamleader is closed
+        return $this->teamleader->team && $this->teamleader->team->activities()->where('status', 'closed')->exists();
     }
 
     public function close()

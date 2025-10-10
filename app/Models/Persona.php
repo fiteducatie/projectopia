@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Persona extends Model
 {
     protected $fillable = [
-        'project_id',
+        'activity_id',
         'name',
         'role',
         'avatar_url',
@@ -17,9 +17,9 @@ class Persona extends Model
         'communication_style',
     ];
 
-    public function project(): BelongsTo
+    public function activity(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Activity::class);
     }
 
     public function userStories()
@@ -29,11 +29,11 @@ class Persona extends Model
 
     public function attachments()
     {
-        return $this->project
+        return $this->activity
             ->media()
             ->whereJsonContains('custom_properties->persona_ids', $this->id);
     }
-    
+
     public function workingHours()
     {
         return $this->hasMany(WorkingHour::class);

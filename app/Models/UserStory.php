@@ -10,7 +10,7 @@ class UserStory extends Model
     protected $table = 'user_stories';
 
     protected $fillable = [
-        'project_id',
+        'activity_id',
         'user_story',
         'acceptance_criteria',
         'personas',
@@ -26,9 +26,9 @@ class UserStory extends Model
         'mvp' => 'boolean',
     ];
 
-    public function project(): BelongsTo
+    public function activity(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Activity::class);
     }
 
     // Custom accessors to handle double-encoded JSON

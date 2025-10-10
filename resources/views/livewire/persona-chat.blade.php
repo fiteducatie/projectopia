@@ -18,7 +18,7 @@
                         <div class="leading-tight">
                             <div class="font-semibold text-sm">{{ $persona->name }}</div>
                             <div class="text-[11px] text-white/80">
-                                @if($this->isProjectClosed())
+                                @if($this->isActivityClosed())
                                     <span class="text-red-300">Momenteel offline</span>
                                 @else
                                     <span x-text="isTyping ? 'typing...' : '{{ $persona->role }}'"></span>
@@ -102,7 +102,7 @@
 
                 <!-- Input -->
                 <footer class="absolute bottom-0 left-0 right-0 bg-slate-900 px-2 py-2">
-                    @if($this->isProjectClosed())
+                    @if($this->isActivityClosed())
                         <div class="flex items-center justify-center gap-2 text-slate-400 text-sm">
                             <div class="w-3 h-3 rounded-full bg-red-500"></div>
                             <span>Project is gesloten - chat niet beschikbaar</span>
@@ -199,7 +199,7 @@
                     if (!this.currentMessage.trim()) return;
 
                     // Check if project is closed
-                    if ({{ $this->isProjectClosed() ? 'true' : 'false' }}) {
+                    if ({{ $this->isActivityClosed() ? 'true' : 'false' }}) {
                         return;
                     }
 

@@ -12,7 +12,7 @@ abstract class BaseChatController extends Controller
     protected abstract function getModel();
     protected abstract function getPromptTemplate(): string;
     protected abstract function getEntityDescription($entity): string;
-    protected abstract function getProjectFromEntity($entity);
+    protected abstract function getActivityFromEntity($entity);
 
     public function stream(Request $request, int $entityId)
     {
@@ -31,9 +31,9 @@ abstract class BaseChatController extends Controller
 
             $fileChoices = [];
 
-            $project = $this->getProjectFromEntity($entity);
+            $activity = $this->getActivityFromEntity($entity);
 
-            $attachmentsToShare = $project->getMedia('*');
+            $attachmentsToShare = $activity->getMedia('*');
 
             foreach ($attachmentsToShare as $attachment) {
                 $name = $attachment->file_name;
@@ -66,7 +66,7 @@ abstract class BaseChatController extends Controller
                         continue;
                     }
 
-                    $attachment = $project->getMedia('*')->firstWhere('file_name', $file->value);
+                    $attachment = $activity->getMedia('*')->firstWhere('file_name', $file->value);
                     if ($attachment) {
                         echo "data: " . json_encode([
                             'type' => 'file',
@@ -124,31 +124,31 @@ abstract class BaseChatController extends Controller
 
     protected function buildPromptFromTemplate($entity): string
     {
-        $project = $this->getProjectFromEntity($entity);
+        $activity = $this->getActivityFromEntity($entity);
 
         $prompt = $this->getPromptTemplate();
 
         // Add persona and user story information for teamleaders
-        if ($this instanceof \App\Http\Controllers\Api\TeamleaderChatController && $project) {
+        if ($this instanceof \App\Http\Controllers\Api\TeamleaderChatController && $activity) {
             $prompt .= "\n\nBESCHIKBARE PERSONA'S EN USER STORIES:\n";
-            $prompt .= $this->getPersonasAndUserStoriesInfo($project);
+            $prompt .= $this->getPersonasAndUserStoriesInfo($activity);
         }
 
 
         return str_replace(
             $this->getTemplatePlaceholders(),
-            $this->getTemplateValues($entity, $project),
+            $this->getTemplateValues($entity, $activity),
             $prompt
         );
     }
 
-    protected function getPersonasAndUserStoriesInfo($project): string
+    protected function getPersonasAndUserStoriesInfo($activity): string
     {
         $info = "";
 
-        // Get all user stories for the project
-        $userStories = $project->userStories;
-        $info .= "USER STORIES IN DIT PROJECT:\n";
+        // Get all user stories for the activity
+        $userStories = $activity->userStories;
+        $info .= "USER STORIES IN DEZE ACTIVITEIT:\n";
 
         if ($userStories->isNotEmpty()) {
             foreach ($userStories as $index => $story) {
@@ -165,11 +165,11 @@ abstract class BaseChatController extends Controller
                 $info .= "\n";
             }
         } else {
-            $info .= "Er zijn momenteel geen user stories gedefinieerd voor dit project.\n\n";
+            $info .= "Er zijn momenteel geen user stories gedefinieerd voor deze activiteit.\n\n";
         }
 
         // Get personas with their associated user stories
-        $personas = $project->personas()->with('userStories')->get();
+        $personas = $activity->personas()->with('userStories')->get();
         $info .= "BESCHIKBARE PERSONA'S:\n";
 
         foreach ($personas as $persona) {
@@ -188,7 +188,7 @@ abstract class BaseChatController extends Controller
         }
 
         if ($personas->isEmpty()) {
-            $info .= "Er zijn momenteel geen persona's toegewezen aan dit project.\n";
+            $info .= "Er zijn momenteel geen persona's toegewezen aan deze activiteit.\n";
         }
 
         return $info;
@@ -200,11 +200,11 @@ abstract class BaseChatController extends Controller
             '{entity.name}', '{entity.role}', '{entity.goals}', '{entity.traits}', '{entity.communication_style}',
             '{entity.summary}', '{entity.description}', '{entity.skillset}', '{entity.deliverables}',
             '{current_datetime}', '{current_date}', '{current_time}',
-            '{project.context}', '{project.objectives}', '{project.constraints}', '{project.start_date}', '{project.end_date}', '{project.risk_notes}'
+            '{activity.context}', '{activity.objectives}', '{activity.constraints}', '{activity.start_date}', '{activity.end_date}', '{activity.risk_notes}'
         ];
     }
 
-    protected function getTemplateValues($entity, $project): array
+    protected function getTemplateValues($entity, $activity): array
     {
         $now = now();
 
@@ -215,21 +215,21 @@ abstract class BaseChatController extends Controller
             $entity->traits ?? 'Empathisch, geduldig en informatief',
             $entity->communication_style ?? 'Duidelijk en beknopt',
             $entity->summary ?? 'Een ervaren team leider',
-            $entity->description ?? 'Verantwoordelijk voor het leiden van het team en begeleiden van projectactiviteiten.',
+            $entity->description ?? 'Verantwoordelijk voor het leiden van het team en begeleiden van activiteiten.',
             $entity->skillset ?? 'Projectmanagement, teamleiderschap en communicatie',
-            $entity->deliverables ?? 'Succesvol projectresultaat en gemotiveerd team',
+            $entity->deliverables ?? 'Succesvol resultaat en gemotiveerd team',
 
             // Current date and time
             $now->format('d-m-Y H:i:s'),
             $now->format('l d F Y'),
             $now->format('H:i'),
 
-            $project ? ($project->context ?? 'Niet van toepassing.') : 'Niet van toepassing.',
-            $project ? ($project->objectives ?? 'Niet van toepassing.') : 'Niet van toepassing.',
-            $project ? ($project->constraints ?? 'Niet van toepassing.') : 'Niet van toepassing.',
-            $project && $project->start_date ? $project->start_date->toDateString() : 'Niet van toepassing.',
-            $project && $project->end_date ? $project->end_date->toDateString() : 'Niet van toepassing.',
-            $project ? ($project->risk_notes ?? 'Niet van toepassing.') : 'Niet van toepassing.'
+            $activity ? ($activity->context ?? 'Niet van toepassing.') : 'Niet van toepassing.',
+            $activity ? ($activity->objectives ?? 'Niet van toepassing.') : 'Niet van toepassing.',
+            $activity ? ($activity->constraints ?? 'Niet van toepassing.') : 'Niet van toepassing.',
+            $activity && $activity->start_date ? $activity->start_date->toDateString() : 'Niet van toepassing.',
+            $activity && $activity->end_date ? $activity->end_date->toDateString() : 'Niet van toepassing.',
+            $activity ? ($activity->risk_notes ?? 'Niet van toepassing.') : 'Niet van toepassing.'
         ];
     }
 

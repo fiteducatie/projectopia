@@ -22,7 +22,7 @@
                 <span>Projectopia</span>
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="/kies-project" class="hover:text-sky-600">Kies project</a>
+                <a href="/kies-project" class="hover:text-sky-600">Kies activiteit</a>
                 <a href="/admin" class="hover:text-sky-600">Admin</a>
             </nav>
 
@@ -36,7 +36,7 @@
             <div>© <script>document.write(new Date().getFullYear())</script> Projectopia</div>
             <div class="space-x-4">
                 <a href="/admin" class="hover:text-sky-600">Inloggen</a>
-                <a href="/kies-project" class="hover:text-sky-600">Kies project</a>
+                <a href="/kies-project" class="hover:text-sky-600">Kies activiteit</a>
             </div>
         </footer>
         @yield('scripts')

@@ -12,7 +12,7 @@
             <div class="text-slate-600 text-sm">{{ $persona->name }}</div>
         </div>
         <div class="flex items-center gap-2">
-            @if($persona->project->status === 'closed')
+            @if($persona->activity->status === 'closed')
                 <button type="button" disabled class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-slate-300 text-slate-500 text-sm cursor-not-allowed">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v14l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/></svg>
                     <span>Offline</span>

@@ -22,7 +22,7 @@ class PersonaComponent extends Component
     public function startChat(): void
     {
         // Check if project is closed
-        if ($this->persona->project->status === 'closed') {
+        if ($this->persona->activity->status === 'closed') {
             return;
         }
 

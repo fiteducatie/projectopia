@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Persona;
-use App\Models\Project;
+use App\Models\Activity;
 use App\Models\Sprint;
 use App\Models\Team;
 use App\Models\User;
@@ -28,9 +28,9 @@ class DemoProjectSeeder extends Seeder
             'owner_id' => $user->id,
         ]);
 
-        $project = Project::query()->firstOrCreate([
+        $activity = Activity::query()->firstOrCreate([
             'team_id' => $team->id,
-            'name' => 'Demo project',
+            'name' => 'Demo activity',
         ], [
             'domain' => 'software',
             'context' => 'Bouw een webapp voor kaartverkoop van een nieuwe achtbaan.',
@@ -43,7 +43,7 @@ class DemoProjectSeeder extends Seeder
         ]);
 
         $maria = Persona::query()->updateOrCreate([
-            'project_id' => $project->id,
+            'activity_id' => $activity->id,
             'name' => 'Maria Jensen',
         ], [
             'role' => 'Manager Pretpark',
@@ -54,7 +54,7 @@ class DemoProjectSeeder extends Seeder
         ]);
 
         $tom = Persona::query()->updateOrCreate([
-            'project_id' => $project->id,
+            'activity_id' => $activity->id,
             'name' => 'Tom Bakker',
         ], [
             'role' => 'Product Owner/Docent',
@@ -74,7 +74,7 @@ class DemoProjectSeeder extends Seeder
         $mariaFile1 = $tempDir . '/bezoekersrapport-q3-2024.txt';
         file_put_contents($mariaFile1, "BEZOEKERSRAPPORT Q3 2024\n\nDit rapport bevat gedetailleerde analyses van bezoekersaantallen en trends in het derde kwartaal van 2024.\n\nHoofdpunten:\n- Piekuren analyse\n- Populaire attracties\n- Bezoekerstevredenheid\n- Omzetcijfers\n\nAanbevelingen voor Q4 zijn opgenomen in bijlage A.");
 
-        $mariaAttachment1 = $project->addMedia($mariaFile1)
+        $mariaAttachment1 = $activity->addMedia($mariaFile1)
             ->usingName('Bezoekersrapport Q3 2024')
             ->toMediaCollection('attachments');
 
@@ -88,7 +88,7 @@ class DemoProjectSeeder extends Seeder
         $mariaFile2 = $tempDir . '/marketingstrategie-2024.txt';
         file_put_contents($mariaFile2, "MARKETINGSTRATEGIE 2024\n\nUitgebreide marketingstrategie voor het pretpark in 2024.\n\nStrategische pijlers:\n- Digitale marketing campagnes\n- Doelgroep segmentatie\n- Budgetverdeling per kwartaal\n- KPI's en meetbare resultaten\n\nVerwachte impact op ticketverkoop: +25% ten opzichte van 2023.");
 
-        $mariaAttachment2 = $project->addMedia($mariaFile2)
+        $mariaAttachment2 = $activity->addMedia($mariaFile2)
             ->usingName('Marketingstrategie 2024')
             ->toMediaCollection('attachments');
 
@@ -103,7 +103,7 @@ class DemoProjectSeeder extends Seeder
         $tomFile = $tempDir . '/project-management-gids.txt';
         file_put_contents($tomFile, "PROJECT MANAGEMENT GIDS\n\nPraktische gids voor projectmanagement in educatieve context.\n\nHoofdstukken:\n1. Agile methodieken\n2. Scrum framework\n3. Studenten begeleiding\n4. Tools en technieken\n5. Best practices\n6. Evaluatie en reflectie\n\nDeze gids helpt docenten bij het begeleiden van studentenprojecten.");
 
-        $tomAttachment = $project->addMedia($tomFile)
+        $tomAttachment = $activity->addMedia($tomFile)
             ->usingName('Project Management Gids')
             ->toMediaCollection('attachments');
 
@@ -121,7 +121,7 @@ class DemoProjectSeeder extends Seeder
         if (is_dir($tempDir) && count(scandir($tempDir)) <= 2) rmdir($tempDir);
 
        UserStory::query()->updateOrCreate([
-            'project_id' => $project->id,
+            'activity_id' => $activity->id,
             'user_story' => 'Als bezoeker wil ik tickets online kunnen kopen zodat ik snel toegang krijg tot het pretpark.',
             'acceptance_criteria' => json_encode(['De bezoeker kan tickets selecteren', 'De bezoeker kan betalen met iDeal of creditcard', 'De bezoeker ontvangt een e-ticket per email']),
             'personas' => json_encode([2]),
@@ -130,16 +130,16 @@ class DemoProjectSeeder extends Seeder
 
 
         UserStory::query()->updateOrCreate([
-            'project_id' => $project->id,
+            'activity_id' => $activity->id,
             'user_story' => 'Als bezoeker wil ik een soepele checkout zodat ik zonder problemen mijn tickets kan kopen.',
             'acceptance_criteria' => json_encode(['De checkout valideert invoer correct', 'De gebruiker ontvangt een bevestiging na betaling']),
             'personas' => json_encode([1, 2]),
             'priority' => 'low',
         ]);
 
-        // Project 'Restaurant App'
+        // Activity 'Restaurant App'
 
-        $restaurantApp = Project::query()->firstOrCreate([
+        $restaurantApp = Activity::query()->firstOrCreate([
             'team_id' => $team->id,
             'name' => 'Restaurant App',
         ], [
@@ -154,7 +154,7 @@ class DemoProjectSeeder extends Seeder
         ]);
 
         $quinten = Persona::query()->updateOrCreate([
-            'project_id' => $restaurantApp->id,
+            'activity_id' => $restaurantApp->id,
             'name' => 'Quinten de Vries',
         ], [
             'role' => 'Restaurant Eigenaar',
@@ -164,7 +164,7 @@ class DemoProjectSeeder extends Seeder
             'communication_style' => 'Informeel, vriendelijk.',
         ]);
         $sanne = Persona::query()->updateOrCreate([
-            'project_id' => $restaurantApp->id,
+            'activity_id' => $restaurantApp->id,
             'name' => 'Sanne Jansen',
         ], [
             'role' => 'Kok/Docent',
@@ -174,22 +174,22 @@ class DemoProjectSeeder extends Seeder
             'communication_style' => 'Open, nieuwsgierig.',
         ]);
         UserStory::query()->updateOrCreate([
-            'project_id' => $restaurantApp->id,
+            'activity_id' => $restaurantApp->id,
             'user_story' => 'Als klant wil ik een tafel kunnen reserveren zodat ik verzekerd ben van een plek in het restaurant.',
             'acceptance_criteria' => json_encode(['De klant kan datum en tijd selecteren', 'De klant ontvangt een bevestiging per email']),
             'personas' => json_encode([$quinten->id]),
             'priority' => 'high',
         ]);
         UserStory::query()->updateOrCreate([
-            'project_id' => $restaurantApp->id,
+            'activity_id' => $restaurantApp->id,
             'user_story' => 'Als klant wil ik het menu kunnen bekijken zodat ik een weloverwogen keuze kan maken.',
             'acceptance_criteria' => json_encode(['Het menu is overzichtelijk ingedeeld', 'De klant kan gerechten filteren op dieetwensen']),
             'personas' => json_encode([$quinten->id, $sanne->id]),
             'priority' => 'low',
         ]);
 
-        // Project 'Fitness Tracker App'
-        $fitnessTracker = Project::query()->firstOrCreate([
+        // Activity 'Fitness Tracker App'
+        $fitnessTracker = Activity::query()->firstOrCreate([
             'team_id' => $team->id,
             'name' => 'Fitness Tracker App',
         ], [
@@ -203,7 +203,7 @@ class DemoProjectSeeder extends Seeder
             'difficulty' => 'hard',
         ]);
         $emma = Persona::query()->updateOrCreate([
-            'project_id' => $fitnessTracker->id,
+            'activity_id' => $fitnessTracker->id,
             'name' => 'Emma de Jong',
         ], [
             'role' => 'Fitness Enthousiast',
@@ -213,7 +213,7 @@ class DemoProjectSeeder extends Seeder
             'communication_style' => 'Motiverend, positief.',
         ]);
         $lucas = Persona::query()->updateOrCreate([
-            'project_id' => $fitnessTracker->id,
+            'activity_id' => $fitnessTracker->id,
             'name' => 'Lucas van den Berg',
         ], [
             'role' => 'Personal Trainer/Docent',
@@ -223,14 +223,14 @@ class DemoProjectSeeder extends Seeder
             'communication_style' => 'Coachend, vragend.',
         ]);
         UserStory::query()->updateOrCreate([
-            'project_id' => $fitnessTracker->id,
+            'activity_id' => $fitnessTracker->id,
             'user_story' => 'Als gebruiker wil ik mijn dagelijkse activiteiten kunnen loggen zodat ik mijn voortgang kan bijhouden.',
             'acceptance_criteria' => json_encode(['De gebruiker kan verschillende activiteiten selecteren', 'De gebruiker kan notities toevoegen bij elke activiteit']),
             'personas' => json_encode([$emma->id]),
             'priority' => 'high',
         ]);
         UserStory::query()->updateOrCreate([
-            'project_id' => $fitnessTracker->id,
+            'activity_id' => $fitnessTracker->id,
             'user_story' => 'Als gebruiker wil ik doelen kunnen stellen zodat ik gemotiveerd blijf om te sporten.',
             'acceptance_criteria' => json_encode(['De gebruiker kan wekelijkse en maandelijkse doelen instellen', 'De app geeft herinneringen om doelen te behalen']),
             'personas' => json_encode([$emma->id, $lucas->id]),

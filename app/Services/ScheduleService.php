@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Project;
+use App\Models\Activity;
 use App\Models\Teamleader;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -10,12 +10,12 @@ use Illuminate\Support\Collection;
 class ScheduleService
 {
     /**
-     * Get currently active schedule items for a project
+     * Get currently active schedule items for an activity
      */
-    public function getActiveScheduleItems(Project $project): Collection
+    public function getActiveScheduleItems(Activity $activity): Collection
     {
         $now = Carbon::now();
-        $schedule = $project->schedule ?? [];
+        $schedule = $activity->schedule ?? [];
 
         return collect($schedule)->filter(function ($item) use ($now) {
             if (!isset($item['time_from']) || !isset($item['time_until'])) {
@@ -30,11 +30,11 @@ class ScheduleService
     }
 
     /**
-     * Check if there's an active schedule item for a project
+     * Check if there's an active schedule item for an activity
      */
-    public function hasActiveSchedule(Project $project): bool
+    public function hasActiveSchedule(Activity $activity): bool
     {
-        return $this->getActiveScheduleItems($project)->isNotEmpty();
+        return $this->getActiveScheduleItems($activity)->isNotEmpty();
     }
 
     /**
@@ -42,7 +42,7 @@ class ScheduleService
      */
     public function generateScheduleMessage(Teamleader $teamleader, array $scheduleItem): string
     {
-        $project = $teamleader->projects()->first();
+        $activity = $teamleader->activities()->first();
         $title = $scheduleItem['title'] ?? 'Geplande activiteit';
         $description = $scheduleItem['description'] ?? '';
         $timeFrom = Carbon::parse($scheduleItem['time_from'])->format('H:i');
@@ -92,9 +92,9 @@ class ScheduleService
     /**
      * Check if a schedule message should be shown (is currently active)
      */
-    public function shouldShowScheduleMessage(Project $project): bool
+    public function shouldShowScheduleMessage(Activity $activity): bool
     {
-        return $this->hasActiveSchedule($project);
+        return $this->hasActiveSchedule($activity);
     }
 
     /**
@@ -102,12 +102,12 @@ class ScheduleService
      */
     public function getCurrentScheduleMessages(Teamleader $teamleader): array
     {
-        $project = $teamleader->projects()->first();
-        if (!$project) {
+        $activity = $teamleader->activities()->first();
+        if (!$activity) {
             return [];
         }
 
-        $activeItems = $this->getActiveScheduleItems($project);
+        $activeItems = $this->getActiveScheduleItems($activity);
         if ($activeItems->isEmpty()) {
             return [];
         }
@@ -144,12 +144,12 @@ class ScheduleService
 
 
     /**
-     * Get all projects with active schedules
+     * Get all activities with active schedules
      */
-    public function getProjectsWithActiveSchedules(): Collection
+    public function getActivitiesWithActiveSchedules(): Collection
     {
-        return Project::all()->filter(function ($project) {
-            return $this->hasActiveSchedule($project);
+        return Activity::all()->filter(function ($activity) {
+            return $this->hasActiveSchedule($activity);
         });
     }
 }

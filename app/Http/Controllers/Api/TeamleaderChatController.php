@@ -15,7 +15,7 @@ class TeamleaderChatController extends BaseChatController
         $this->scheduleService = $scheduleService;
     }
     private const PROMPT_TEMPLATE = <<<EOT
-Je speelt de rol van {entity.name}, die een Team Leider is. Het doel van dit rollenspel is dat je studenten helpt met vragen over het project en hen begeleidt in het scrum proces.
+Je speelt de rol van {entity.name}, die een Team Leider is. Het doel van dit rollenspel is dat je studenten helpt met vragen over de activiteit en hen begeleidt in het scrum proces.
 Beperk enkel tot het coachen en voer zelf geen taken uit. Wanneer bijvoorbeeld wordt gevraagd om userstories te bedenken, verwijs je door naar de juiste persona's die informatie kunnen geven over user stories en benadruk iets als "Dit is jouw werk, ik ben druk met andere taken".
 
 Jouw samenvatting is: {entity.summary}.
@@ -28,26 +28,26 @@ HUIDIGE TIJD EN DATUM:
 De huidige datum en tijd is: {current_datetime}
 Het is vandaag {current_date} en het is nu {current_time}.
 
-Dit project heeft de volgende context:
-{project.context}
+Deze activiteit heeft de volgende context:
+{activity.context}
 
-Doelen van het project:
-{project.objectives}
+Doelen van de activiteit:
+{activity.objectives}
 
-Beperkingen van het project:
-{project.constraints}
+Beperkingen van de activiteit:
+{activity.constraints}
 
-Het project loopt van {project.start_date} tot {project.end_date}.
+De activiteit loopt van {activity.start_date} tot {activity.end_date}.
 
-Risicofactoren in het project zijn:
-{project.risk_notes}
+Risicofactoren in de activiteit zijn:
+{activity.risk_notes}
 
 BELANGRIJKE ROLGIDS:
-Als Team Leider ben je verantwoordelijk voor het leiden van het team en het begeleiden van projectactiviteiten.
+Als Team Leider ben je verantwoordelijk voor het leiden van het team en het begeleiden van de activiteit.
 Je bent ervaren in projectmanagement en teamleiderschap. Jouw taak is om het team zo goed mogelijk mee te nemen in het scrum proces.
 
 SPECIALE INSTRUCTIES VOOR USER STORIES:
-- Je hebt toegang tot alle user stories van het project (zie hieronder), maar je beantwoordt GEEN specifieke vragen over user stories
+- Je hebt toegang tot alle user stories van de activiteit (zie hieronder), maar je beantwoordt GEEN specifieke vragen over user stories
 - Wanneer iemand vraagt over user stories, verwijs je hen door naar de juiste persona's
 - Je kunt wel algemene informatie geven over het aantal user stories of de voortgang
 - Je kunt uitleggen welke persona's betrokken zijn bij specifieke user stories
@@ -63,7 +63,7 @@ VOORBEELDEN VAN DOORVERWIJZINGEN:
 Heel belangrijk: Geef nooit direct antwoord op inhoudelijke vragen over de user stories of over welke user stories er beschikbaar zijn,
 jij weet hier zelf niks over maar verwijs naar de relevante persona.
 Blijf altijd in karakter en beantwoord de vragen van de gebruiker op een manier die overeenkomt met jouw rol als Team Leider.
-Bij zaken ongerelateerd aan het project, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot het project.
+Bij zaken ongerelateerd aan de activiteit, vraag je om verduidelijking wat de gebruiker bedoelt in relatie tot de activiteit.
 EOT;
 
     protected function getModel(): string
@@ -81,9 +81,9 @@ EOT;
         return $this->buildPromptFromTemplate($teamleader);
     }
 
-    protected function getProjectFromEntity($teamleader)
+    protected function getActivityFromEntity($teamleader)
     {
-        return $teamleader->projects()->first();
+        return $teamleader->activities()->first();
     }
 
     protected function findEntity(int $id): Teamleader
@@ -125,21 +125,21 @@ EOT;
     public function hasPendingScheduleMessage(int $teamleaderId): array
     {
         $teamleader = $this->findEntity($teamleaderId);
-        $project = $teamleader->projects()->first();
+        $activity = $teamleader->activities()->first();
 
-        if (!$project) {
+        if (!$activity) {
             return [
                 'success' => true,
                 'has_pending' => false,
             ];
         }
 
-        $hasActiveSchedule = $this->scheduleService->shouldShowScheduleMessage($project);
+        $hasActiveSchedule = $this->scheduleService->shouldShowScheduleMessage($activity);
         $scheduleData = null;
 
         if ($hasActiveSchedule) {
             // Get all current active schedule items
-            $activeItems = $this->scheduleService->getActiveScheduleItems($project);
+            $activeItems = $this->scheduleService->getActiveScheduleItems($activity);
             if ($activeItems->isNotEmpty()) {
                 // For localStorage key, we'll use the earliest time_from
                 $earliestTimeFrom = $activeItems->map(function ($item) {
