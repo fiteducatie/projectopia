@@ -17,6 +17,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class ActivityResource extends Resource
 {
@@ -62,6 +63,30 @@ class ActivityResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Aangemaakt op')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('domain')
+                    ->options(function () {
+                        return Activity::query()
+                            ->distinct()
+                            ->pluck('domain', 'domain')
+                            ->toArray();
+                    })
+                    ->label('Domein'),
+                SelectFilter::make('difficulty')
+                    ->options(function() {
+                        return Activity::query()
+                            ->distinct()
+                            ->pluck('difficulty', 'difficulty')
+                            ->toArray();
+                    })
+                    ->label('Moeilijkheid'),
+                SelectFilter::make('status')
+                    ->options(function() {
+                        return Activity::query()
+                            ->distinct()
+                            ->pluck('status', 'status')
+                            ->toArray();
+                    })
+                    ->label('Status'),
                 TrashedFilter::make(),
             ])
             ->recordActions([
