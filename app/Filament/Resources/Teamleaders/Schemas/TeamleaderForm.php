@@ -52,7 +52,7 @@ class TeamleaderForm
                     ->schema([
                         TextEntry::make('description_help')
                             ->label('Beschrijving')
-                            ->state('Korte beschrijving van de team leider, en zijn rol in het project.')
+                            ->state('Korte beschrijving van de teamleider en zijn rol in het project.')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         Textarea::make('description')
                             ->hiddenLabel()
