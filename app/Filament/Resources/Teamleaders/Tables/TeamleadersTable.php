@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Teamleaders\Tables;
 
+use App\Http\Resources\Teamleader;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -15,6 +16,9 @@ use Filament\Tables\Table;
 
 class TeamleadersTable
 {
+    protected static ?string $modelLabel = 'Teamleider';
+    protected static ?string $pluralModelLabel = 'Team Leiders';
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -53,8 +57,10 @@ class TeamleadersTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                ViewAction::make()
+                    ->label('Bekijk'),
+                EditAction::make()
+                    ->label('Bewerk'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

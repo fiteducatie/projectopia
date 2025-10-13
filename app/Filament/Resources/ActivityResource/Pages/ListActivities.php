@@ -11,8 +11,6 @@ class ListActivities extends ListRecords
 {
     protected static string $resource = ActivityResource::class;
 
-
-    //change label of model
     protected static ?string $modelLabel = 'Activiteit';
     protected static ?string $pluralModelLabel = 'Activiteiten';
 
@@ -29,7 +27,8 @@ class ListActivities extends ListRecords
                 ->action(function () {
                     \App\Models\Activity::query()->update(['status' => 'closed']);
                     $this->redirect($this->getResource()::getUrl('index'));
-                })
+                }),
+            
         ];
     }
 }

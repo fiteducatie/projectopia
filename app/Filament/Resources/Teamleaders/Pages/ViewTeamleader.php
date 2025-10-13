@@ -10,10 +10,16 @@ class ViewTeamleader extends ViewRecord
 {
     protected static string $resource = TeamleaderResource::class;
 
+    public function getTitle(): string
+    {
+        return 'Bekijk teamleider';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            EditAction::make()
+                ->label('Bewerk'),
         ];
     }
 }

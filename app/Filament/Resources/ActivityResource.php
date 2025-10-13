@@ -11,6 +11,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
@@ -61,6 +63,12 @@ class ActivityResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make(),
+            ])
+            ->recordActions([
+                ViewAction::make()
+                    ->label('Bekijk'),
+                EditAction::make()
+                    ->label('Bewerk'),
             ])
             ->recordUrl(fn($record) => !$record->trashed() ? static::getUrl('view', ['record' => $record]) : null);
     }

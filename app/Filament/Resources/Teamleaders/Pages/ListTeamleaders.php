@@ -10,10 +10,14 @@ class ListTeamleaders extends ListRecords
 {
     protected static string $resource = TeamleaderResource::class;
 
+    protected static ?string $modelLabel = 'Teamleider';
+    protected static ?string $pluralModelLabel = 'Team Leiders';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Nieuwe teamleider'),
         ];
     }
 }

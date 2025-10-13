@@ -16,10 +16,14 @@ class EditTeamleader extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
-            ForceDeleteAction::make(),
-            RestoreAction::make(),
+            ViewAction::make()
+                ->label('Bekijk'),
+            DeleteAction::make()
+                ->label('Verwijder'),
+            ForceDeleteAction::make()
+                ->label('Verwijder permanent'),
+            RestoreAction::make()
+                ->label('Herstel'),
         ];
     }
 }

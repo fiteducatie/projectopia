@@ -10,6 +10,11 @@ class CreateTeamleader extends CreateRecord
 {
     protected static string $resource = TeamleaderResource::class;
 
+    public  function getTitle(): string
+    {
+        return 'Nieuwe teamleider';
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $tenant = Filament::getTenant();
