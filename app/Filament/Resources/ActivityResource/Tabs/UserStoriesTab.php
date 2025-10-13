@@ -15,6 +15,10 @@ class UserStoriesTab
             Section::make()
                 ->description('Maak de scope van de activiteit concreet door user stories aan te leveren.')
                 ->schema([
+                    TextEntry::make('user_stories_description')
+                        ->label('User Stories')
+                        ->state('User stories zijn korte, eenvoudige beschrijvingen van een functionaliteit vanuit het perspectief van de eindgebruiker. Ze helpen bij het definiëren van de scope en het begrijpen van de behoeften van de gebruikers.')
+                        ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                     Repeater::make('user_stories_data')
                         ->relationship('userStories')
                         ->itemLabel(function (array $state, $component): string {
@@ -29,8 +33,7 @@ class UserStoriesTab
                             }
                             return trim($label);
                         })
-                        ->label('User Stories')
-                        ->helperText('Beschrijf de functionaliteiten vanuit gebruikersperspectief. Minimaal 3 is aan te raden.')
+                        ->hiddenLabel()
                         ->schema([
                             TextEntry::make('userstories_help')
                                 ->label('User stories')

@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 
 class AttachmentsTab
@@ -16,9 +17,12 @@ class AttachmentsTab
             Section::make()
                 ->description('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s. Voeg extra details toe.')
                 ->schema([
-                    SpatieMediaLibraryFileUpload::make('attachments')
+                    TextEntry::make('attachments_help')
                         ->label('Bestanden uploaden')
-                        ->helperText('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s.')
+                        ->state('Upload relevante documenten zoals Word, PDF, afbeeldingen of video\'s.')
+                        ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
+                    SpatieMediaLibraryFileUpload::make('attachments')
+                        ->hiddenLabel()
                         ->collection('attachments')
                         ->downloadable()
                         ->multiple()
@@ -30,10 +34,13 @@ class AttachmentsTab
                         ->responsiveImages()
                         ->conversion('thumb'),
 
+                    TextEntry::make('attachments_details_help')
+                        ->label('Bestandsdetails')
+                        ->state('Voeg extra details toe aan geüploade bestanden zoals naam, beschrijving en relevante persona\'s.')
+                        ->extraAttributes(['class' => 'italic text-sm text-gray-400', 'style' => 'margin-top: 1rem;']),
                     Repeater::make('attachment_metadata')
                         ->visibleOn('edit')
-                        ->label('Bestandsdetails')
-                        ->helperText('Voeg extra details toe aan geüploade bestanden zoals naam, beschrijving en relevante persona\'s.')
+                        ->hiddenLabel()
                         ->schema([
                             Hidden::make('media_id'),
 

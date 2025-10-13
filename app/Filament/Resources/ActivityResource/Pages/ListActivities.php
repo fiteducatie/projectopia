@@ -11,10 +11,17 @@ class ListActivities extends ListRecords
 {
     protected static string $resource = ActivityResource::class;
 
+
+    //change label of model
+    protected static ?string $modelLabel = 'Activiteit';
+    protected static ?string $pluralModelLabel = 'Activiteiten';
+
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Nieuwe activiteit'),
             Action::make('change-all-activities-status')
                 ->label('Sluit alle activiteiten')
                 ->color('danger')

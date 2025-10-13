@@ -12,6 +12,12 @@ class EditActivity extends EditRecord
 {
     protected static string $resource = ActivityResource::class;
 
+
+    public function getTitle(): string
+    {
+        return 'Bewerk activiteit: ' . $this->record->name;
+    }
+
     protected array $attachmentsData = [];
 
     protected function getHeaderActions(): array

@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TimePicker;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 
 class PersonasTab
@@ -16,11 +17,14 @@ class PersonasTab
             Section::make()
                 ->description('Voeg belangrijke stakeholders of doelgroepen toe. Ze worden gebruikt om mee te communiceren om meer van de activiteit te weten te komen.')
                 ->schema([
+                    TextEntry::make('personas_description')
+                        ->label('Persona\'s')
+                        ->state('Minimaal 1 persona is aan te raden: Klant, Product Owner of Doelgroep.')
+                        ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                     Repeater::make('personas_data')
                         ->relationship('personas')
                         ->itemLabel(fn(array $state): string => trim(($state['role'] ?? 'Rol') . ': ' . ($state['name'] ?? 'Naam')))
-                        ->label('Persona\'s')
-                        ->helperText('Minimaal 1 persona is aan te raden: Klant, Product Owner of Doelgroep.')
+                        ->hiddenLabel()
                         ->schema([
                             Forms\Components\TextInput::make('name')->label('Naam')->required()
                                 ->helperText('Naam van de persona (mag fictief).'),

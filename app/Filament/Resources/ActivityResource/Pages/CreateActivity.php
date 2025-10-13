@@ -12,6 +12,10 @@ class CreateActivity extends CreateRecord
 {
     protected static string $resource = ActivityResource::class;
 
+    public  function getTitle(): string
+    {
+        return 'Nieuwe activiteit';
+    }
     /**
      * Temporarily store repeater data during create flow.
      * @var array<int, array<string, mixed>>
