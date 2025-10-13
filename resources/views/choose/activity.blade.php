@@ -58,12 +58,12 @@
         </div>
         <div class="space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-6">
-                <h3 class="font-semibold mb-3">Team Leiders</h3>
+                <h3 class="font-semibold mb-3">Teamleiders</h3>
                 <div class="space-y-3">
                     @forelse ($activity->teamleaders as $teamleader)
                         @livewire('teamleader-component', ['teamleader' => $teamleader], key('teamleader-' . $teamleader->id))
                     @empty
-                        <div class="text-slate-500 text-sm">Geen team leiders toegevoegd.</div>
+                        <div class="text-slate-500 text-sm">Geen teamleiders toegevoegd.</div>
                     @endforelse
                 </div>
             </div>

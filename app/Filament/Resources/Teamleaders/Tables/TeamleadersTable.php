@@ -17,7 +17,7 @@ use Filament\Tables\Table;
 class TeamleadersTable
 {
     protected static ?string $modelLabel = 'Teamleider';
-    protected static ?string $pluralModelLabel = 'Team Leiders';
+    protected static ?string $pluralModelLabel = 'Teamleiders';
 
     public static function configure(Table $table): Table
     {

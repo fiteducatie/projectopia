@@ -15,16 +15,16 @@ class TeamLeadersTab
     {
         return [
             Section::make()
-                ->description('Selecteer team leiders voor deze activiteit.')
+                ->description('Selecteer teamleiders voor deze activiteit.')
                 ->schema([
                     TextEntry::make('team_leaders_help')
-                        ->label('Team Leiders')
+                        ->label('Teamleiders')
                         ->state('Selecteer een of meer teamleiders die betrokken zijn bij deze activiteit.')
                         ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                     Forms\Components\Select::make('team_leader_ids')
                         ->hiddenLabel()
                         ->multiple()
-                        ->placeholder('Selecteer team leiders')
+                        ->placeholder('Selecteer teamleiders')
                         ->relationship('teamLeaders', 'name')
                         ->preload()
                         ->searchable()
@@ -33,7 +33,7 @@ class TeamLeadersTab
                             Grid::make(2)
                                 ->schema([
                                     TextEntry::make('team_leader_help')
-                                        ->label('Team Leider')
+                                        ->label('Teamleider')
                                         ->state('Volledige naam van de teamleider.')
                                         ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                                     TextInput::make('name')
@@ -43,7 +43,7 @@ class TeamLeadersTab
 
                                     TextEntry::make('avatar_url_help')
                                         ->label('Avatar URL')
-                                        ->state('Optioneel: URL naar een afbeelding van de team leider.')
+                                        ->state('Optioneel: URL naar een afbeelding van de teamleider.')
                                         ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                                     TextInput::make('avatar_url')
                                         ->hiddenLabel()
@@ -74,7 +74,7 @@ class TeamLeadersTab
 
                             TextEntry::make('communication_style_help')
                                 ->label('Communicatiestijl')
-                                ->state('Hoe communiceert deze team leider? (bijv. direct, diplomatiek, data-gedreven)')
+                                ->state('Hoe communiceert deze teamleider? (bijv. direct, diplomatiek, data-gedreven)')
                                 ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                             Textarea::make('communication_style')
                                 ->hiddenLabel()
@@ -93,7 +93,7 @@ class TeamLeadersTab
 
                             TextEntry::make('deliverables_help')
                                 ->label('Deliverables')
-                                ->state('Wat vind deze team leider belangrijk voor het project? (interviews met klant, diagrammen, database, schone code, heldere prototypes, etc.)')
+                                ->state('Wat vind deze teamleider belangrijk voor het project? (interviews met klant, diagrammen, database, schone code, heldere prototypes, etc.)')
                                 ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                             Textarea::make('deliverables')
                                 ->hiddenLabel()

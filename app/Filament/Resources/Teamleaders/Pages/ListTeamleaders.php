@@ -11,7 +11,7 @@ class ListTeamleaders extends ListRecords
     protected static string $resource = TeamleaderResource::class;
 
     protected static ?string $modelLabel = 'Teamleider';
-    protected static ?string $pluralModelLabel = 'Team Leiders';
+    protected static ?string $pluralModelLabel = 'Teamleiders';
 
     public function getTitle(): string
     {

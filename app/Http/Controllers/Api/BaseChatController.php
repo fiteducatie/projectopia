@@ -214,7 +214,7 @@ abstract class BaseChatController extends Controller
             $entity->goals ?? 'De gebruiker zo goed mogelijk helpen',
             $entity->traits ?? 'Empathisch, geduldig en informatief',
             $entity->communication_style ?? 'Duidelijk en beknopt',
-            $entity->summary ?? 'Een ervaren team leider',
+            $entity->summary ?? 'Een ervaren teamleider',
             $entity->description ?? 'Verantwoordelijk voor het leiden van het team en begeleiden van activiteiten.',
             $entity->skillset ?? 'Projectmanagement, teamleiderschap en communicatie',
             $entity->deliverables ?? 'Succesvol resultaat en gemotiveerd team',

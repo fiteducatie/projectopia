@@ -15,10 +15,10 @@ class TeamleaderForm
         return $schema
             ->schema([
                 Section::make('Basis Informatie')
-                    ->description('Algemene informatie over de team leider')
+                    ->description('Algemene informatie over de teamleider')
                     ->schema([
                         TextEntry::make('team_leader_help')
-                            ->label('Team Leider')
+                            ->label('Teamleider')
                             ->state('Volledige naam van de teamleider.')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         TextInput::make('name')
@@ -28,7 +28,7 @@ class TeamleaderForm
 
                         TextEntry::make('avatar_url_help')
                             ->label('Avatar URL')
-                            ->state('Optioneel: URL naar een afbeelding van de team leider.')
+                            ->state('Optioneel: URL naar een afbeelding van de teamleider.')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         TextInput::make('avatar_url')
                             ->hiddenLabel()
@@ -37,7 +37,7 @@ class TeamleaderForm
 
                         TextEntry::make('summary_help')
                             ->label('Samenvatting')
-                            ->state('Korte samenvatting van de team leider en zijn rol in het project.')
+                            ->state('Korte samenvatting van de teamleider en zijn rol in het project.')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         Textarea::make('summary')
                             ->hiddenLabel()
@@ -48,7 +48,7 @@ class TeamleaderForm
                     ->columns(2),
 
                 Section::make('Profiel')
-                    ->description('Details over de team leider')
+                    ->description('Details over de teamleider')
                     ->schema([
                         TextEntry::make('description_help')
                             ->label('Beschrijving')
@@ -61,7 +61,7 @@ class TeamleaderForm
 
                         TextEntry::make('communication_style_help')
                             ->label('Communicatiestijl')
-                            ->state('Hoe communiceert deze team leider? (bijv. direct, diplomatiek, data-gedreven)')
+                            ->state('Hoe communiceert deze teamleider? (bijv. direct, diplomatiek, data-gedreven)')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         Textarea::make('communication_style')
                             ->hiddenLabel()
@@ -84,7 +84,7 @@ class TeamleaderForm
 
                         TextEntry::make('deliverables_help')
                             ->label('Deliverables')
-                            ->state('Wat vind deze team leider belangrijk voor het project? (interviews met klant, diagrammen, database, schone code, heldere prototypes, etc.)')
+                            ->state('Wat vind deze teamleider belangrijk voor het project? (interviews met klant, diagrammen, database, schone code, heldere prototypes, etc.)')
                             ->extraAttributes(['class' => 'italic text-sm text-gray-400']),
                         Textarea::make('deliverables')
                             ->hiddenLabel()

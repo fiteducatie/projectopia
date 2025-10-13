@@ -24,7 +24,7 @@ class TeamleaderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationLabel = 'Team Leiders';
+    protected static ?string $navigationLabel = 'Teamleiders';
 
     protected static ?string $recordTitleAttribute = 'name';
 

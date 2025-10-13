@@ -27,12 +27,12 @@
                                 @if($this->isActivityClosed())
                                     <span class="text-red-500">Momenteel offline</span>
                                 @else
-                                    <span x-text="isTyping ? 'typing...' : 'Team Leider'"></span>
+                                    <span x-text="isTyping ? 'typing...' : 'Teamleider'"></span>
                                 @endif
                             </div>
                         </div>
                     @else
-                        <h2 class="font-bold text-lg text-emerald-900">Team Leider Chat</h2>
+                        <h2 class="font-bold text-lg text-emerald-900">Teamleider Chat</h2>
                     @endif
 
                     <!-- Schedule History Button -->
