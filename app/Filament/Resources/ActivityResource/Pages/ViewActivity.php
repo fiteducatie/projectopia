@@ -15,6 +15,14 @@ class ViewActivity extends ViewRecord
 {
     protected static string $resource = ActivityResource::class;
 
+    protected static ?string $modelLabel = 'Activiteit';
+    protected static ?string $pluralModelLabel = 'Activiteiten';
+
+    public function getTitle(): string
+    {
+        return 'Details van Activiteit: ' . $this->record->name;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
