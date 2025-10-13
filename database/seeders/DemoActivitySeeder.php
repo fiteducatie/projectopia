@@ -11,7 +11,7 @@ use App\Models\UserStory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DemoProjectSeeder extends Seeder
+class DemoActivitySeeder extends Seeder
 {
     public function run(): void
     {
