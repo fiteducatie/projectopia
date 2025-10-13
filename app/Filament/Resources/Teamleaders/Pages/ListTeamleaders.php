@@ -13,6 +13,11 @@ class ListTeamleaders extends ListRecords
     protected static ?string $modelLabel = 'Teamleider';
     protected static ?string $pluralModelLabel = 'Team Leiders';
 
+    public function getTitle(): string
+    {
+        return 'Overzicht van alle Teamleiders';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

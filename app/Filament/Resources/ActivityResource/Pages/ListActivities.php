@@ -12,9 +12,12 @@ class ListActivities extends ListRecords
     protected static string $resource = ActivityResource::class;
 
     protected static ?string $modelLabel = 'Activiteit';
-    protected static ?string $pluralModelLabel = 'Activiteiten';
+    protected static ?string $pluralModelLabel = 'Activiteiten';    
 
-
+    public function getTitle(): string
+    {
+        return 'Overzicht van alle Activiteiten';
+    }
     protected function getHeaderActions(): array
     {
         return [
@@ -28,7 +31,7 @@ class ListActivities extends ListRecords
                     \App\Models\Activity::query()->update(['status' => 'closed']);
                     $this->redirect($this->getResource()::getUrl('index'));
                 }),
-            
+
         ];
     }
 }
