@@ -38,9 +38,9 @@ class TeamleadersTable
                         }
                         return $state;
                     }),
-                TextColumn::make('projects_count')
-                    ->label('Projecten')
-                    ->counts('projects')
+                TextColumn::make('activities_count')
+                    ->label('Activiteiten')
+                    ->counts('activities')
                     ->badge()
                     ->color('success'),
                 TextColumn::make('created_at')
