@@ -22,3 +22,44 @@
 .prose ul li::marker {
     @apply text-blue-500;
 }
+
+.prose h2 {
+    @apply text-2xl font-bold;
+}
+
+.prose h3 {
+    @apply text-xl font-bold;
+}
+
+.prose h4 {
+    @apply text-lg font-bold;
+}
+
+.prose table {
+    @apply w-full my-4;
+}
+
+.prose table th {
+    @apply bg-gray-100;
+}
+
+.prose table td {
+    @apply border border-gray-200 p-1;
+}
+
+.prose details {
+    @apply my-4;
+
+}
+
+.prose details summary {
+    @apply font-bold cursor-pointer;
+}
+
+.prose details p {
+    @apply my-2;
+}
+
+.prose details summary:hover {
+    @apply text-blue-500;
+}

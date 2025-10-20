@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\ActivityResource\InfolistTabs;
 
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section as InfoSection;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\ViewEntry;
 
 class OverviewInfolistTab
 {
@@ -27,20 +29,7 @@ class OverviewInfolistTab
                     TextEntry::make('status')->label('Status')->badge()->color(fn($state) => $state === 'open' ? 'success' : 'danger')->columnSpan(2),
                 ])->columnSpanFull(),
 
-            InfoSection::make('Context')
-                ->schema([
-                    TextEntry::make('context')->markdown()->hiddenLabel(),
-                ])->collapsible(),
-
-            InfoSection::make('Doelstellingen')
-                ->schema([
-                    TextEntry::make('objectives')->markdown()->hiddenLabel(),
-                ])->collapsible(),
-
-            InfoSection::make('Randvoorwaarden')
-                ->schema([
-                    TextEntry::make('constraints')->markdown()->hiddenLabel(),
-                ])->collapsible(),
+            ViewEntry::make('content')->view('filament.components.rich-editor.rich-content-renderer'),
         ];
     }
 }

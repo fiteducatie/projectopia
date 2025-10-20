@@ -43,17 +43,8 @@
 
     <div class="mt-6 grid md:grid-cols-3 gap-6">
         <div class="md:col-span-2 space-y-6">
-            <div class="rounded-xl border border-slate-200 bg-white p-6">
-                <h2 class="font-semibold mb-2">Context</h2>
-                <div class="prose prose-slate max-w-none text-sm">{!! $activity->context !!}</div>
-            </div>
-            <div class="rounded-xl border border-slate-200 bg-white p-6">
-                <h2 class="font-semibold mb-2">Doelstellingen</h2>
-                <div class="prose prose-slate max-w-none text-sm">{!! $activity->objectives !!}</div>
-            </div>
-            <div class="rounded-xl border border-slate-200 bg-white p-6">
-                <h2 class="font-semibold mb-2">Randvoorwaarden</h2>
-                <div class="prose prose-slate max-w-none text-sm">{!! $activity->constraints !!}</div>
+            <div class="prose">
+                {!! \Filament\Forms\Components\RichEditor\RichContentRenderer::make($activity->content)->toHtml() !!}
             </div>
         </div>
         <div class="space-y-6">
