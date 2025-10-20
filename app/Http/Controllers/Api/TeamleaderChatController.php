@@ -28,19 +28,12 @@ HUIDIGE TIJD EN DATUM:
 De huidige datum en tijd is: {current_datetime}
 Het is vandaag {current_date} en het is nu {current_time}.
 
-Deze activiteit heeft de volgende context:
-{activity.context}
-
-Doelen van de activiteit:
-{activity.objectives}
-
-Beperkingen van de activiteit:
-{activity.constraints}
+Deze activiteit heeft de volgende content.
+Hier haal je de benodigde informatie uit voor de activiteit. Hou rekening met de structuur.
+Door kopjes wordt aangegeven dat er een nieuwe sectie begint.
+{activity.content}
 
 De activiteit loopt van {activity.start_date} tot {activity.end_date}.
-
-Risicofactoren in de activiteit zijn:
-{activity.risk_notes}
 
 BELANGRIJKE ROLGIDS:
 Als Teamleider ben je verantwoordelijk voor het leiden van het team en het begeleiden van de activiteit.
