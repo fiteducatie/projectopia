@@ -13,8 +13,10 @@ use App\Filament\Resources\ActivityResource\InfolistTabs\OverviewInfolistTab;
 use App\Filament\Resources\ActivityResource\InfolistTabs\UserStoriesInfolistTab;
 use App\Filament\Resources\ActivityResource\InfolistTabs\PersonasInfolistTab;
 use App\Filament\Resources\ActivityResource\InfolistTabs\AttachmentsInfolistTab;
+use App\Filament\Resources\ActivityResource\InfolistTabs\InfoPopupInfolistTab;
 use App\Filament\Resources\ActivityResource\InfolistTabs\TeamLeadersInfolistTab;
 use App\Filament\Resources\ActivityResource\InfolistTabs\ScheduleInfolistTab;
+use App\Filament\Resources\ActivityResource\Tabs\InfoPopupTab;
 
 class ActivityTabFactory
 {
@@ -36,6 +38,7 @@ class ActivityTabFactory
 
             $tab->schema(match ($tabKey) {
                 'overview' => OverviewTab::make(),
+                'info_popup' => InfoPopupTab::make(),
                 'user_stories' => UserStoriesTab::make(),
                 'personas' => PersonasTab::make(),
                 'attachments' => AttachmentsTab::make(),
@@ -68,6 +71,7 @@ class ActivityTabFactory
 
             $tab->schema(match ($tabKey) {
                 'overview' => OverviewInfolistTab::make(),
+                'info_popup' => InfoPopupInfolistTab::make(),
                 'user_stories' => UserStoriesInfolistTab::make(),
                 'personas' => PersonasInfolistTab::make(),
                 'attachments' => AttachmentsInfolistTab::make(),
