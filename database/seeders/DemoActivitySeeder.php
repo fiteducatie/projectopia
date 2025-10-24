@@ -36,11 +36,23 @@ class DemoActivitySeeder extends Seeder
             'context' => 'Bouw een webapp voor kaartverkoop van een nieuwe achtbaan.',
             'objectives' => 'Online ticketing, rit-informatie, boekingssysteem.',
             'constraints' => 'Budget en tijdslimiet van 8 weken.',
+            'difficulty' => 'medium',
             'start_date' => now()->startOfMonth(),
             'end_date' => now()->startOfMonth()->addWeeks(8),
             'risk_notes' => 'Scope creep, prestatieproblemen, compliance.',
             'difficulty' => 'normal',
-        ]);
+            'info_popup' => '   <h3>📋 Instructie: Gebruik van de Projectpagina</h3>
+                                <p>De projectpagina is ontwikkeld om je snel inzicht te geven in alle belangrijke onderdelen van een project. Zodra je de pagina opent, zie je een overzicht met de belangrijkste informatie en functies.</p>
+                                <br>
+                                <h3>📚 Projectcontext (links):</h3>
+                                <p>Aan de linkerkant vind je de context, doelstellingen en randvoorwaarden van het project. Zo krijg je direct duidelijkheid over wat het project beoogt en binnen welke kaders er gewerkt wordt.</p>
+                                <br>
+                                <h3>👥 Teamleiders (rechts):</h3>
+                                <p>Aan de rechterzijde staan de teamleiders vermeld. Zij geven aan hoe het project verloopt en wanneer specifieke onderdelen moeten worden opgeleverd — bijvoorbeeld op een bepaalde dag of binnen een week.</p>
+                                <br>
+                                <h3>💡 Betrokkenen (rechts onderin):</h3>
+                                <p>Rechts onderin vind je de betrokkenen. Zij zijn beschikbaar om extra informatie uit het project te halen. Door de juiste vragen te stellen, krijg je inzicht in belangrijke informatie, user stories, acceptatiecriteria en prioriteiten.</p>'
+                            ]);
 
         $maria = Persona::query()->updateOrCreate([
             'activity_id' => $activity->id,
@@ -147,11 +159,22 @@ class DemoActivitySeeder extends Seeder
             'context' => 'Bouw een mobiele app voor het reserveren en bestellen in een restaurant.',
             'objectives' => 'Tafelreserveringen, menu bekijken, online bestellen.',
             'constraints' => 'Budget en tijdslimiet van 6 weken.',
+            'difficulty' => 'medium',
             'start_date' => now()->startOfMonth(),
             'end_date' => now()->startOfMonth()->addWeeks(6),
             'risk_notes' => 'Technische uitdagingen, gebruikersacceptatie.',
-            'difficulty' => 'hard',
-        ]);
+            'info_popup' => '   <h3>📋 Instructie: Gebruik van de Projectpagina</h3>
+                                <p>De projectpagina is ontwikkeld om je snel inzicht te geven in alle belangrijke onderdelen van een project. Zodra je de pagina opent, zie je een overzicht met de belangrijkste informatie en functies.</p>
+                                <br>
+                                <h3>📚 Projectcontext (links):</h3>
+                                <p>Aan de linkerkant vind je de context, doelstellingen en randvoorwaarden van het project. Zo krijg je direct duidelijkheid over wat het project beoogt en binnen welke kaders er gewerkt wordt.</p>
+                                <br>
+                                <h3>👥 Teamleiders (rechts):</h3>
+                                <p>Aan de rechterzijde staan de teamleiders vermeld. Zij geven aan hoe het project verloopt en wanneer specifieke onderdelen moeten worden opgeleverd — bijvoorbeeld op een bepaalde dag of binnen een week.</p>
+                                <br>
+                                <h3>💡 Betrokkenen (rechts onderin):</h3>
+                                <p>Rechts onderin vind je de betrokkenen. Zij zijn beschikbaar om extra informatie uit het project te halen. Door de juiste vragen te stellen, krijg je inzicht in belangrijke informatie, user stories, acceptatiecriteria en prioriteiten.</p>'
+                            ]);
 
         $quinten = Persona::query()->updateOrCreate([
             'activity_id' => $restaurantApp->id,
@@ -201,6 +224,17 @@ class DemoActivitySeeder extends Seeder
             'end_date' => now()->startOfMonth()->addWeeks(10),
             'risk_notes' => 'Privacy zorgen, technische integraties.',
             'difficulty' => 'hard',
+            'info_popup' => '   <h3>📋 Instructie: Gebruik van de Projectpagina</h3>
+                                <p>De projectpagina is ontwikkeld om je snel inzicht te geven in alle belangrijke onderdelen van een project. Zodra je de pagina opent, zie je een overzicht met de belangrijkste informatie en functies.</p>
+                                <br>
+                                <h3>📚 Projectcontext (links):</h3>
+                                <p>Aan de linkerkant vind je de context, doelstellingen en randvoorwaarden van het project. Zo krijg je direct duidelijkheid over wat het project beoogt en binnen welke kaders er gewerkt wordt.</p>
+                                <br>
+                                <h3>👥 Teamleiders (rechts):</h3>
+                                <p>Aan de rechterzijde staan de teamleiders vermeld. Zij geven aan hoe het project verloopt en wanneer specifieke onderdelen moeten worden opgeleverd — bijvoorbeeld op een bepaalde dag of binnen een week.</p>
+                                <br>
+                                <h3>💡 Betrokkenen (rechts onderin):</h3>
+                                <p>Rechts onderin vind je de betrokkenen. Zij zijn beschikbaar om extra informatie uit het project te halen. Door de juiste vragen te stellen, krijg je inzicht in belangrijke informatie, user stories, acceptatiecriteria en prioriteiten.</p>'
         ]);
         $emma = Persona::query()->updateOrCreate([
             'activity_id' => $fitnessTracker->id,
