@@ -22,3 +22,47 @@
 .prose ul li::marker {
     @apply text-blue-500;
 }
+
+#popup {
+    font-size: 1.2rem;
+}
+
+#popup h1 {
+    @apply text-3xl font-bold mb-6;
+}
+
+#popup h2 {
+    @apply text-2xl font-semibold mb-4;
+}
+
+#popup h3 {
+    @apply text-xl font-semibold mb-3;
+}
+
+#popup p{
+    @apply py-3
+}
+
+#popup li{
+    @apply list-disc ml-6 text-gray-700 leading-relaxed;
+}
+
+#popup img {
+    @apply my-4 max-w-full h-auto;
+}
+
+#popup table {
+    @apply w-full border-collapse my-4 rounded-lg ;
+}
+
+#popup tr:nth-child(even) {
+    @apply bg-gray-50 ;
+}
+#popup th{
+    @apply bg-gray-100 font-semibold ;
+}
+
+#popup th, #popup td {
+    @apply border border-gray-300 px-4 py-2 text-left ;
+}
+

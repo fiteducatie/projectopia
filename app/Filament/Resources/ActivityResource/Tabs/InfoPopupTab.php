@@ -21,6 +21,13 @@ class InfoPopupTab
                     RichEditor::make('info_popup')
                         ->hiddenLabel()
                         ->nullable()
+                        ->toolbarButtons([
+                            ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                            ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                            ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                            ['table'],
+                            ['undo', 'redo'],
+                        ])
                         ->columnSpanFull(),
                 ]),
         ];
