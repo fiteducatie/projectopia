@@ -23,7 +23,7 @@
     @apply text-blue-500;
 }
 
-#popup {
+#popup{
     font-size: 1.2rem;
 }
 
@@ -39,16 +39,12 @@
     @apply text-xl font-semibold mb-3;
 }
 
-#popup p{
+#popup p {
     @apply py-3
 }
 
-#popup li{
+#popup li {
     @apply list-disc ml-6 text-gray-700 leading-relaxed;
-}
-
-#popup img {
-    @apply my-4 max-w-full h-auto;
 }
 
 #popup table {
@@ -58,11 +54,7 @@
 #popup tr:nth-child(even) {
     @apply bg-gray-50 ;
 }
-#popup th{
-    @apply bg-gray-100 font-semibold ;
-}
-
 #popup th, #popup td {
-    @apply border border-gray-300 px-4 py-2 text-left ;
+    @apply bg-gray-100 font-semibold border border-gray-300 px-4 py-2 text-left ;
 }
 

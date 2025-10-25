@@ -5,3 +5,39 @@
 
 /* Load a fresh educational font */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+#viewPopup{
+    font-size: 1.2rem;
+}
+
+#viewPopup h2 {
+    @apply text-2xl font-semibold mb-4;
+}
+
+#viewPopup h3 {
+    @apply text-xl font-semibold mb-3;
+}
+
+#viewPopup p {
+    @apply py-3
+}
+
+#viewPopup li {
+    @apply list-disc ml-6 text-gray-700 leading-relaxed;
+}
+
+#viewPopup table {
+    @apply w-full border-collapse my-4 rounded-lg ;
+}
+
+#viewPopup tr:nth-child(even) {
+    @apply bg-gray-50 ;
+}
+
+#viewPopup th {
+    @apply bg-gray-100 font-semibold ;
+}
+
+#viewPopup th, #viewPopup td {
+    @apply border border-gray-300 px-4 py-2 text-left ;
+}
