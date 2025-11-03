@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             DemoActivitySeeder::class,
             TeamleaderSeeder::class,
             RolesSeeder::class,
+            ActivityTypesSeeder::class,
         ]);
     }
 }

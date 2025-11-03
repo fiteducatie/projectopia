@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (Schema::hasTable('activities') && Schema::hasColumn('activities', 'deleted_at')) {
-            return;
-        }
-        Schema::table('activities', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('activity_types', function (Blueprint $table) {
+            $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
+            $table->json('template')->nullable();
         });
     }
 
@@ -24,9 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('activities', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('activity_types', function (Blueprint $table) {
+            //
         });
     }
 };
-

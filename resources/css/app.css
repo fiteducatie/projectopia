@@ -23,38 +23,43 @@
     @apply text-blue-500;
 }
 
-#popup{
-    font-size: 1.2rem;
+.prose h2 {
+    @apply text-2xl font-bold;
 }
 
-#popup h1 {
-    @apply text-3xl font-bold mb-6;
+.prose h3 {
+    @apply text-xl font-bold;
 }
 
-#popup h2 {
-    @apply text-2xl font-semibold mb-4;
+.prose h4 {
+    @apply text-lg font-bold;
 }
 
-#popup h3 {
-    @apply text-xl font-semibold mb-3;
+.prose table {
+    @apply w-full my-4;
 }
 
-#popup p {
-    @apply py-3
+.prose table th {
+    @apply bg-gray-100;
 }
 
-#popup li {
-    @apply list-disc ml-6 text-gray-700 leading-relaxed;
+.prose table td {
+    @apply border border-gray-200 p-1;
 }
 
-#popup table {
-    @apply w-full border-collapse my-4 rounded-lg ;
+.prose details {
+    @apply my-4;
+
 }
 
-#popup tr:nth-child(even) {
-    @apply bg-gray-50 ;
-}
-#popup th, #popup td {
-    @apply bg-gray-100 font-semibold border border-gray-300 px-4 py-2 text-left ;
+.prose details summary {
+    @apply font-bold cursor-pointer;
 }
 
+.prose details p {
+    @apply my-2;
+}
+
+.prose details summary:hover {
+    @apply text-blue-500;
+}

@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // if 'activities already exists, dont don anything
+        if (Schema::hasTable('activities')) {
+            return;
+        }
         Schema::create('activities', function (Blueprint $table) {
+
             $table->id();
             $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
             $table->string('name');

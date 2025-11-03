@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources\ActivityResource\Tabs;
 
+use App\Models\ActivityType;
 use Filament\Forms;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 
 class OverviewTab
@@ -12,18 +16,23 @@ class OverviewTab
     {
         return [
             Section::make()
+                ->columns(3)
                 ->description('Basis activiteit informatie')
                 ->schema([
                     SpatieMediaLibraryFileUpload::make('banner')
                         ->label('Activiteit afbeelding')
+                        ->columnSpanFull()
                         ->image()
                         ->imageEditor()
                         ->collection('banner'),
                     Forms\Components\TextInput::make('name')->label('Naam')
+                        ->columnSpanFull()
                         ->helperText('Korte, herkenbare activiteit naam.')
                         ->required()
                         ->maxLength(255),
+
                     Forms\Components\Select::make('domain')->label('Domein')
+                        ->columns(1)
                         ->options([
                             'software' => 'Software',
                             'marketing' => 'Marketing',
@@ -31,6 +40,7 @@ class OverviewTab
                         ])->required()->default('software')
                         ->helperText('Bepaalt de standaardtemplates (Software, Marketing, Evenement).'),
                     Forms\Components\Select::make('difficulty')->label('Complexiteit')
+                        ->columns(1)
                         ->options([
                             'laag' => 'Laag',
                             'middel' => 'Middel',
@@ -45,24 +55,47 @@ class OverviewTab
                         ->helperText('Gesloten activiteiten hebben geen actieve chat functionaliteit.'),
                 ]),
             Section::make()
-                ->description('Beschrijf wat er gebouwd moet worden, voor wie en waarom. Dit vormt de basis voor alle beslissingen.')
                 ->schema([
-                    Forms\Components\RichEditor::make('context')->label('Context')
-                        ->helperText('1–3 alinea\'s met achtergrond, doelgroep en gewenste impact.'),
+                    Select::make('activiteitstemplate')->label('Activiteit template')
+                        ->live()
+                        ->afterStateUpdated(function (callable $set, callable $get, $state) {
+
+                            if ( !OverviewTab::isTiptapEmpty($get('content')) ) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Er is al inhoud voor de activiteit. Sla deze eerst leeg op voor je een nieuw template kunt kiezen.')
+                                    ->send();
+                                return;
+                            }
+                            $activityType = ActivityType::find($state);
+                            $set('content', $activityType->template);
+                        })
+                        ->options(function () {
+                            $activityTypes = ActivityType::all();
+                            return $activityTypes->pluck('name', 'id');
+                        }),
+                    RichEditor::make('content')->json()->label('Activiteit inhoud')->live()
                 ]),
-            Section::make()
-                ->description('Welke meetbare doelen moet de activiteit bereiken? Denk aan KPI\'s of leerdoelen.')
-                ->schema([
-                    Forms\Components\RichEditor::make('objectives')->label('Doelstellingen')
-                        ->helperText('Gebruik opsommingen; maak doelen concreet en toetsbaar.'),
-                ]),
-            Section::make()
-                ->description('Beperkingen zoals tijd, budget, techniek, compliance of scope-afbakening.')
-                ->schema([
-                    Forms\Components\RichEditor::make('constraints')->label('Randvoorwaarden')
-                        ->helperText('Som de belangrijkste beperkingen op; dit helpt bij prioriteren.'),
-                ]),
+
         ];
     }
-}
 
+    public static function isTiptapEmpty(?array $value): bool
+    {
+        if (empty($value['content'])) {
+            return true;
+        }
+
+        foreach ($value['content'] as $block) {
+            if (!empty($block['content'])) {
+                foreach ($block['content'] as $inner) {
+                    if (!empty($inner['text'])) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+}

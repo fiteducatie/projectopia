@@ -21,6 +21,7 @@ class Activity extends Model implements HasMedia
         'slug',
         'schedule',
         'domain',
+        'content',
         'context',
         'objectives',
         'constraints',
