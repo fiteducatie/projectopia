@@ -15,6 +15,11 @@ class ActivityTabsConfig
                 'icon' => 'heroicon-o-eye',
                 'badge' => null, // No count needed for overview
             ],
+            'info_popup' => [
+                'name' => 'Info Popup',
+                'icon' => 'heroicon-o-envelope-open',
+                'badge' => fn ($record) => $record && $record->info_popup ? 1 : 0,
+            ],
             'user_stories' => [
                 'name' => 'User Stories',
                 'icon' => 'heroicon-o-document-text',

@@ -30,6 +30,7 @@ class Activity extends Model implements HasMedia
         'risk_notes',
         'difficulty',
         'status',
+        'info_popup',
     ];
 
     protected $casts = [

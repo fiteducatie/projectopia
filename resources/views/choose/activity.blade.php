@@ -272,5 +272,8 @@
             </footer>
         </div>
     </div>
-
+    <div>
+        @livewire('show-info-popup')
+    </div>
+    
 @endsection

@@ -26,7 +26,8 @@ class ViewActivity extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make()->label('Bewerken'),
+            EditAction::make()->label('Bewerken')
+                ->color('info'),
             Action::make('view-guest')
                 ->label('Bekijk als gast')
                 ->color('gray')
