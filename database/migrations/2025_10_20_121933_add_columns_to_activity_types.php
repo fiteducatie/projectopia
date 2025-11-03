@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('activity_types', function (Blueprint $table) {
             $table->foreignId('team_id')->nullable()->constrained('teams')->nullOnDelete();
-            $table->text('template')->nullable();
+            $table->json('template')->nullable();
         });
     }
 

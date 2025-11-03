@@ -17,6 +17,10 @@ use Filament\Tables\Table;
 class ActivityTypeResource extends Resource
 {
     protected static ?string $model = ActivityType::class;
+    // $label
+    protected static ?string $label = 'Activiteitstype';
+    protected static ?string $pluralLabel = 'Activiteitstypen';
+    protected static ?string $navigationLabel = 'Activiteitstypen';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

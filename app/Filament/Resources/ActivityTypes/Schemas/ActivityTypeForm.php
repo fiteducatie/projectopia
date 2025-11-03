@@ -22,6 +22,7 @@ class ActivityTypeForm
                 ColorPicker::make('color')->label('Kleur')
                     ->required(),
                 RichEditor::make('template')->label('Template')
+                    ->json()
                     ->columnSpanFull()
                     ->required()
             ]);
